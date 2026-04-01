@@ -25,6 +25,20 @@ layout_mode = 2
 
 [node name="WarningPopup" parent="HUD" instance=ExtResource("3_warning")]
 
+[node name="DayBanner" type="Label" parent="HUD"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 250.0
+offset_right = 150.0
+offset_bottom = 310.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 48
+text = "Dia 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="PauseOverlay" type="ColorRect" parent="HUD"]
 anchors_preset = 15
 anchor_right = 1.0
