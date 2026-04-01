@@ -18,12 +18,18 @@ const ISO_RIGHT = Vector2(1, 0.5)
 var is_active: bool = true
 
 
+const TARGET_HEIGHT := 80.0  # Desired character height in pixels
+
 func setup(data: CharacterData) -> void:
 	## Called by Main after scene is ready. Initializes character data.
 	character_data = data
 	needs.initialize(data)
 	if data.sprite_path != "":
-		sprite.texture = load(data.sprite_path)
+		var tex: Texture2D = load(data.sprite_path)
+		sprite.texture = tex
+		# Scale sprite to uniform height regardless of source image size
+		var scale_factor := TARGET_HEIGHT / float(tex.get_height())
+		sprite.scale = Vector2(scale_factor, scale_factor)
 	CharacterManager.register_player(self)
 
 
