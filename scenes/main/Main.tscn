@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -7,6 +7,8 @@
 [ext_resource type="Script" path="res://scripts/clock/CommuteManager.gd" id="5_commute"]
 [ext_resource type="PackedScene" path="res://scenes/world/TestRoom.tscn" id="6_room"]
 [ext_resource type="PackedScene" path="res://scenes/characters/Player.tscn" id="7_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/NeedsBars.tscn" id="8_needs"]
+[ext_resource type="Texture2D" path="res://assets/characters/Smartle.png" id="9_smartle"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_script")
@@ -15,8 +17,11 @@ script = ExtResource("1_script")
 
 [node name="TestRoom" parent="World" instance=ExtResource("6_room")]
 
-[node name="Player" parent="World/TestRoom/YSortRoot" instance=ExtResource("7_player")]
+[node name="Gritty" parent="World/TestRoom/YSortRoot" instance=ExtResource("7_player")]
 position = Vector2(384, 192)
+
+[node name="Smartle" parent="World/TestRoom/YSortRoot" instance=ExtResource("7_player")]
+position = Vector2(550, 250)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 layer = 10
@@ -29,6 +34,16 @@ offset_bottom = 80.0
 
 [node name="ClockDisplay" parent="HUD/TopBar" instance=ExtResource("2_clock")]
 layout_mode = 2
+
+[node name="NeedsBars" parent="HUD" instance=ExtResource("8_needs")]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 240.0
+grow_horizontal = 0
 
 [node name="WarningPopup" parent="HUD" instance=ExtResource("3_warning")]
 
