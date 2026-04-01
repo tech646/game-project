@@ -1,38 +1,55 @@
 extends Node2D
 
-## Main scene — root of the game. Holds HUD and world placeholder.
-## Manages day cycle, schedule, and commute systems.
+## Main scene — root of the game. Manages locations, characters, HUD, day cycle.
 
-@onready var clock_display: Control = $HUD/TopBar/ClockDisplay
 @onready var warning_popup: Control = $HUD/WarningPopup
 @onready var pause_overlay: ColorRect = $HUD/PauseOverlay
+@onready var fade_overlay: ColorRect = $HUD/FadeOverlay
 @onready var day_banner: Label = $HUD/DayBanner
 @onready var schedule_manager: Node = $Systems/ScheduleManager
 @onready var commute_manager: Node = $Systems/CommuteManager
-@onready var gritty_player: CharacterBody2D = $World/TestRoom/YSortRoot/Gritty
-@onready var smartle_player: CharacterBody2D = $World/TestRoom/YSortRoot/Smartle
+@onready var world: Node2D = $World
 
-const SLEEP_WARNING_HOUR := 23   # 23:00
-const FORCE_END_HOUR := 0        # 00:00 (midnight)
-const NO_SLEEP_PENALTY := 30.0   # Energy penalty for not sleeping
+const SLEEP_WARNING_HOUR := 23
+const FORCE_END_HOUR := 0
+const NO_SLEEP_PENALTY := 30.0
 
 var _sleep_warned: bool = false
 var _day_ended: bool = false
+
+# Player nodes — created dynamically
+var gritty_player: CharacterBody2D = null
+var smartle_player: CharacterBody2D = null
+var _player_scene: PackedScene = preload("res://scenes/characters/Player.tscn")
 
 
 func _ready() -> void:
 	pause_overlay.visible = false
 	day_banner.visible = false
-	_init_characters()
+
+	# Setup scene manager
+	SceneManager.setup(world, fade_overlay)
+
+	# Create players
+	_create_players()
+
+	# Load starting locations
+	_load_starting_locations()
+
+	# Connect signals
 	GameState.state_changed.connect(_on_state_changed)
 	GameClock.hour_changed.connect(_on_hour_changed)
 	GameClock.day_changed.connect(_on_day_changed)
+	CharacterManager.character_switched.connect(_on_character_switched)
 	schedule_manager.add_to_group("schedule_manager")
+
 	_show_day_banner(GameClock.game_day)
 
 
-func _init_characters() -> void:
-	# Gritty — favela boy
+func _create_players() -> void:
+	gritty_player = _player_scene.instantiate()
+	smartle_player = _player_scene.instantiate()
+
 	var gritty_data := CharacterData.new()
 	gritty_data.character_name = "gritty"
 	gritty_data.display_name = "Gritty"
@@ -45,9 +62,7 @@ func _init_characters() -> void:
 	gritty_data.commute_leave_by = 435
 	gritty_data.commute_travel_time = 45
 	gritty_data.commute_energy_cost = 15.0
-	gritty_player.setup(gritty_data)
 
-	# Smartle — mansion girl
 	var smartle_data := CharacterData.new()
 	smartle_data.character_name = "smartle"
 	smartle_data.display_name = "Smartle"
@@ -60,10 +75,39 @@ func _init_characters() -> void:
 	smartle_data.commute_leave_by = 465
 	smartle_data.commute_travel_time = 15
 	smartle_data.commute_energy_cost = 5.0
-	smartle_player.setup(smartle_data)
+
+	# Setup must happen after adding to tree, so defer
+	gritty_player.character_data = gritty_data
+	smartle_player.character_data = smartle_data
 
 
-func _on_state_changed(_old_state: GameState.State, new_state: GameState.State) -> void:
+func _load_starting_locations() -> void:
+	# Load Gritty's favela first (active player)
+	var favela := SceneManager.load_location_immediate("favela")
+	await favela.ready
+	SceneManager.place_player_in_location(gritty_player, favela)
+	gritty_player.setup(gritty_player.character_data)
+
+	# Smartle is off-screen for now — setup but don't place yet
+	# She'll be placed when player switches to her
+	smartle_player.setup(smartle_player.character_data)
+
+
+func _on_character_switched(active_name: String) -> void:
+	var target_location := SceneManager.get_location(active_name)
+	var current_player := CharacterManager.get_active_player()
+
+	# Remove active player from current location
+	if current_player.get_parent():
+		current_player.get_parent().remove_child(current_player)
+
+	# Load the target character's location
+	await SceneManager.change_location(target_location, active_name)
+	var loc_node := SceneManager.get_current_location_node()
+	SceneManager.place_player_in_location(current_player, loc_node)
+
+
+func _on_state_changed(_old: GameState.State, new_state: GameState.State) -> void:
 	pause_overlay.visible = (new_state == GameState.State.PAUSED)
 
 
@@ -71,7 +115,6 @@ func _on_hour_changed(hour: int) -> void:
 	if hour == SLEEP_WARNING_HOUR and not _sleep_warned:
 		_sleep_warned = true
 		EventBus.warning_shown.emit("Hora de dormir!", "yellow")
-
 	if hour == FORCE_END_HOUR and not _day_ended:
 		_force_end_day()
 
@@ -93,8 +136,10 @@ func _force_end_day() -> void:
 
 
 func _apply_overnight_recovery() -> void:
-	_get_needs(gritty_player).modify_need("energy", gritty_player.character_data.overnight_recovery)
-	_get_needs(smartle_player).modify_need("energy", smartle_player.character_data.overnight_recovery)
+	if gritty_player.character_data:
+		_get_needs(gritty_player).modify_need("energy", gritty_player.character_data.overnight_recovery)
+	if smartle_player.character_data:
+		_get_needs(smartle_player).modify_need("energy", smartle_player.character_data.overnight_recovery)
 
 
 func _get_needs(player: CharacterBody2D) -> NeedsComponent:

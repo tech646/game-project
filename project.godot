@@ -25,6 +25,7 @@ GameClock="*res://autoloads/GameClock.gd"
 GameState="*res://autoloads/GameState.gd"
 EventBus="*res://autoloads/EventBus.gd"
 CharacterManager="*res://autoloads/CharacterManager.gd"
+SceneManager="*res://autoloads/SceneManager.gd"
 
 [display]
 

@@ -1,27 +1,16 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
 [ext_resource type="PackedScene" path="res://scenes/ui/WarningPopup.tscn" id="3_warning"]
-[ext_resource type="Script" path="res://scripts/clock/ScheduleManager.gd" id="4_schedule"]
-[ext_resource type="Script" path="res://scripts/clock/CommuteManager.gd" id="5_commute"]
-[ext_resource type="PackedScene" path="res://scenes/world/TestRoom.tscn" id="6_room"]
-[ext_resource type="PackedScene" path="res://scenes/characters/Player.tscn" id="7_player"]
-[ext_resource type="PackedScene" path="res://scenes/ui/NeedsBars.tscn" id="8_needs"]
-[ext_resource type="Texture2D" path="res://assets/characters/Smartle.png" id="9_smartle"]
+[ext_resource type="PackedScene" path="res://scenes/ui/NeedsBars.tscn" id="4_needs"]
+[ext_resource type="Script" path="res://scripts/clock/ScheduleManager.gd" id="5_schedule"]
+[ext_resource type="Script" path="res://scripts/clock/CommuteManager.gd" id="6_commute"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_script")
 
 [node name="World" type="Node2D" parent="."]
-
-[node name="TestRoom" parent="World" instance=ExtResource("6_room")]
-
-[node name="Gritty" parent="World/TestRoom/YSortRoot" instance=ExtResource("7_player")]
-position = Vector2(384, 192)
-
-[node name="Smartle" parent="World/TestRoom/YSortRoot" instance=ExtResource("7_player")]
-position = Vector2(550, 250)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 layer = 10
@@ -35,7 +24,7 @@ offset_bottom = 80.0
 [node name="ClockDisplay" parent="HUD/TopBar" instance=ExtResource("2_clock")]
 layout_mode = 2
 
-[node name="NeedsBars" parent="HUD" instance=ExtResource("8_needs")]
+[node name="NeedsBars" parent="HUD" instance=ExtResource("4_needs")]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -60,6 +49,15 @@ theme_override_font_sizes/font_size = 48
 text = "Dia 1"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="FadeOverlay" type="ColorRect" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="PauseOverlay" type="ColorRect" parent="HUD"]
 anchors_preset = 15
@@ -90,7 +88,7 @@ vertical_alignment = 1
 [node name="Systems" type="Node" parent="."]
 
 [node name="ScheduleManager" type="Node" parent="Systems"]
-script = ExtResource("4_schedule")
+script = ExtResource("5_schedule")
 
 [node name="CommuteManager" type="Node" parent="Systems"]
-script = ExtResource("5_commute")
+script = ExtResource("6_commute")
