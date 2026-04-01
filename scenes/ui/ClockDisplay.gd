@@ -5,9 +5,9 @@ extends Control
 
 @onready var time_label: Label = $TimeLabel
 @onready var day_label: Label = $DayLabel
-@onready var anim_player: AnimationPlayer = $AnimationPlayer
 
 var _is_pulsing: bool = false
+var _pulse_tween: Tween = null
 
 
 func _ready() -> void:
@@ -35,13 +35,24 @@ func _update_display() -> void:
 
 
 func _start_pulse() -> void:
-	if not _is_pulsing and anim_player.has_animation("pulse_red"):
-		_is_pulsing = true
-		anim_player.play("pulse_red")
+	if _is_pulsing:
+		return
+	_is_pulsing = true
+	_pulse_loop()
+
+
+func _pulse_loop() -> void:
+	if not _is_pulsing:
+		return
+	_pulse_tween = create_tween().set_loops()
+	_pulse_tween.tween_property(time_label, "modulate", Color(1, 0.2, 0.2, 1), 0.5)
+	_pulse_tween.tween_property(time_label, "modulate", Color.WHITE, 0.5)
 
 
 func _stop_pulse() -> void:
 	if _is_pulsing:
 		_is_pulsing = false
-		anim_player.stop()
+		if _pulse_tween:
+			_pulse_tween.kill()
+			_pulse_tween = null
 		time_label.modulate = Color.WHITE

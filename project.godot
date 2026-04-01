@@ -1,13 +1,23 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
-; but it can also be manually edited if needed.
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
 config/name="Dois Mundos"
 config/description="A life simulation game about social inequality — two characters, same dream, different starting conditions."
 run/main_scene="res://scenes/main/Main.tscn"
-config/features=PackedStringArray("4.3", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 
 [autoload]
 
@@ -19,7 +29,6 @@ EventBus="*res://autoloads/EventBus.gd"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/size/resizable=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 

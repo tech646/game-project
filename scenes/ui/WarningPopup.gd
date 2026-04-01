@@ -1,10 +1,9 @@
 extends Control
 
 ## Animated popup for deadline warnings and penalty messages.
-## Listens to EventBus.warning_shown and displays with fade animation.
+## Listens to EventBus.warning_shown and displays with fade tween.
 
 @onready var label: Label = $PanelContainer/Label
-@onready var anim_player: AnimationPlayer = $AnimationPlayer
 
 var _queue: Array[Dictionary] = []
 var _showing: bool = false
@@ -13,6 +12,7 @@ var _showing: bool = false
 func _ready() -> void:
 	EventBus.warning_shown.connect(_on_warning)
 	EventBus.sat_penalty.connect(_on_sat_penalty)
+	modulate = Color(1, 1, 1, 0)
 	visible = false
 
 
@@ -41,9 +41,9 @@ func _show_next() -> void:
 	label.text = item.message
 	label.modulate = item.color
 	visible = true
-	if anim_player.has_animation("show_warning"):
-		anim_player.play("show_warning")
-		await anim_player.animation_finished
-	else:
-		await get_tree().create_timer(2.5).timeout
-	_show_next()
+
+	var tween := create_tween()
+	tween.tween_property(self, "modulate", Color.WHITE, 0.3).from(Color(1, 1, 1, 0))
+	tween.tween_interval(2.0)
+	tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.5)
+	tween.tween_callback(_show_next)

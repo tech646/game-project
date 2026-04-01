@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://main_scene"]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://clock_display" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
-[ext_resource type="PackedScene" uid="uid://warning_popup" path="res://scenes/ui/WarningPopup.tscn" id="3_warning"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
+[ext_resource type="PackedScene" path="res://scenes/ui/WarningPopup.tscn" id="3_warning"]
 [ext_resource type="Script" path="res://scripts/clock/ScheduleManager.gd" id="4_schedule"]
 [ext_resource type="Script" path="res://scripts/clock/CommuteManager.gd" id="5_commute"]
 
