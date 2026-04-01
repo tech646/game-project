@@ -9,7 +9,7 @@ static func create_isometric_tileset() -> TileSet:
 	tileset.tile_shape = TileSet.TILE_SHAPE_ISOMETRIC
 	tileset.tile_size = Vector2i(128, 64)
 
-	# Physics layer for wall collision
+	# Physics layer for wall collision — must be added BEFORE creating tiles
 	tileset.add_physics_layer()
 	tileset.set_physics_layer_collision_layer(0, 1)
 
@@ -31,26 +31,25 @@ static func create_isometric_tileset() -> TileSet:
 	source.texture = texture
 	source.texture_region_size = Vector2i(tile_w, tile_h)
 
-	# Floor tile (0,0) — no collision
-	source.create_tile(Vector2i(0, 0))
+	# Add source to tileset FIRST so physics layers are available to TileData
+	source.create_tile(Vector2i(0, 0))  # Floor
+	source.create_tile(Vector2i(1, 0))  # Wall
+	source.create_tile(Vector2i(2, 0))  # Furniture
+	tileset.add_source(source)
 
-	# Wall tile (1,0) — with collision
-	source.create_tile(Vector2i(1, 0))
+	# Now set collision polygons (physics layer 0 exists on TileData after add_source)
+	var collision_polygon := PackedVector2Array([
+		Vector2(-64, 0), Vector2(0, -32), Vector2(64, 0), Vector2(0, 32)
+	])
+
 	var wall_data: TileData = source.get_tile_data(Vector2i(1, 0), 0)
 	wall_data.add_collision_polygon(0)
-	wall_data.set_collision_polygon_points(0, 0, PackedVector2Array([
-		Vector2(-64, 0), Vector2(0, -32), Vector2(64, 0), Vector2(0, 32)
-	]))
+	wall_data.set_collision_polygon_points(0, 0, collision_polygon)
 
-	# Furniture tile (2,0) — with collision
-	source.create_tile(Vector2i(2, 0))
 	var furn_data: TileData = source.get_tile_data(Vector2i(2, 0), 0)
 	furn_data.add_collision_polygon(0)
-	furn_data.set_collision_polygon_points(0, 0, PackedVector2Array([
-		Vector2(-64, 0), Vector2(0, -32), Vector2(64, 0), Vector2(0, 32)
-	]))
+	furn_data.set_collision_polygon_points(0, 0, collision_polygon)
 
-	tileset.add_source(source)
 	return tileset
 
 
