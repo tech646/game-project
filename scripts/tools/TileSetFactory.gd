@@ -4,7 +4,41 @@ class_name TileSetFactory
 ## Creates an isometric TileSet programmatically with floor and wall tiles.
 ## Used at runtime since hand-writing .tres for tilesets is impractical.
 
+# Location color palettes: {floor_color, wall_color, accent_color}
+const PALETTES := {
+	"default": {
+		"floor": Color(0.76, 0.70, 0.60),
+		"wall": Color(0.35, 0.25, 0.20),
+		"accent": Color(0.45, 0.50, 0.60),
+	},
+	"favela": {
+		"floor": Color(0.55, 0.45, 0.35),   # Dark brown concrete
+		"wall": Color(0.60, 0.30, 0.20),     # Red-brown brick
+		"accent": Color(0.40, 0.35, 0.30),   # Worn wood
+	},
+	"mansion": {
+		"floor": Color(0.92, 0.90, 0.88),   # White marble
+		"wall": Color(0.85, 0.70, 0.75),     # Light pink
+		"accent": Color(0.75, 0.80, 0.85),   # Soft blue-gray
+	},
+	"school": {
+		"floor": Color(0.70, 0.58, 0.42),   # Wood tone
+		"wall": Color(0.82, 0.78, 0.70),     # Beige
+		"accent": Color(0.50, 0.60, 0.50),   # Green board
+	},
+}
+
+
+static func create_tileset_for(location: String) -> TileSet:
+	var palette: Dictionary = PALETTES.get(location, PALETTES["default"])
+	return _build_tileset(palette.floor, palette.wall, palette.accent)
+
+
 static func create_isometric_tileset() -> TileSet:
+	return create_tileset_for("default")
+
+
+static func _build_tileset(floor_color: Color, wall_color: Color, accent_color: Color) -> TileSet:
 	var tileset := TileSet.new()
 	tileset.tile_shape = TileSet.TILE_SHAPE_ISOMETRIC
 	tileset.tile_size = Vector2i(128, 64)
@@ -19,12 +53,9 @@ static func create_isometric_tileset() -> TileSet:
 	var cols := 3
 	var image := Image.create(tile_w * cols, tile_h, false, Image.FORMAT_RGBA8)
 
-	# Tile (0,0): Floor — warm stone
-	_draw_iso_diamond(image, 0, Color(0.76, 0.70, 0.60))
-	# Tile (1,0): Wall — dark brown
-	_draw_iso_diamond(image, tile_w, Color(0.35, 0.25, 0.20))
-	# Tile (2,0): Furniture placeholder — blue-gray
-	_draw_iso_diamond(image, tile_w * 2, Color(0.45, 0.50, 0.60))
+	_draw_iso_diamond(image, 0, floor_color)
+	_draw_iso_diamond(image, tile_w, wall_color)
+	_draw_iso_diamond(image, tile_w * 2, accent_color)
 
 	var texture := ImageTexture.create_from_image(image)
 	var source := TileSetAtlasSource.new()
