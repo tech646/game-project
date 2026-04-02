@@ -2,42 +2,25 @@ extends Area2D
 class_name InteractionDetector
 
 ## Detects nearby GameObjects for interaction.
-## Uses direct distance check as fallback since Area2D signals
-## can be unreliable with programmatically spawned objects.
+## Scans all GameObjects in the scene tree by distance.
 
-const INTERACT_RANGE := 80.0
+const INTERACT_RANGE := 100.0
 
 
 func get_nearest_object() -> GameObject:
-	# First try Area2D overlapping bodies
-	var bodies := get_overlapping_bodies()
+	var player_pos: Vector2 = get_parent().global_position
 	var nearest: GameObject = null
 	var nearest_dist := INF
 
-	for body in bodies:
-		if body is GameObject:
-			var dist: float = global_position.distance_to(body.global_position)
-			if dist < nearest_dist:
+	# Scan all nodes in tree that are GameObjects
+	var all_objects := get_tree().get_nodes_in_group("game_objects")
+	for obj in all_objects:
+		if obj is GameObject:
+			var dist: float = player_pos.distance_to(obj.global_position)
+			if dist < INTERACT_RANGE and dist < nearest_dist:
 				nearest_dist = dist
-				nearest = body
+				nearest = obj
 
-	# Fallback: scan parent's siblings for GameObjects in range
-	if nearest == null:
-		var ysort := get_owner()
-		if ysort:
-			ysort = ysort.get_parent()  # YSortRoot
-		if not ysort:
-			ysort = get_parent().get_parent()  # Player -> YSortRoot
-		if ysort:
-			for child in ysort.get_children():
-				if child is GameObject:
-					var dist: float = global_position.distance_to(child.global_position)
-					if dist < INTERACT_RANGE and dist < nearest_dist:
-						nearest_dist = dist
-						nearest = child
-
-	if nearest:
-		print("[InteractionDetector] Found: ", nearest.object_name, " dist=", nearest_dist)
 	return nearest
 
 

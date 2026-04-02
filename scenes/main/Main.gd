@@ -182,15 +182,10 @@ func _show_day_banner(day: int) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact") and not interaction_popup.visible and not dialogue_box.visible:
-		print("[DEBUG] Enter pressed")
 		var player := CharacterManager.get_active_player()
 		if not player:
-			print("[DEBUG] No active player")
 			return
-		print("[DEBUG] Active player: ", player.name)
-		print("[DEBUG] Nearby objects: ", player.interaction_detector._nearby_objects.size())
 		var result: Dictionary = player.try_interact()
-		print("[DEBUG] Interaction result: ", result)
 		if result.has("type"):
 			if result.type == "object":
 				player.lock_for_action()

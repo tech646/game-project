@@ -26,6 +26,7 @@ const QUALITY_MULTIPLIERS := {
 
 
 func _ready() -> void:
+	add_to_group("game_objects")
 	_update_labels()
 	_update_visual()
 
