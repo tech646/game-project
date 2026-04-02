@@ -1,0 +1,120 @@
+extends Node
+class_name MissionManager
+
+## Generates and tracks 10 daily missions per character.
+## Auto-detects completion from game events.
+
+signal mission_completed(character: String, mission_id: String)
+signal all_missions_completed(character: String)
+signal missions_reset(character: String)
+
+const SAT_PER_MISSION := 3
+const ALL_COMPLETE_BONUS := 10
+
+# Mission templates
+const FIXED_MISSIONS := [
+	{"id": "go_school", "icon": "📚", "desc": "Ir à escola", "event": "commute_arrived"},
+	{"id": "study", "icon": "✏️", "desc": "Estudar", "event": "action_study"},
+	{"id": "eat", "icon": "🥣", "desc": "Comer", "event": "action_eat"},
+	{"id": "sleep", "icon": "😴", "desc": "Dormir", "event": "action_sleep"},
+	{"id": "fun", "icon": "🎮", "desc": "Se divertir", "event": "action_fun"},
+	{"id": "homework", "icon": "📖", "desc": "Fazer dever de casa", "event": "homework_done"},
+	{"id": "on_time", "icon": "🕐", "desc": "Chegar na hora", "event": "arrived_on_time"},
+]
+
+const BONUS_MISSIONS := [
+	{"id": "study2", "icon": "✏️", "desc": "Estudar de novo", "event": "action_study"},
+	{"id": "eat2", "icon": "🥣", "desc": "Comer de novo", "event": "action_eat"},
+	{"id": "talk_brighta", "icon": "💬", "desc": "Falar com Brighta", "event": "talk_npc"},
+	{"id": "explore", "icon": "🗺️", "desc": "Explorar o ambiente", "event": "action_any"},
+	{"id": "sleep_early", "icon": "🌙", "desc": "Dormir cedo", "event": "action_sleep"},
+	{"id": "study3", "icon": "📝", "desc": "Sessão extra de estudo", "event": "action_study"},
+]
+
+# {character_name: [{mission_data + "done": bool}]}
+var character_missions: Dictionary = {}
+
+
+func _ready() -> void:
+	GameClock.day_changed.connect(_on_day_changed)
+	EventBus.commute_finished.connect(_on_commute_finished)
+
+
+func generate_missions(character: String) -> void:
+	var missions: Array[Dictionary] = []
+
+	# Add 7 fixed missions
+	for m in FIXED_MISSIONS:
+		missions.append(m.duplicate())
+		missions[-1]["done"] = false
+
+	# Add 3 random bonus missions
+	var shuffled := BONUS_MISSIONS.duplicate()
+	shuffled.shuffle()
+	for i in range(min(3, shuffled.size())):
+		var m: Dictionary = shuffled[i].duplicate()
+		m["done"] = false
+		missions.append(m)
+
+	character_missions[character] = missions
+	missions_reset.emit(character)
+
+
+func get_missions(character: String) -> Array:
+	return character_missions.get(character, [])
+
+
+func complete_mission_by_event(character: String, event_name: String) -> void:
+	var missions: Array = get_missions(character)
+	for m in missions:
+		if m.event == event_name and not m.done:
+			m.done = true
+			# Award SAT
+			var player := _get_player(character)
+			if player:
+				var needs: NeedsComponent = player.get_node("NeedsComponent")
+				needs.modify_sat(SAT_PER_MISSION)
+			mission_completed.emit(character, m.id)
+			_check_all_complete(character)
+			return  # Only complete one per event
+
+
+func get_completion_count(character: String) -> int:
+	var count := 0
+	for m in get_missions(character):
+		if m.done:
+			count += 1
+	return count
+
+
+func _check_all_complete(character: String) -> void:
+	var missions: Array = get_missions(character)
+	for m in missions:
+		if not m.done:
+			return
+	# All done!
+	var player := _get_player(character)
+	if player:
+		var needs: NeedsComponent = player.get_node("NeedsComponent")
+		needs.modify_sat(ALL_COMPLETE_BONUS)
+	all_missions_completed.emit(character)
+	EventBus.warning_shown.emit("Todas as missões completas! +%d SAT bonus!" % ALL_COMPLETE_BONUS, "yellow")
+
+
+func _on_day_changed(_day: int) -> void:
+	for character in ["gritty", "smartle"]:
+		generate_missions(character)
+
+
+func _on_commute_finished(character: String, late_minutes: int) -> void:
+	complete_mission_by_event(character, "commute_arrived")
+	if late_minutes == 0:
+		complete_mission_by_event(character, "arrived_on_time")
+
+
+func _get_player(character: String) -> CharacterBody2D:
+	for p in CharacterManager.players:
+		var needs: NeedsComponent = p.get_node_or_null("NeedsComponent")
+		if needs and needs.character_name == character:
+			return p
+	return null
