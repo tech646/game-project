@@ -82,14 +82,24 @@ func _create_players() -> void:
 
 
 func _load_starting_locations() -> void:
-	# Load Gritty's favela first (active player)
+	# Load Gritty's favela
 	var favela := SceneManager.load_location_immediate("favela")
-	await favela.ready
-	SceneManager.place_player_in_location(gritty_player, favela)
-	gritty_player.setup(gritty_player.character_data)
+	var ysort: Node2D = favela.get_node("YSortRoot")
 
-	# Smartle is off-screen for now — setup but don't place yet
-	# She'll be placed when player switches to her
+	# Add Gritty to favela
+	ysort.add_child(gritty_player)
+	gritty_player.position = favela.get_spawn_world_pos()
+
+	# Add Smartle to favela too (off to the side, will move to mansion on switch)
+	ysort.add_child(smartle_player)
+	smartle_player.position = favela.get_spawn_world_pos() + Vector2(100, 50)
+
+	# Defer setup to next frame so @onready vars are initialized
+	call_deferred("_setup_players")
+
+
+func _setup_players() -> void:
+	gritty_player.setup(gritty_player.character_data)
 	smartle_player.setup(smartle_player.character_data)
 
 
