@@ -58,18 +58,6 @@ func _update_labels() -> void:
 
 
 func _setup_visual() -> void:
-	# Hide the placeholder ColorRect
+	# Hide the ColorRect — we use background images now
 	if color_rect:
 		color_rect.visible = false
-
-	# Add FurnitureSprite if type is set
-	if furniture_type >= 0:
-		var fsprite := FurnitureSprite.new()
-		fsprite.furniture_type = furniture_type as FurnitureSprite.FurnitureType
-		fsprite.quality = quality
-		add_child(fsprite)
-	else:
-		# Fallback: show colored rect
-		if color_rect:
-			color_rect.visible = true
-			color_rect.color = object_color

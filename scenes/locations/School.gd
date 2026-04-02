@@ -1,42 +1,47 @@
 extends LocationBase
 
-## Shared school — neutral quality, both characters attend.
+## Shared school — uses Future Learning Lab image.
+## Objects positioned over furniture in the image.
 
 func _init() -> void:
 	location_name = "school"
-	room_width = 12
-	room_height = 10
+	bg_scale = 0.4  # Slightly smaller, different aspect ratio
 
 
 func _spawn_objects() -> void:
+	setup_background("res://assets/environments/Gemini_Generated_Image_ag7qjrag7qjrag7q.png")
+
+	# Image 2084x2016 at 0.4 scale = ~834x806
+
 	create_object({
-		"name": "Carteira Escolar", "action": "Estudar", "quality": 3,
+		"name": "Carteira", "action": "Estudar", "quality": 3,
 		"need": "", "base_restore": 0.0, "time_cost": 60,
-		"tile_pos": Vector2i(3, 3), "furniture_type": FurnitureSprite.FurnitureType.SCHOOL_DESK,
+		"pos": Vector2(-120, -80),
 	})
 	create_object({
 		"name": "Cantina", "action": "Comer", "quality": 2,
 		"need": "hunger", "base_restore": 25.0, "time_cost": 30,
-		"tile_pos": Vector2i(9, 3), "furniture_type": FurnitureSprite.FurnitureType.CAFETERIA,
+		"pos": Vector2(160, 60),
 	})
 	create_object({
 		"name": "Biblioteca", "action": "Estudar", "quality": 3,
 		"need": "", "base_restore": 0.0, "time_cost": 60,
-		"tile_pos": Vector2i(3, 7), "furniture_type": FurnitureSprite.FurnitureType.LIBRARY,
+		"pos": Vector2(-160, 100),
 	})
 	create_object({
 		"name": "Mesa da Brighta", "action": "Falar", "quality": 3,
 		"need": "", "base_restore": 0.0, "time_cost": 30,
-		"tile_pos": Vector2i(9, 7), "furniture_type": FurnitureSprite.FurnitureType.TEACHER_DESK,
+		"pos": Vector2(0, -120),
 	})
 
-	# Brighta NPC placeholder
+	# Brighta label
 	var brighta_label := Label.new()
 	brighta_label.text = "👩‍🏫 Mrs Brighta"
 	brighta_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	brighta_label.add_theme_font_size_override("font_size", 9)
-	brighta_label.position = ground_layer.map_to_local(Vector2i(10, 7)) + Vector2(-40, -55)
+	brighta_label.position = Vector2(-20, -160)
 	ysort_root.add_child(brighta_label)
 
-	create_door("🚪 Voltar para Casa", "home", Vector2i(6, 9), Color(0.5, 0.4, 0.3))
-	spawn_point = get_spawn_world_pos()
+	create_door("🚪 Casa", "home", Vector2(0, 180))
+
+	spawn_point = Vector2(0, 60)

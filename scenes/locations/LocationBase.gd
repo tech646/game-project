@@ -1,46 +1,46 @@
 extends Node2D
 class_name LocationBase
 
-## Base class for all location scenes (Favela, Mansion, School).
-## Paints tiles and spawns GameObjects programmatically.
+## Base class for all location scenes.
+## Uses background image with invisible interactive objects on top.
 
 @export var location_name: String = ""
-@export var room_width: int = 10
-@export var room_height: int = 10
+@export var bg_scale: float = 0.5  # Scale factor for background image
 
-@onready var ground_layer: TileMapLayer = $GroundLayer
 @onready var ysort_root: Node2D = $YSortRoot
-@onready var walls_layer: TileMapLayer = $YSortRoot/WallsLayer
-
-const FLOOR_TILE := Vector2i(0, 0)
-const FLOOR_ALT_TILE := Vector2i(3, 0)
-const WALL_TILE := Vector2i(1, 0)
 
 var spawn_point := Vector2.ZERO
 var _game_object_scene: PackedScene = preload("res://scenes/components/GameObject.tscn")
 var _door_scene: PackedScene = preload("res://scenes/components/DoorObject.tscn")
 
+var bg_sprite: Sprite2D = null
+var room_bounds: Rect2 = Rect2()
+
 
 func _ready() -> void:
-	var tileset := TileSetFactory.create_tileset_for(location_name)
-	ground_layer.tile_set = tileset
-	walls_layer.tile_set = tileset
-	_paint_room()
 	_spawn_objects()
 
 
-func _paint_room() -> void:
-	for x in range(room_width):
-		for y in range(room_height):
-			# Alternate floor tiles for variety
-			var floor_tile := FLOOR_TILE if (x + y) % 3 != 0 else FLOOR_ALT_TILE
-			ground_layer.set_cell(Vector2i(x, y), 0, floor_tile)
-			if x == 0 or x == room_width - 1 or y == 0 or y == room_height - 1:
-				walls_layer.set_cell(Vector2i(x, y), 0, WALL_TILE)
+func setup_background(texture_path: String) -> void:
+	var tex: Texture2D = load(texture_path)
+	if not tex:
+		return
+	bg_sprite = Sprite2D.new()
+	bg_sprite.texture = tex
+	bg_sprite.scale = Vector2(bg_scale, bg_scale)
+	bg_sprite.centered = true
+	bg_sprite.z_index = -10
+	add_child(bg_sprite)
+	bg_sprite.position = Vector2.ZERO
+
+	# Calculate room bounds from image size
+	var half_w := tex.get_width() * bg_scale * 0.5
+	var half_h := tex.get_height() * bg_scale * 0.5
+	room_bounds = Rect2(-half_w, -half_h, half_w * 2, half_h * 2)
 
 
 func _spawn_objects() -> void:
-	## Override in subclass to place objects.
+	## Override in subclass.
 	pass
 
 
@@ -55,38 +55,23 @@ func create_object(data: Dictionary) -> void:
 	obj.object_color = data.get("color", Color(0.5, 0.5, 0.5))
 	obj.furniture_type = data.get("furniture_type", -1)
 
-	var tile_pos: Vector2i = data.get("tile_pos", Vector2i(3, 3))
-	obj.position = ground_layer.map_to_local(tile_pos)
+	var pos: Vector2 = data.get("pos", Vector2.ZERO)
+	obj.position = pos
 	ysort_root.add_child(obj)
 
 
-func create_door(door_name: String, target: String, tile_pos: Vector2i, color: Color = Color(0.3, 0.25, 0.2)) -> void:
+func create_door(door_name: String, target: String, pos: Vector2, color: Color = Color(0.3, 0.25, 0.2)) -> void:
 	var door: StaticBody2D = _door_scene.instantiate()
 	door.door_name = door_name
 	door.target_location = target
 	door.door_color = color
-	door.position = ground_layer.map_to_local(tile_pos)
+	door.position = pos
 	ysort_root.add_child(door)
-	# Remove wall tile where door is placed
-	walls_layer.erase_cell(tile_pos)
 
 
 func get_spawn_world_pos() -> Vector2:
-	return ground_layer.map_to_local(Vector2i(room_width / 2, room_height / 2))
+	return spawn_point
 
 
 func get_map_bounds() -> Rect2:
-	var corners := [
-		ground_layer.map_to_local(Vector2i(0, 0)),
-		ground_layer.map_to_local(Vector2i(room_width, 0)),
-		ground_layer.map_to_local(Vector2i(0, room_height)),
-		ground_layer.map_to_local(Vector2i(room_width, room_height)),
-	]
-	var min_pos: Vector2 = corners[0]
-	var max_pos: Vector2 = corners[0]
-	for c in corners:
-		min_pos.x = min(min_pos.x, c.x)
-		min_pos.y = min(min_pos.y, c.y)
-		max_pos.x = max(max_pos.x, c.x)
-		max_pos.y = max(max_pos.y, c.y)
-	return Rect2(min_pos - Vector2(128, 64), max_pos - min_pos + Vector2(256, 128))
+	return room_bounds

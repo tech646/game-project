@@ -5,10 +5,5 @@
 [node name="MansionHome" type="Node2D"]
 script = ExtResource("1_script")
 
-[node name="GroundLayer" type="TileMapLayer" parent="."]
-
 [node name="YSortRoot" type="Node2D" parent="."]
-y_sort_enabled = true
-
-[node name="WallsLayer" type="TileMapLayer" parent="YSortRoot"]
 y_sort_enabled = true

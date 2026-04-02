@@ -1,39 +1,44 @@
 extends LocationBase
 
-## Smartle's mansion — spacious, luxurious, high-quality objects.
+## Smartle's mansion — uses bedroom image as background.
+## Objects positioned over furniture in the image.
 
 func _init() -> void:
 	location_name = "mansion"
-	room_width = 14
-	room_height = 14
+	bg_scale = 0.5
 
 
 func _spawn_objects() -> void:
+	setup_background("res://assets/environments/Gemini_Generated_Image_fg10nffg10nffg10.png")
+
+	# Image ~1365x768 at 0.5 scale = ~683x384
+
 	create_object({
-		"name": "Cama King", "action": "Dormir", "quality": 5,
+		"name": "Cama", "action": "Dormir", "quality": 5,
 		"need": "energy", "base_restore": 40.0, "time_cost": 120,
-		"tile_pos": Vector2i(2, 2), "furniture_type": FurnitureSprite.FurnitureType.KING_BED,
-	})
-	create_object({
-		"name": "Cozinha Gourmet", "action": "Cozinhar", "quality": 4,
-		"need": "hunger", "base_restore": 30.0, "time_cost": 30,
-		"tile_pos": Vector2i(11, 2), "furniture_type": FurnitureSprite.FurnitureType.GOURMET_KITCHEN,
+		"pos": Vector2(-180, -20),
 	})
 	create_object({
 		"name": "Setup Gamer", "action": "Jogar", "quality": 5,
 		"need": "fun", "base_restore": 25.0, "time_cost": 60,
-		"tile_pos": Vector2i(10, 8), "furniture_type": FurnitureSprite.FurnitureType.GAMER_SETUP,
+		"pos": Vector2(180, -30),
 	})
 	create_object({
-		"name": "Tutor Particular", "action": "Estudar", "quality": 5,
+		"name": "Mesa", "action": "Estudar", "quality": 5,
 		"need": "", "base_restore": 0.0, "time_cost": 60,
-		"tile_pos": Vector2i(4, 8), "furniture_type": FurnitureSprite.FurnitureType.TUTOR,
+		"pos": Vector2(180, 30),
+	})
+	create_object({
+		"name": "Cozinha", "action": "Cozinhar", "quality": 4,
+		"need": "hunger", "base_restore": 30.0, "time_cost": 30,
+		"pos": Vector2(-100, 100),
 	})
 	create_object({
 		"name": "Academia", "action": "Malhar", "quality": 4,
 		"need": "energy", "base_restore": 20.0, "time_cost": 45,
-		"tile_pos": Vector2i(7, 12), "furniture_type": FurnitureSprite.FurnitureType.GYM,
+		"pos": Vector2(100, 100),
 	})
 
-	create_door("🚪 Ir para Escola", "school", Vector2i(7, 13), Color(0.7, 0.6, 0.7))
-	spawn_point = get_spawn_world_pos()
+	create_door("🚪 Escola", "school", Vector2(0, -130))
+
+	spawn_point = Vector2(0, 40)
