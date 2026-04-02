@@ -30,6 +30,20 @@ offset_bottom = 80.0
 [node name="ClockDisplay" parent="HUD/TopBar" instance=ExtResource("2_clock")]
 layout_mode = 2
 
+[node name="LocationLabel" type="Label" parent="HUD"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 10.0
+offset_right = 200.0
+offset_bottom = 35.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.9, 0.85, 0.7, 1)
+text = "🏠 Casa do Gritty — Favela"
+horizontal_alignment = 1
+
 [node name="NeedsBars" parent="HUD" instance=ExtResource("4_needs")]
 anchors_preset = 1
 anchor_left = 1.0

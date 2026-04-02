@@ -10,6 +10,7 @@ extends Node2D
 @onready var dialogue_box: PanelContainer = $HUD/DialogueBox
 @onready var sat_quiz: PanelContainer = $HUD/SATQuiz
 @onready var mission_panel: PanelContainer = $HUD/MissionPanel
+@onready var location_label: Label = $HUD/LocationLabel
 @onready var schedule_manager: Node = $Systems/ScheduleManager
 @onready var commute_manager: Node = $Systems/CommuteManager
 @onready var mission_manager: MissionManager = $Systems/MissionManager
@@ -116,6 +117,8 @@ func _load_starting_locations() -> void:
 	holder.add_child(smartle_player)
 	smartle_player.position = Vector2.ZERO
 
+	_update_location_label("favela")
+
 	# Defer setup
 	call_deferred("_setup_players")
 
@@ -148,6 +151,7 @@ func _on_character_switched(active_name: String) -> void:
 	var ysort: Node2D = loc_node.get_node("YSortRoot")
 	ysort.add_child(active_player)
 	active_player.position = loc_node.get_spawn_world_pos()
+	_update_location_label(target_location)
 
 
 func _on_state_changed(_old: GameState.State, new_state: GameState.State) -> void:
@@ -197,6 +201,16 @@ func _apply_overnight_recovery() -> void:
 
 func _get_needs(player: CharacterBody2D) -> NeedsComponent:
 	return player.get_node("NeedsComponent") as NeedsComponent
+
+
+const LOCATION_NAMES := {
+	"favela": "🏠 Casa do Gritty — Favela",
+	"mansion": "🏰 Casa da Smartle — Mansão",
+	"school": "🏫 Escola Bilingue",
+}
+
+func _update_location_label(location: String) -> void:
+	location_label.text = LOCATION_NAMES.get(location, location)
 
 
 func _show_day_banner(day: int) -> void:
@@ -308,3 +322,5 @@ func _use_door(door: DoorObject) -> void:
 				other.get_parent().remove_child(other)
 			ysort.add_child(other)
 			other.position = loc_node.get_spawn_world_pos() + Vector2(80, 40)
+
+	_update_location_label(target)

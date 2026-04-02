@@ -28,10 +28,9 @@ scale = Vector2(0.15, 0.15)
 offset = Vector2(0, -60)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 position_smoothing_speed = 5.0
-drag_horizontal_enabled = true
-drag_vertical_enabled = true
 
 [node name="NeedsComponent" type="Node" parent="."]
 script = ExtResource("3_needs")
