@@ -13,6 +13,7 @@ class_name LocationBase
 @onready var walls_layer: TileMapLayer = $YSortRoot/WallsLayer
 
 const FLOOR_TILE := Vector2i(0, 0)
+const FLOOR_ALT_TILE := Vector2i(3, 0)
 const WALL_TILE := Vector2i(1, 0)
 
 var spawn_point := Vector2.ZERO
@@ -31,7 +32,9 @@ func _ready() -> void:
 func _paint_room() -> void:
 	for x in range(room_width):
 		for y in range(room_height):
-			ground_layer.set_cell(Vector2i(x, y), 0, FLOOR_TILE)
+			# Alternate floor tiles for variety
+			var floor_tile := FLOOR_TILE if (x + y) % 3 != 0 else FLOOR_ALT_TILE
+			ground_layer.set_cell(Vector2i(x, y), 0, floor_tile)
 			if x == 0 or x == room_width - 1 or y == 0 or y == room_height - 1:
 				walls_layer.set_cell(Vector2i(x, y), 0, WALL_TILE)
 
