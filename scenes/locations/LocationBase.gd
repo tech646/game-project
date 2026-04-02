@@ -50,6 +50,7 @@ func create_object(data: Dictionary) -> void:
 	obj.base_restore = data.get("base_restore", 0.0)
 	obj.time_cost = data.get("time_cost", 30)
 	obj.object_color = data.get("color", Color(0.5, 0.5, 0.5))
+	obj.furniture_type = data.get("furniture_type", -1)
 
 	var tile_pos: Vector2i = data.get("tile_pos", Vector2i(3, 3))
 	obj.position = ground_layer.map_to_local(tile_pos)

@@ -7,10 +7,11 @@ class_name GameObject
 @export var object_name: String = "Object"
 @export var action_name: String = "Usar"
 @export_range(1, 5) var quality: int = 1
-@export var need_affected: String = ""       # "energy", "hunger", "fun", or "" for study
+@export var need_affected: String = ""
 @export var base_restore: float = 0.0
-@export var time_cost: int = 30              # game minutes to use
+@export var time_cost: int = 30
 @export var object_color: Color = Color(0.5, 0.5, 0.5)
+@export var furniture_type: int = -1  # FurnitureSprite.FurnitureType or -1 for none
 
 const QUALITY_MULTIPLIERS := {
 	1: 0.50,
@@ -22,13 +23,13 @@ const QUALITY_MULTIPLIERS := {
 
 @onready var quality_label: Label = $QualityLabel
 @onready var name_label: Label = $NameLabel
-@onready var sprite: ColorRect = $ColorRect
+@onready var color_rect: ColorRect = $ColorRect
 
 
 func _ready() -> void:
 	add_to_group("game_objects")
 	_update_labels()
-	_update_visual()
+	_setup_visual()
 
 
 func get_restore_amount() -> float:
@@ -45,10 +46,30 @@ func get_quality_string() -> String:
 func _update_labels() -> void:
 	if quality_label:
 		quality_label.text = get_quality_string()
+		# Color stars based on quality
+		if quality >= 4:
+			quality_label.modulate = Color(1, 0.85, 0.3)  # Gold
+		elif quality >= 2:
+			quality_label.modulate = Color(0.8, 0.8, 0.8)  # Silver
+		else:
+			quality_label.modulate = Color(0.6, 0.5, 0.4)  # Bronze
 	if name_label:
 		name_label.text = object_name
 
 
-func _update_visual() -> void:
-	if sprite:
-		sprite.color = object_color
+func _setup_visual() -> void:
+	# Hide the placeholder ColorRect
+	if color_rect:
+		color_rect.visible = false
+
+	# Add FurnitureSprite if type is set
+	if furniture_type >= 0:
+		var fsprite := FurnitureSprite.new()
+		fsprite.furniture_type = furniture_type as FurnitureSprite.FurnitureType
+		fsprite.quality = quality
+		add_child(fsprite)
+	else:
+		# Fallback: show colored rect
+		if color_rect:
+			color_rect.visible = true
+			color_rect.color = object_color

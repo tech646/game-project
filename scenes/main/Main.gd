@@ -113,6 +113,7 @@ func _load_starting_locations() -> void:
 	# Add her to a hidden holder node
 	var holder := Node2D.new()
 	holder.name = "InactivePlayerHolder"
+	holder.visible = false
 	add_child(holder)
 	holder.add_child(smartle_player)
 	smartle_player.position = Vector2.ZERO

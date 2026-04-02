@@ -92,6 +92,27 @@ static func _draw_iso_diamond(image: Image, offset_x: int, color: Color) -> void
 			var px := offset_x + x
 			var dx := absf(float(px - cx)) / 64.0
 			var dy := absf(float(y - cy)) / 32.0
-			if dx + dy <= 1.0:
-				var shade := 1.0 - (dy * 0.2)
-				image.set_pixel(px, y, Color(color.r * shade, color.g * shade, color.b * shade))
+			var dist := dx + dy
+			if dist <= 1.0:
+				# Top-left face lighter, bottom-right face darker
+				var face_shade := 1.0
+				if y < cy:
+					face_shade = 1.05 if x < cx else 0.95  # Top faces
+				else:
+					face_shade = 0.85 if x < cx else 0.75  # Bottom faces
+
+				# Edge highlight
+				var edge := 1.0 - dist
+				var edge_boost := 0.0
+				if edge < 0.06:  # Near the diamond edge
+					edge_boost = 0.15
+
+				var shade := face_shade + edge_boost
+				var r := clampf(color.r * shade, 0.0, 1.0)
+				var g := clampf(color.g * shade, 0.0, 1.0)
+				var b := clampf(color.b * shade, 0.0, 1.0)
+				image.set_pixel(px, y, Color(r, g, b))
+
+				# Outline pixel (1px border)
+				if dist > 0.97:
+					image.set_pixel(px, y, Color(color.r * 0.4, color.g * 0.4, color.b * 0.4))
