@@ -65,9 +65,12 @@ func try_interact() -> Dictionary:
 	if _interaction_locked or not is_active:
 		return {}
 
-	var obj := interaction_detector.get_nearest_object()
-	if obj:
-		return {"type": "object", "object": obj}
+	var result := interaction_detector.get_nearest_interactable()
+	if result.has("type"):
+		if result.type == "door":
+			return {"type": "door", "door": result.node}
+		elif result.type == "object":
+			return {"type": "object", "object": result.node}
 	return {}
 
 

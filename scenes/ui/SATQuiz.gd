@@ -54,6 +54,8 @@ func show_quiz() -> void:
 
 	_set_buttons_enabled(true)
 	visible = true
+	# Pause game while quiz is showing
+	GameClock.pause()
 
 
 func _on_answer(choice: String) -> void:
@@ -77,6 +79,8 @@ func _on_answer(choice: String) -> void:
 	# Auto-close after 2 seconds
 	await get_tree().create_timer(2.0).timeout
 	visible = false
+	# Resume game
+	GameClock.resume()
 	quiz_completed.emit(correct, bonus)
 
 

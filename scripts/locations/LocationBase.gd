@@ -17,6 +17,7 @@ const WALL_TILE := Vector2i(1, 0)
 
 var spawn_point := Vector2.ZERO
 var _game_object_scene: PackedScene = preload("res://scenes/components/GameObject.tscn")
+var _door_scene: PackedScene = preload("res://scenes/components/DoorObject.tscn")
 
 
 func _ready() -> void:
@@ -53,6 +54,17 @@ func create_object(data: Dictionary) -> void:
 	var tile_pos: Vector2i = data.get("tile_pos", Vector2i(3, 3))
 	obj.position = ground_layer.map_to_local(tile_pos)
 	ysort_root.add_child(obj)
+
+
+func create_door(door_name: String, target: String, tile_pos: Vector2i, color: Color = Color(0.3, 0.25, 0.2)) -> void:
+	var door: StaticBody2D = _door_scene.instantiate()
+	door.door_name = door_name
+	door.target_location = target
+	door.door_color = color
+	door.position = ground_layer.map_to_local(tile_pos)
+	ysort_root.add_child(door)
+	# Remove wall tile where door is placed
+	walls_layer.erase_cell(tile_pos)
 
 
 func get_spawn_world_pos() -> Vector2:

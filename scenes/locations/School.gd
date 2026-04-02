@@ -38,4 +38,7 @@ func _spawn_objects() -> void:
 	brighta_label.position = ground_layer.map_to_local(Vector2i(10, 7)) + Vector2(-40, -50)
 	ysort_root.add_child(brighta_label)
 
+	# Door to go home
+	create_door("🚪 Voltar para Casa", "home", Vector2i(6, 9), Color(0.5, 0.4, 0.3))
+
 	spawn_point = get_spawn_world_pos()

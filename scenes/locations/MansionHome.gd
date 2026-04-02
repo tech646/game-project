@@ -35,4 +35,7 @@ func _spawn_objects() -> void:
 		"color": Color(0.50, 0.55, 0.60), "tile_pos": Vector2i(7, 12),
 	})
 
+	# Door to school
+	create_door("🚪 Ir para Escola", "school", Vector2i(7, 13), Color(0.7, 0.6, 0.7))
+
 	spawn_point = get_spawn_world_pos()

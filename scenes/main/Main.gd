@@ -99,19 +99,24 @@ func _create_players() -> void:
 
 
 func _load_starting_locations() -> void:
-	# Load Gritty's favela
+	# Load Gritty's favela — active player starts here
 	var favela := SceneManager.load_location_immediate("favela")
 	var ysort: Node2D = favela.get_node("YSortRoot")
 
-	# Add Gritty to favela
+	# Add Gritty to favela (active)
 	ysort.add_child(gritty_player)
 	gritty_player.position = favela.get_spawn_world_pos()
 
-	# Add Smartle to favela too (off to the side, will move to mansion on switch)
-	ysort.add_child(smartle_player)
-	smartle_player.position = favela.get_spawn_world_pos() + Vector2(100, 50)
+	# Smartle starts off-tree — she'll be placed when Tab switches to her
+	# But we still need her in the tree for NeedsComponent to tick
+	# Add her to a hidden holder node
+	var holder := Node2D.new()
+	holder.name = "InactivePlayerHolder"
+	add_child(holder)
+	holder.add_child(smartle_player)
+	smartle_player.position = Vector2.ZERO
 
-	# Defer setup to next frame so @onready vars are initialized
+	# Defer setup
 	call_deferred("_setup_players")
 
 
@@ -121,17 +126,28 @@ func _setup_players() -> void:
 
 
 func _on_character_switched(active_name: String) -> void:
+	var active_player := CharacterManager.get_active_player()
+	var inactive_player := CharacterManager.get_inactive_player()
 	var target_location := SceneManager.get_location(active_name)
-	var current_player := CharacterManager.get_active_player()
 
-	# Remove active player from current location
-	if current_player.get_parent():
-		current_player.get_parent().remove_child(current_player)
+	# Move inactive player to holder
+	if inactive_player and inactive_player.get_parent():
+		var old_parent := inactive_player.get_parent()
+		old_parent.remove_child(inactive_player)
+		$InactivePlayerHolder.add_child(inactive_player)
 
-	# Load the target character's location
+	# Remove active player from wherever it is
+	if active_player.get_parent():
+		active_player.get_parent().remove_child(active_player)
+
+	# Load the target location with fade
 	await SceneManager.change_location(target_location, active_name)
 	var loc_node := SceneManager.get_current_location_node()
-	SceneManager.place_player_in_location(current_player, loc_node)
+
+	# Place active player in the new location
+	var ysort: Node2D = loc_node.get_node("YSortRoot")
+	ysort.add_child(active_player)
+	active_player.position = loc_node.get_spawn_world_pos()
 
 
 func _on_state_changed(_old: GameState.State, new_state: GameState.State) -> void:
@@ -194,7 +210,7 @@ func _show_day_banner(day: int) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("interact") and not interaction_popup.visible and not dialogue_box.visible:
+	if event.is_action_pressed("interact") and not interaction_popup.visible and not dialogue_box.visible and not sat_quiz.visible:
 		var player := CharacterManager.get_active_player()
 		if not player:
 			return
@@ -203,6 +219,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			if result.type == "object":
 				player.lock_for_action()
 				interaction_popup.show_for_object(result.object)
+			elif result.type == "door":
+				_use_door(result.door)
 
 
 func _on_action_confirmed(obj: GameObject) -> void:
@@ -245,3 +263,40 @@ func _on_quiz_completed(correct: bool, sat_bonus: int) -> void:
 			needs.modify_sat(sat_bonus)
 			EventBus.warning_shown.emit("+%d SAT (resposta correta!)" % sat_bonus, "yellow")
 			college_progress.check_score(needs.character_name, needs.sat_score)
+
+
+func _use_door(door: DoorObject) -> void:
+	var player := CharacterManager.get_active_player()
+	if not player:
+		return
+	var needs := CharacterManager.get_active_needs()
+	var target: String = door.target_location
+
+	# "home" means go to character's home location
+	if target == "home":
+		if needs:
+			target = SceneManager.get_location(needs.character_name)
+			# If already at home, do nothing
+			if target == "favela" or target == "mansion":
+				pass
+			else:
+				target = "favela" if needs.character_name == "gritty" else "mansion"
+		else:
+			target = "favela"
+
+	# Update character location tracking
+	if needs:
+		SceneManager.character_locations[needs.character_name] = target
+
+	# Remove player from current location
+	if player.get_parent():
+		player.get_parent().remove_child(player)
+
+	# Transition with fade
+	await SceneManager.change_location(target, needs.character_name if needs else "")
+	var loc_node := SceneManager.get_current_location_node()
+
+	# Place player in new location
+	var ysort: Node2D = loc_node.get_node("YSortRoot")
+	ysort.add_child(player)
+	player.position = loc_node.get_spawn_world_pos()
