@@ -21,29 +21,32 @@ const SLEEP_WARNING_HOUR := 23
 const FORCE_END_HOUR := 0
 const NO_SLEEP_PENALTY := 30.0
 
+const LOCATION_NAMES := {
+	"favela_bedroom": "🏠 Quarto do Gritty",
+	"favela_kitchen": "🏠 Cozinha do Gritty",
+	"mansion": "🏰 Mansão da Smartle",
+	"school": "🏫 Escola Bilingue",
+}
+
 var _sleep_warned: bool = false
 var _day_ended: bool = false
 
-# Player nodes — created dynamically
 var gritty_player: CharacterBody2D = null
 var smartle_player: CharacterBody2D = null
 var _player_scene: PackedScene = preload("res://scenes/characters/Player.tscn")
+var _pending_player_placement: Dictionary = {}  # Used after scene swap
 
 
 func _ready() -> void:
 	pause_overlay.visible = false
 	day_banner.visible = false
 
-	# Setup scene manager
 	SceneManager.setup(world, fade_overlay)
+	SceneManager.location_changed.connect(_on_location_changed)
 
-	# Create players
 	_create_players()
-
-	# Load starting locations
 	_load_starting_locations()
 
-	# Connect signals
 	GameState.state_changed.connect(_on_state_changed)
 	GameClock.hour_changed.connect(_on_hour_changed)
 	GameClock.day_changed.connect(_on_day_changed)
@@ -53,11 +56,7 @@ func _ready() -> void:
 	sat_quiz.quiz_completed.connect(_on_quiz_completed)
 	schedule_manager.add_to_group("schedule_manager")
 	mission_manager.add_to_group("mission_manager")
-
-	# Setup mission panel
 	mission_panel.setup(mission_manager)
-
-	# Generate initial missions
 	mission_manager.generate_missions("gritty")
 	mission_manager.generate_missions("smartle")
 
@@ -76,10 +75,6 @@ func _create_players() -> void:
 	gritty_data.starting_energy = 45.0
 	gritty_data.starting_fun = 60.0
 	gritty_data.overnight_recovery = 50.0
-	gritty_data.commute_mode = "bus"
-	gritty_data.commute_leave_by = 435
-	gritty_data.commute_travel_time = 45
-	gritty_data.commute_energy_cost = 15.0
 
 	var smartle_data := CharacterData.new()
 	smartle_data.character_name = "smartle"
@@ -89,38 +84,25 @@ func _create_players() -> void:
 	smartle_data.starting_energy = 85.0
 	smartle_data.starting_fun = 70.0
 	smartle_data.overnight_recovery = 85.0
-	smartle_data.commute_mode = "car"
-	smartle_data.commute_leave_by = 465
-	smartle_data.commute_travel_time = 15
-	smartle_data.commute_energy_cost = 5.0
 
-	# Setup must happen after adding to tree, so defer
 	gritty_player.character_data = gritty_data
 	smartle_player.character_data = smartle_data
 
 
 func _load_starting_locations() -> void:
-	# Load Gritty's favela — active player starts here
-	var favela := SceneManager.load_location_immediate("favela")
+	var favela := SceneManager.load_location_immediate("favela_bedroom")
 	var ysort: Node2D = favela.get_node("YSortRoot")
-
-	# Add Gritty to favela (active)
 	ysort.add_child(gritty_player)
 	gritty_player.position = favela.get_spawn_world_pos()
 
-	# Smartle starts off-tree — she'll be placed when Tab switches to her
-	# But we still need her in the tree for NeedsComponent to tick
-	# Add her to a hidden holder node
+	# Inactive player holder (hidden)
 	var holder := Node2D.new()
 	holder.name = "InactivePlayerHolder"
 	holder.visible = false
 	add_child(holder)
 	holder.add_child(smartle_player)
-	smartle_player.position = Vector2.ZERO
 
-	_update_location_label("favela")
-
-	# Defer setup
+	_update_location_label("favela_bedroom")
 	call_deferred("_setup_players")
 
 
@@ -129,31 +111,86 @@ func _setup_players() -> void:
 	smartle_player.setup(smartle_player.character_data)
 
 
+# ======== SCENE TRANSITIONS ========
+
 func _on_character_switched(active_name: String) -> void:
-	var active_player := CharacterManager.get_active_player()
-	var inactive_player := CharacterManager.get_inactive_player()
-	var target_location := SceneManager.get_location(active_name)
+	var active := CharacterManager.get_active_player()
+	var inactive := CharacterManager.get_inactive_player()
+	var target := SceneManager.get_location(active_name)
 
-	# Move inactive player to holder
-	if inactive_player and inactive_player.get_parent():
-		var old_parent := inactive_player.get_parent()
-		old_parent.remove_child(inactive_player)
-		$InactivePlayerHolder.add_child(inactive_player)
+	# Park inactive in holder
+	_park_player(inactive)
 
-	# Remove active player from wherever it is
-	if active_player.get_parent():
-		active_player.get_parent().remove_child(active_player)
+	# Remove active from current location
+	_park_player(active)
 
-	# Load the target location with fade
-	await SceneManager.change_location(target_location, active_name)
-	var loc_node := SceneManager.get_current_location_node()
+	# Schedule placement after scene loads
+	_pending_player_placement = {"player": active, "target": target}
+	SceneManager.change_location(target, active_name)
 
-	# Place active player in the new location
-	var ysort: Node2D = loc_node.get_node("YSortRoot")
-	ysort.add_child(active_player)
-	active_player.position = loc_node.get_spawn_world_pos()
-	_update_location_label(target_location)
 
+func _on_location_changed(_character: String, location: String) -> void:
+	# Place player after scene swap completes
+	if not _pending_player_placement.is_empty():
+		var player: CharacterBody2D = _pending_player_placement.player
+		var loc := SceneManager.get_current_location_node()
+		if loc:
+			var ysort: Node2D = loc.get_node("YSortRoot")
+			if player.get_parent():
+				player.get_parent().remove_child(player)
+			ysort.add_child(player)
+			player.position = loc.get_spawn_world_pos()
+
+			# If both at same location (school), show both
+			var other := CharacterManager.get_inactive_player()
+			if other:
+				var other_needs: NeedsComponent = other.get_node_or_null("NeedsComponent")
+				if other_needs and SceneManager.get_location(other_needs.character_name) == location:
+					_park_player(other)
+					ysort.add_child(other)
+					other.position = loc.get_spawn_world_pos() + Vector2(80, 40)
+
+		_pending_player_placement = {}
+	_update_location_label(location)
+
+
+func _use_door(door: DoorObject) -> void:
+	var player := CharacterManager.get_active_player()
+	if not player:
+		return
+	var needs := CharacterManager.get_active_needs()
+	var target: String = door.target_location
+
+	# "home" resolves to character's home
+	if target == "home":
+		if needs and needs.character_name == "gritty":
+			target = "favela_bedroom"
+		else:
+			target = "mansion"
+
+	var char_name: String = needs.character_name if needs else ""
+	if char_name != "":
+		SceneManager.character_locations[char_name] = target
+
+	# Park players
+	_park_player(player)
+	var other := CharacterManager.get_inactive_player()
+	if other and other.get_parent() and other.get_parent().name == "YSortRoot":
+		_park_player(other)
+
+	_pending_player_placement = {"player": player, "target": target}
+	SceneManager.change_location(target, char_name)
+
+
+func _park_player(player: CharacterBody2D) -> void:
+	if not player:
+		return
+	if player.get_parent() and player.get_parent() != $InactivePlayerHolder:
+		player.get_parent().remove_child(player)
+		$InactivePlayerHolder.add_child(player)
+
+
+# ======== DAY CYCLE ========
 
 func _on_state_changed(_old: GameState.State, new_state: GameState.State) -> void:
 	pause_overlay.visible = (new_state == GameState.State.PAUSED)
@@ -190,7 +227,7 @@ func _check_homework() -> void:
 		if not needs.homework_done:
 			needs.modify_sat(-5)
 			EventBus.warning_shown.emit("%s: -5 SAT (sem dever de casa!)" % needs.character_name.capitalize(), "red")
-		needs.homework_done = false  # Reset for next day
+		needs.homework_done = false
 
 
 func _apply_overnight_recovery() -> void:
@@ -204,11 +241,7 @@ func _get_needs(player: CharacterBody2D) -> NeedsComponent:
 	return player.get_node("NeedsComponent") as NeedsComponent
 
 
-const LOCATION_NAMES := {
-	"favela": "🏠 Casa do Gritty — Favela",
-	"mansion": "🏰 Casa da Smartle — Mansão",
-	"school": "🏫 Escola Bilingue",
-}
+# ======== UI ========
 
 func _update_location_label(location: String) -> void:
 	location_label.text = LOCATION_NAMES.get(location, location)
@@ -223,6 +256,8 @@ func _show_day_banner(day: int) -> void:
 	tween.tween_property(day_banner, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_callback(func(): day_banner.visible = false)
 
+
+# ======== INTERACTION ========
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact") and not interaction_popup.visible and not dialogue_box.visible and not sat_quiz.visible:
@@ -245,16 +280,13 @@ func _on_action_confirmed(obj: GameObject) -> void:
 	var executor: ActionExecutor = player.get_node("ActionExecutor")
 	var needs: NeedsComponent = player.get_node("NeedsComponent")
 
-	# Connect study_completed to trigger quiz
 	if not executor.study_completed.is_connected(_on_study_completed):
 		executor.study_completed.connect(_on_study_completed)
 
 	executor.execute(obj, needs)
-	# Show result
 	executor.action_completed.connect(func(text: String):
 		if text != "":
 			EventBus.warning_shown.emit(text, "yellow")
-		# Check college milestones
 		college_progress.check_score(needs.character_name, needs.sat_score)
 	, CONNECT_ONE_SHOT)
 	player.unlock_from_action()
@@ -267,7 +299,6 @@ func _on_popup_closed() -> void:
 
 
 func _on_study_completed(_character: String) -> void:
-	# Show SAT quiz after study action
 	sat_quiz.show_quiz()
 
 
@@ -278,50 +309,3 @@ func _on_quiz_completed(correct: bool, sat_bonus: int) -> void:
 			needs.modify_sat(sat_bonus)
 			EventBus.warning_shown.emit("+%d SAT (resposta correta!)" % sat_bonus, "yellow")
 			college_progress.check_score(needs.character_name, needs.sat_score)
-
-
-func _use_door(door: DoorObject) -> void:
-	var player := CharacterManager.get_active_player()
-	var other := CharacterManager.get_inactive_player()
-	if not player:
-		return
-	var needs := CharacterManager.get_active_needs()
-	var target: String = door.target_location
-
-	# "home" means go to character's home location
-	if target == "home":
-		target = "favela" if needs and needs.character_name == "gritty" else "mansion"
-
-	# Update character location tracking
-	if needs:
-		SceneManager.character_locations[needs.character_name] = target
-
-	# Remove player from current location
-	if player.get_parent():
-		player.get_parent().remove_child(player)
-
-	# If leaving a shared location (school), remove other player too
-	if other and other.get_parent() and other.get_parent().name == "YSortRoot":
-		other.get_parent().remove_child(other)
-		$InactivePlayerHolder.add_child(other)
-
-	# Transition with fade
-	var char_name: String = needs.character_name if needs else ""
-	await SceneManager.change_location(target, char_name)
-	var loc_node := SceneManager.get_current_location_node()
-
-	# Place active player in new location
-	var ysort: Node2D = loc_node.get_node("YSortRoot")
-	ysort.add_child(player)
-	player.position = loc_node.get_spawn_world_pos()
-
-	# If both characters are at the same location (school), show both
-	if other and needs:
-		var other_needs: NeedsComponent = other.get_node("NeedsComponent")
-		if other_needs and SceneManager.get_location(other_needs.character_name) == target:
-			if other.get_parent():
-				other.get_parent().remove_child(other)
-			ysort.add_child(other)
-			other.position = loc_node.get_spawn_world_pos() + Vector2(80, 40)
-
-	_update_location_label(target)
