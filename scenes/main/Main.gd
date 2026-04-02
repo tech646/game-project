@@ -8,8 +8,12 @@ extends Node2D
 @onready var day_banner: Label = $HUD/DayBanner
 @onready var interaction_popup: PanelContainer = $HUD/InteractionPopup
 @onready var dialogue_box: PanelContainer = $HUD/DialogueBox
+@onready var sat_quiz: PanelContainer = $HUD/SATQuiz
+@onready var mission_panel: PanelContainer = $HUD/MissionPanel
 @onready var schedule_manager: Node = $Systems/ScheduleManager
 @onready var commute_manager: Node = $Systems/CommuteManager
+@onready var mission_manager: MissionManager = $Systems/MissionManager
+@onready var college_progress: CollegeProgress = $Systems/CollegeProgress
 @onready var world: Node2D = $World
 
 const SLEEP_WARNING_HOUR := 23
@@ -45,7 +49,16 @@ func _ready() -> void:
 	CharacterManager.character_switched.connect(_on_character_switched)
 	interaction_popup.action_confirmed.connect(_on_action_confirmed)
 	interaction_popup.popup_closed.connect(_on_popup_closed)
+	sat_quiz.quiz_completed.connect(_on_quiz_completed)
 	schedule_manager.add_to_group("schedule_manager")
+	mission_manager.add_to_group("mission_manager")
+
+	# Setup mission panel
+	mission_panel.setup(mission_manager)
+
+	# Generate initial missions
+	mission_manager.generate_missions("gritty")
+	mission_manager.generate_missions("smartle")
 
 	_show_day_banner(GameClock.game_day)
 
@@ -198,11 +211,18 @@ func _on_action_confirmed(obj: GameObject) -> void:
 		return
 	var executor: ActionExecutor = player.get_node("ActionExecutor")
 	var needs: NeedsComponent = player.get_node("NeedsComponent")
+
+	# Connect study_completed to trigger quiz
+	if not executor.study_completed.is_connected(_on_study_completed):
+		executor.study_completed.connect(_on_study_completed)
+
 	executor.execute(obj, needs)
 	# Show result
 	executor.action_completed.connect(func(text: String):
 		if text != "":
 			EventBus.warning_shown.emit(text, "yellow")
+		# Check college milestones
+		college_progress.check_score(needs.character_name, needs.sat_score)
 	, CONNECT_ONE_SHOT)
 	player.unlock_from_action()
 
@@ -211,3 +231,17 @@ func _on_popup_closed() -> void:
 	var player := CharacterManager.get_active_player()
 	if player:
 		player.unlock_from_action()
+
+
+func _on_study_completed(_character: String) -> void:
+	# Show SAT quiz after study action
+	sat_quiz.show_quiz()
+
+
+func _on_quiz_completed(correct: bool, sat_bonus: int) -> void:
+	if correct and sat_bonus > 0:
+		var needs := CharacterManager.get_active_needs()
+		if needs:
+			needs.modify_sat(sat_bonus)
+			EventBus.warning_shown.emit("+%d SAT (resposta correta!)" % sat_bonus, "yellow")
+			college_progress.check_score(needs.character_name, needs.sat_score)

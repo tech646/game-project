@@ -1,0 +1,272 @@
+[
+  {
+    "id": "RW-001",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which choice completes the text so that it conforms to the conventions of Standard English?\n\nThe artist Frida Kahlo is _____ for her vivid self-portraits.",
+    "options": ["A) knew", "B) known", "C) knowing", "D) knows"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-002",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which choice best completes the sentence?\n\nThe new library was _____ to the public last Tuesday.",
+    "options": ["A) opened", "B) opening", "C) open", "D) opens"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-003",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Choose the word that best fits the context.\n\nDespite the heavy rain, the hikers decided to _____ with their journey.",
+    "options": ["A) proceed", "B) precede", "C) produce", "D) protect"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-004",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which choice most effectively combines the two sentences?\n\nThe experiment failed. The scientists learned valuable information from it.",
+    "options": ["A) The experiment failed, so the scientists learned valuable information.", "B) Although the experiment failed, the scientists learned valuable information from it.", "C) The experiment failed, the scientists learned valuable information.", "D) The experiment failed because the scientists learned valuable information."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-005",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which word best replaces 'happy' in the following sentence to make it more precise?\n\nThe researcher was happy about the breakthrough discovery.",
+    "options": ["A) elated", "B) content", "C) pleased", "D) satisfied"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-006",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Read the passage and answer the question.\n\n'The migration patterns of monarch butterflies have puzzled scientists for decades.'\n\nWhat is the main purpose of this sentence?",
+    "options": ["A) To introduce a topic", "B) To present a conclusion", "C) To offer a counterargument", "D) To provide evidence"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-007",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Which transition word best connects these ideas?\n\nMany students prefer online learning. _____, some educators argue that in-person instruction is more effective.",
+    "options": ["A) Therefore", "B) However", "C) Furthermore", "D) Similarly"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-008",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Identify the error in the sentence.\n\n'Neither the teacher nor the students was prepared for the fire drill.'",
+    "options": ["A) 'Neither' should be 'Either'", "B) 'nor' should be 'or'", "C) 'was' should be 'were'", "D) No error"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-009",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which sentence uses a comma correctly?",
+    "options": ["A) The dog, ran quickly across the yard.", "B) After eating dinner, we went for a walk.", "C) She likes, apples oranges and bananas.", "D) My friend who, lives next door is kind."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-010",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "What does the word 'ubiquitous' mean in the following sentence?\n\n'Smartphones have become ubiquitous in modern society.'",
+    "options": ["A) Expensive", "B) Everywhere", "C) Complicated", "D) Unnecessary"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-001",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "Solve for x:\n\n2x + 5 = 17",
+    "options": ["A) x = 4", "B) x = 6", "C) x = 7", "D) x = 11"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-002",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "What is 15% of 200?",
+    "options": ["A) 15", "B) 20", "C) 25", "D) 30"],
+    "answer": "D",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-003",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "If a triangle has angles measuring 45° and 90°, what is the third angle?",
+    "options": ["A) 35°", "B) 45°", "C) 55°", "D) 60°"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-004",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "What is the slope of the line passing through points (2, 3) and (6, 11)?",
+    "options": ["A) 1", "B) 2", "C) 3", "D) 4"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-005",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "Simplify: (3x²)(4x³)",
+    "options": ["A) 7x⁵", "B) 12x⁵", "C) 12x⁶", "D) 7x⁶"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-006",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "A store offers a 20% discount on a $80 item. What is the sale price?",
+    "options": ["A) $16", "B) $60", "C) $64", "D) $68"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-007",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "What is the value of f(3) if f(x) = x² - 2x + 1?",
+    "options": ["A) 1", "B) 4", "C) 6", "D) 9"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-008",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "If the ratio of boys to girls in a class is 3:5, and there are 40 students total, how many girls are there?",
+    "options": ["A) 15", "B) 20", "C) 24", "D) 25"],
+    "answer": "D",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-009",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "Solve the system of equations:\n\nx + y = 10\n2x - y = 5",
+    "options": ["A) x=3, y=7", "B) x=5, y=5", "C) x=4, y=6", "D) x=7, y=3"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-010",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "A circle has an area of 64π square units. What is its radius?",
+    "options": ["A) 4", "B) 8", "C) 16", "D) 32"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-011",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Choose the correct form:\n\nThe team _____ their best effort in the final game.",
+    "options": ["A) gived", "B) gave", "C) given", "D) gives"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-012",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which sentence is punctuated correctly?",
+    "options": ["A) Its a beautiful day outside.", "B) It's a beautiful day outside.", "C) Its' a beautiful day outside.", "D) It is' a beautiful day outside."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-011",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "What is the area of a rectangle with length 12 and width 5?",
+    "options": ["A) 17", "B) 34", "C) 60", "D) 120"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-012",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "If 3(x - 4) = 15, what is x?",
+    "options": ["A) 3", "B) 7", "C) 9", "D) 11"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-013",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Which revision most improves the clarity of this sentence?\n\n'The policy was implemented by the government that was controversial.'",
+    "options": ["A) The government implemented the controversial policy.", "B) The policy that was controversial was implemented by the government.", "C) Implemented by the government, the policy was controversial.", "D) The controversial policy was implemented the government."],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-013",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "What is the mean of 4, 8, 12, 16, 20?",
+    "options": ["A) 10", "B) 12", "C) 14", "D) 16"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-014",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "What is the probability of rolling an even number on a standard six-sided die?",
+    "options": ["A) 1/6", "B) 1/3", "C) 1/2", "D) 2/3"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-014",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which word is a synonym for 'brave'?",
+    "options": ["A) Timid", "B) Courageous", "C) Cautious", "D) Nervous"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-015",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "What type of figurative language is used in: 'Time is money'?",
+    "options": ["A) Simile", "B) Metaphor", "C) Personification", "D) Hyperbole"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-015",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "If f(x) = 2x + 3 and g(x) = x², what is g(f(2))?",
+    "options": ["A) 7", "B) 14", "C) 25", "D) 49"],
+    "answer": "D",
+    "source": "CollegeBoard Question Bank"
+  }
+]
