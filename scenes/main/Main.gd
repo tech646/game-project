@@ -267,6 +267,7 @@ func _on_quiz_completed(correct: bool, sat_bonus: int) -> void:
 
 func _use_door(door: DoorObject) -> void:
 	var player := CharacterManager.get_active_player()
+	var other := CharacterManager.get_inactive_player()
 	if not player:
 		return
 	var needs := CharacterManager.get_active_needs()
@@ -274,15 +275,7 @@ func _use_door(door: DoorObject) -> void:
 
 	# "home" means go to character's home location
 	if target == "home":
-		if needs:
-			target = SceneManager.get_location(needs.character_name)
-			# If already at home, do nothing
-			if target == "favela" or target == "mansion":
-				pass
-			else:
-				target = "favela" if needs.character_name == "gritty" else "mansion"
-		else:
-			target = "favela"
+		target = "favela" if needs and needs.character_name == "gritty" else "mansion"
 
 	# Update character location tracking
 	if needs:
@@ -292,11 +285,26 @@ func _use_door(door: DoorObject) -> void:
 	if player.get_parent():
 		player.get_parent().remove_child(player)
 
+	# If leaving a shared location (school), remove other player too
+	if other and other.get_parent() and other.get_parent().name == "YSortRoot":
+		other.get_parent().remove_child(other)
+		$InactivePlayerHolder.add_child(other)
+
 	# Transition with fade
-	await SceneManager.change_location(target, needs.character_name if needs else "")
+	var char_name: String = needs.character_name if needs else ""
+	await SceneManager.change_location(target, char_name)
 	var loc_node := SceneManager.get_current_location_node()
 
-	# Place player in new location
+	# Place active player in new location
 	var ysort: Node2D = loc_node.get_node("YSortRoot")
 	ysort.add_child(player)
 	player.position = loc_node.get_spawn_world_pos()
+
+	# If both characters are at the same location (school), show both
+	if other and needs:
+		var other_needs: NeedsComponent = other.get_node("NeedsComponent")
+		if other_needs and SceneManager.get_location(other_needs.character_name) == target:
+			if other.get_parent():
+				other.get_parent().remove_child(other)
+			ysort.add_child(other)
+			other.position = loc_node.get_spawn_world_pos() + Vector2(80, 40)
