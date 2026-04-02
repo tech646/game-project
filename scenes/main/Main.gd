@@ -53,6 +53,7 @@ func _ready() -> void:
 	GameClock.day_changed.connect(_on_day_changed)
 	CharacterManager.character_switched.connect(_on_character_switched)
 	interaction_popup.action_confirmed.connect(_on_action_confirmed)
+	interaction_popup.alt_action_confirmed.connect(_on_alt_action_confirmed)
 	interaction_popup.popup_closed.connect(_on_popup_closed)
 	sat_quiz.quiz_completed.connect(_on_quiz_completed)
 	schedule_manager.add_to_group("schedule_manager")
@@ -292,6 +293,37 @@ func _on_action_confirmed(obj: GameObject) -> void:
 			EventBus.warning_shown.emit(text, "yellow")
 		college_progress.check_score(needs.character_name, needs.sat_score)
 	, CONNECT_ONE_SHOT)
+	player.unlock_from_action()
+
+
+func _on_alt_action_confirmed(obj: GameObject) -> void:
+	## Execute the alt action (e.g., "Jogar" on a desk)
+	var player := CharacterManager.get_active_player()
+	if not player:
+		return
+	var needs: NeedsComponent = player.get_node("NeedsComponent")
+
+	# Advance clock
+	for i in range(obj.alt_time_cost):
+		GameClock._advance_minute()
+
+	# Restore alt need
+	if obj.alt_need_affected != "":
+		var restore: float = obj.alt_base_restore * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0)
+		needs.modify_need(obj.alt_need_affected, restore)
+		var icon := ""
+		match obj.alt_need_affected:
+			"fun": icon = "🎮"
+			"energy": icon = "⚡"
+			"hunger": icon = "🍖"
+		EventBus.warning_shown.emit("+%.0f %s %s" % [restore, icon, obj.alt_need_affected.capitalize()], "yellow")
+
+		# Mission event
+		var mm := get_tree().get_first_node_in_group("mission_manager") as MissionManager
+		if mm:
+			mm.complete_mission_by_event(needs.character_name, "action_fun")
+			mm.complete_mission_by_event(needs.character_name, "action_any")
+
 	player.unlock_from_action()
 
 

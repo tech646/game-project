@@ -11,7 +11,16 @@ class_name GameObject
 @export var base_restore: float = 0.0
 @export var time_cost: int = 30
 @export var object_color: Color = Color(0.5, 0.5, 0.5)
-@export var furniture_type: int = -1  # FurnitureSprite.FurnitureType or -1 for none
+@export var furniture_type: int = -1
+
+## Secondary action (for dual-purpose objects like desk = study + fun)
+var alt_action_name: String = ""
+var alt_need_affected: String = ""
+var alt_base_restore: float = 0.0
+var alt_time_cost: int = 30
+
+func has_alt_action() -> bool:
+	return alt_action_name != ""
 
 const QUALITY_MULTIPLIERS := {
 	1: 0.50,

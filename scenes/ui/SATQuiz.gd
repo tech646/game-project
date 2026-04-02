@@ -54,8 +54,8 @@ func show_quiz() -> void:
 
 	_set_buttons_enabled(true)
 	visible = true
-	# Pause game while quiz is showing
-	GameClock.pause()
+	# Pause game and block movement while quiz is showing
+	GameState.change_state(GameState.State.IN_MENU)
 
 
 func _on_answer(choice: String) -> void:
@@ -80,7 +80,7 @@ func _on_answer(choice: String) -> void:
 	await get_tree().create_timer(2.0).timeout
 	visible = false
 	# Resume game
-	GameClock.resume()
+	GameState.change_state(GameState.State.PLAYING)
 	quiz_completed.emit(correct, bonus)
 
 

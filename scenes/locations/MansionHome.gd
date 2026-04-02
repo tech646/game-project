@@ -20,6 +20,8 @@ func _spawn_objects() -> void:
 		"name": "Setup Gamer", "action": "Estudar", "quality": 5,
 		"need": "", "base_restore": 0.0, "time_cost": 60,
 		"pos": Vector2(140, -20),
+		"alt_action": "Jogar", "alt_need": "fun",
+		"alt_restore": 25.0, "alt_time": 60,
 	})
 
 	create_door("🚪 Cozinha", "mansion_kitchen", Vector2(0, -120))

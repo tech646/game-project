@@ -18,6 +18,8 @@ const TARGET_HEIGHT := 120.0
 
 var is_active: bool = true
 var _interaction_locked: bool = false
+var _walk_time: float = 0.0
+var _is_walking: bool = false
 
 
 func setup(data: CharacterData) -> void:
@@ -55,9 +57,26 @@ func _physics_process(_delta: float) -> void:
 			sprite.flip_h = true
 		elif direction.x > 0:
 			sprite.flip_h = false
+		_is_walking = true
+	else:
+		_is_walking = false
 
 	velocity = direction * speed
 	move_and_slide()
+	_animate_walk(_delta)
+
+
+func _animate_walk(delta: float) -> void:
+	if _is_walking:
+		_walk_time += delta * 10.0
+		# Bob up and down
+		sprite.offset.y = -60 + sin(_walk_time) * 3.0
+		# Slight lean
+		sprite.rotation = sin(_walk_time * 0.5) * 0.05
+	else:
+		_walk_time = 0.0
+		sprite.offset.y = -60
+		sprite.rotation = 0.0
 
 
 func try_interact() -> Dictionary:

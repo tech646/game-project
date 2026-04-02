@@ -54,6 +54,10 @@ func create_object(data: Dictionary) -> void:
 	obj.time_cost = data.get("time_cost", 30)
 	obj.object_color = data.get("color", Color(0.5, 0.5, 0.5))
 	obj.furniture_type = data.get("furniture_type", -1)
+	obj.alt_action_name = data.get("alt_action", "")
+	obj.alt_need_affected = data.get("alt_need", "")
+	obj.alt_base_restore = data.get("alt_restore", 0.0)
+	obj.alt_time_cost = data.get("alt_time", 30)
 
 	var pos: Vector2 = data.get("pos", Vector2.ZERO)
 	obj.position = pos
