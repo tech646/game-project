@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/NeedsBars.tscn" id="4_needs"]
 [ext_resource type="Script" path="res://scripts/clock/ScheduleManager.gd" id="5_schedule"]
 [ext_resource type="Script" path="res://scripts/clock/CommuteManager.gd" id="6_commute"]
+[ext_resource type="PackedScene" path="res://scenes/ui/InteractionPopup.tscn" id="7_interact"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="8_dialogue"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_script")
@@ -49,6 +51,10 @@ theme_override_font_sizes/font_size = 48
 text = "Dia 1"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="InteractionPopup" parent="HUD" instance=ExtResource("7_interact")]
+
+[node name="DialogueBox" parent="HUD" instance=ExtResource("8_dialogue")]
 
 [node name="FadeOverlay" type="ColorRect" parent="HUD"]
 anchors_preset = 15

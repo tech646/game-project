@@ -6,6 +6,8 @@ extends Node2D
 @onready var pause_overlay: ColorRect = $HUD/PauseOverlay
 @onready var fade_overlay: ColorRect = $HUD/FadeOverlay
 @onready var day_banner: Label = $HUD/DayBanner
+@onready var interaction_popup: PanelContainer = $HUD/InteractionPopup
+@onready var dialogue_box: PanelContainer = $HUD/DialogueBox
 @onready var schedule_manager: Node = $Systems/ScheduleManager
 @onready var commute_manager: Node = $Systems/CommuteManager
 @onready var world: Node2D = $World
@@ -41,6 +43,8 @@ func _ready() -> void:
 	GameClock.hour_changed.connect(_on_hour_changed)
 	GameClock.day_changed.connect(_on_day_changed)
 	CharacterManager.character_switched.connect(_on_character_switched)
+	interaction_popup.action_confirmed.connect(_on_action_confirmed)
+	interaction_popup.popup_closed.connect(_on_popup_closed)
 	schedule_manager.add_to_group("schedule_manager")
 
 	_show_day_banner(GameClock.game_day)
@@ -142,7 +146,17 @@ func _force_end_day() -> void:
 	EventBus.warning_shown.emit("Voce nao dormiu! -%.0f%% energia" % NO_SLEEP_PENALTY, "red")
 	_get_needs(gritty_player).modify_need("energy", -NO_SLEEP_PENALTY)
 	_get_needs(smartle_player).modify_need("energy", -NO_SLEEP_PENALTY)
+	_check_homework()
 	EventBus.day_ended.emit(GameClock.game_day)
+
+
+func _check_homework() -> void:
+	for player in [gritty_player, smartle_player]:
+		var needs := _get_needs(player)
+		if not needs.homework_done:
+			needs.modify_sat(-5)
+			EventBus.warning_shown.emit("%s: -5 SAT (sem dever de casa!)" % needs.character_name.capitalize(), "red")
+		needs.homework_done = false  # Reset for next day
 
 
 func _apply_overnight_recovery() -> void:
@@ -164,3 +178,36 @@ func _show_day_banner(day: int) -> void:
 	tween.tween_interval(2.5)
 	tween.tween_property(day_banner, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_callback(func(): day_banner.visible = false)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("interact") and not interaction_popup.visible and not dialogue_box.visible:
+		var player := CharacterManager.get_active_player()
+		if not player:
+			return
+		var result: Dictionary = player.try_interact()
+		if result.has("type"):
+			if result.type == "object":
+				player.lock_for_action()
+				interaction_popup.show_for_object(result.object)
+
+
+func _on_action_confirmed(obj: GameObject) -> void:
+	var player := CharacterManager.get_active_player()
+	if not player:
+		return
+	var executor: ActionExecutor = player.get_node("ActionExecutor")
+	var needs: NeedsComponent = player.get_node("NeedsComponent")
+	executor.execute(obj, needs)
+	# Show result
+	executor.action_completed.connect(func(text: String):
+		if text != "":
+			EventBus.warning_shown.emit(text, "yellow")
+	, CONNECT_ONE_SHOT)
+	player.unlock_from_action()
+
+
+func _on_popup_closed() -> void:
+	var player := CharacterManager.get_active_player()
+	if player:
+		player.unlock_from_action()

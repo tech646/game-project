@@ -20,6 +20,7 @@ var hunger: float = 50.0
 var energy: float = 45.0
 var fun: float = 60.0
 var sat_score: int = 0
+var homework_done: bool = false
 
 var character_name: String = ""
 
