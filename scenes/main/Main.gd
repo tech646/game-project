@@ -24,7 +24,8 @@ const NO_SLEEP_PENALTY := 30.0
 const LOCATION_NAMES := {
 	"favela_bedroom": "🏠 Quarto do Gritty",
 	"favela_kitchen": "🏠 Cozinha do Gritty",
-	"mansion": "🏰 Mansão da Smartle",
+	"mansion": "🏰 Quarto da Smartle",
+	"mansion_kitchen": "🏰 Cozinha da Smartle",
 	"school": "🏫 Escola Bilingue",
 }
 
@@ -161,12 +162,14 @@ func _use_door(door: DoorObject) -> void:
 	var needs := CharacterManager.get_active_needs()
 	var target: String = door.target_location
 
-	# "home" resolves to character's home
+	# "home" resolves to character's home bedroom
 	if target == "home":
 		if needs and needs.character_name == "gritty":
 			target = "favela_bedroom"
-		else:
+		elif needs and needs.character_name == "smartle":
 			target = "mansion"
+		else:
+			target = "favela_bedroom"
 
 	var char_name: String = needs.character_name if needs else ""
 	if char_name != "":

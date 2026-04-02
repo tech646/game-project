@@ -9,6 +9,7 @@ const LOCATIONS := {
 	"favela_bedroom": "res://scenes/locations/FavelaBedroom.tscn",
 	"favela_kitchen": "res://scenes/locations/FavelaKitchen.tscn",
 	"mansion": "res://scenes/locations/MansionHome.tscn",
+	"mansion_kitchen": "res://scenes/locations/MansionKitchen.tscn",
 	"school": "res://scenes/locations/School.tscn",
 }
 

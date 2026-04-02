@@ -9,7 +9,7 @@ const ISO_UP    = Vector2(1, -0.5)
 const ISO_DOWN  = Vector2(-1, 0.5)
 const ISO_LEFT  = Vector2(-1, -0.5)
 const ISO_RIGHT = Vector2(1, 0.5)
-const TARGET_HEIGHT := 50.0  # Smaller to fit background image scale
+const TARGET_HEIGHT := 65.0
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var needs: NeedsComponent = $NeedsComponent
