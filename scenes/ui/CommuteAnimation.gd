@@ -11,19 +11,19 @@ signal commute_done
 @onready var thought_label: Label = $VBox/ThoughtLabel
 
 const BUS_THOUGHTS := [
-	"🚌 O ônibus está lotado como sempre...",
-	"🚌 Pelo menos posso revisar no caminho.",
-	"🚌 30 minutos de pé... as pernas doem.",
-	"🚌 Queria ter um lugar pra sentar.",
-	"🚌 Falta pouco... acho.",
+	"🚌 The bus is packed as always...",
+	"🚌 At least I can review notes on the way.",
+	"🚌 30 minutes standing... my legs hurt.",
+	"🚌 Wish I had a seat.",
+	"🚌 Almost there... I think.",
 ]
 
 const CAR_THOUGHTS := [
-	"🚗 O motorista já está esperando.",
-	"🚗 Ar condicionado no ponto certo.",
-	"🚗 Dá pra revisar no tablet.",
-	"🚗 Chegando rapidinho.",
-	"🚗 Já posso ver a escola!",
+	"🚗 The driver is already waiting.",
+	"🚗 AC set just right.",
+	"🚗 I can review on the tablet.",
+	"🚗 Getting there in no time.",
+	"🚗 I can already see the school!",
 ]
 
 var _is_running := false
@@ -41,8 +41,8 @@ func show_commute(character_name: String, mode: String, travel_time: int) -> voi
 	var is_bus := (mode == "bus")
 	var thoughts := BUS_THOUGHTS if is_bus else CAR_THOUGHTS
 
-	scene_label.text = "%s indo para escola..." % character_name.capitalize()
-	vehicle_label.text = "🚌 Ônibus (lotado)" if is_bus else "🚗 Carro particular"
+	scene_label.text = "%s heading to school..." % character_name.capitalize()
+	vehicle_label.text = "🚌 Bus (packed)" if is_bus else "🚗 Private car"
 	vehicle_label.add_theme_color_override("font_color",
 		Color(0.8, 0.6, 0.3) if is_bus else Color(0.5, 0.8, 0.5))
 	progress_bar.value = 0
@@ -65,12 +65,12 @@ func show_commute(character_name: String, mode: String, travel_time: int) -> voi
 	# Energy drain notification for bus
 	if is_bus:
 		tween.tween_callback(func():
-			thought_label.text = "😓 Chegou cansado(a)... -15 ⚡"
+			thought_label.text = "😓 Arrived exhausted... -15 ⚡"
 			thought_label.add_theme_color_override("font_color", Color(1, 0.5, 0.3))
 		)
 	else:
 		tween.tween_callback(func():
-			thought_label.text = "😊 Chegou fresquinho(a)! -5 ⚡"
+			thought_label.text = "😊 Arrived fresh! -5 ⚡"
 			thought_label.add_theme_color_override("font_color", Color(0.5, 1, 0.5))
 		)
 

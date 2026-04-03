@@ -36,7 +36,7 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 			"hunger":
 				_complete_mission(needs.character_name, "action_eat")
 			"energy":
-				if obj.action_name == "Dormir":
+				if obj.action_name == "Sleep":
 					_complete_mission(needs.character_name, "action_sleep")
 			"fun":
 				_complete_mission(needs.character_name, "action_fun")
@@ -45,7 +45,7 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		_complete_mission(needs.character_name, "action_any")
 
 	# Study → SAT gain + quiz trigger
-	if obj.need_affected == "" and (obj.action_name == "Estudar" or obj.action_name == "Falar"):
+	if obj.need_affected == "" and (obj.action_name == "Study" or obj.action_name == "Talk"):
 		var sat_gain := int(float(SAT_PER_STUDY) * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0))
 		needs.modify_sat(sat_gain)
 		result_text = "+%d 📚 SAT" % sat_gain
@@ -53,12 +53,12 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		_complete_mission(needs.character_name, "action_study")
 
 		# Home desk study = homework done
-		if obj.object_name.contains("Mesa") or obj.object_name.contains("Tutor"):
+		if obj.object_name.contains("Desk") or obj.object_name.contains("Tutor"):
 			needs.homework_done = true
 			_complete_mission(needs.character_name, "homework_done")
 
 		# Brighta interaction
-		if obj.action_name == "Falar":
+		if obj.action_name == "Talk":
 			_complete_mission(needs.character_name, "talk_npc")
 
 		# Trigger quiz

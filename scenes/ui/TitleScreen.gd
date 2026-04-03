@@ -10,20 +10,20 @@ signal start_game
 @onready var subtitle: Label = $VBox/Subtitle
 
 var _narrative_lines := [
-	"Dois jovens. Mesmo sonho. Mundos diferentes.",
+	"Two kids. Same dream. Different worlds.",
 	"",
-	"Gritty mora na favela. Acorda cedo, pega ônibus lotado,",
-	"estuda em mesa velha, come o que tem.",
+	"Gritty lives in the favela. Wakes up early, rides a packed bus,",
+	"studies at a worn-out desk, eats whatever's there.",
 	"",
-	"Smartle mora na mansão. Tem tutor particular, setup gamer,",
-	"chef gourmet, e carro particular.",
+	"Smartle lives in a mansion. Private tutor, gaming setup,",
+	"gourmet chef, and a private car.",
 	"",
-	"Os dois estudam na mesma escola de elite.",
-	"Os dois sonham com uma faculdade nos Estados Unidos.",
+	"They both attend the same elite school.",
+	"They both dream of getting into a top college.",
 	"",
-	"Mas o caminho é muito diferente.",
+	"But the path couldn't be more different.",
 	"",
-	"Você vai jogar com os dois. Vai sentir a diferença.",
+	"You'll play as both. You'll feel the difference.",
 ]
 
 

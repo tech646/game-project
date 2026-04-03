@@ -17,4 +17,4 @@ size_flags_horizontal = 3
 [node name="TitleLabel" type="Label" parent="ScrollContainer/MissionList"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "Missões (0/10)"
+text = "Missions (0/10)"

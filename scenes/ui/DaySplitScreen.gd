@@ -16,6 +16,7 @@ var _smartle_needs: NeedsComponent = null
 
 func _ready() -> void:
 	visible = false
+	set_process_unhandled_input(false)
 	continue_btn.pressed.connect(_on_continue)
 
 
@@ -23,12 +24,13 @@ func show_split(day: int, gritty_needs: NeedsComponent, smartle_needs: NeedsComp
 	_gritty_needs = gritty_needs
 	_smartle_needs = smartle_needs
 
-	day_label.text = "☀ Dia %d — Bom dia!" % day
+	day_label.text = "☀ Day %d — Good morning!" % day
 
 	_fill_panel(gritty_panel, "GRITTY", "🏠 Favela", gritty_needs, Color(0.9, 0.5, 0.6))
-	_fill_panel(smartle_panel, "SMARTLE", "🏰 Mansão", smartle_needs, Color(0.5, 0.7, 0.9))
+	_fill_panel(smartle_panel, "SMARTLE", "🏰 Mansion", smartle_needs, Color(0.5, 0.7, 0.9))
 
 	visible = true
+	set_process_unhandled_input(true)
 	GameState.change_state(GameState.State.IN_MENU)
 
 	# Auto-show with animation
@@ -48,19 +50,19 @@ func _fill_panel(panel: VBoxContainer, name: String, location: String, needs: Ne
 	header.add_theme_color_override("font_color", color)
 
 	_add_info(panel, location, Color(0.7, 0.7, 0.7))
-	_add_bar_info(panel, "🍖 Fome", needs.hunger)
-	_add_bar_info(panel, "⚡ Energia", needs.energy)
-	_add_bar_info(panel, "🎮 Diversão", needs.fun)
+	_add_bar_info(panel, "🍖 Hunger", needs.hunger)
+	_add_bar_info(panel, "⚡ Energy", needs.energy)
+	_add_bar_info(panel, "🎮 Fun", needs.fun)
 	_add_info(panel, "📚 SAT: %d/1600" % needs.sat_score, Color(0.4, 0.7, 1))
 
 	# Comparison commentary
 	if needs.energy < 30:
-		_add_info(panel, "😩 Cansado(a)...", Color(1, 0.5, 0.4))
+		_add_info(panel, "😩 Tired...", Color(1, 0.5, 0.4))
 	elif needs.energy > 70:
-		_add_info(panel, "😊 Descansado(a)!", Color(0.5, 1, 0.5))
+		_add_info(panel, "😊 Well rested!", Color(0.5, 1, 0.5))
 
 	if needs.hunger < 30:
-		_add_info(panel, "🍽 Com fome...", Color(1, 0.6, 0.3))
+		_add_info(panel, "🍽 Hungry...", Color(1, 0.6, 0.3))
 
 
 func _add_info(panel: VBoxContainer, text: String, color: Color) -> void:
@@ -117,6 +119,7 @@ func _on_continue() -> void:
 	tween.tween_property(self, "modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		visible = false
+		set_process_unhandled_input(false)
 		GameState.change_state(GameState.State.PLAYING)
 		continue_day.emit()
 	)

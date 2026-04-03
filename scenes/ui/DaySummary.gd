@@ -13,12 +13,13 @@ signal summary_closed
 
 func _ready() -> void:
 	visible = false
+	set_process_unhandled_input(false)
 	close_btn.pressed.connect(_close)
 
 
 func show_summary(day: int, gritty_needs: NeedsComponent, smartle_needs: NeedsComponent,
 		gritty_missions: int, smartle_missions: int) -> void:
-	day_label.text = "🌙 Fim do Dia %d" % day
+	day_label.text = "🌙 End of Day %d" % day
 
 	_fill_col(gritty_col, "GRITTY", gritty_needs, gritty_missions, Color(0.9, 0.5, 0.6))
 	_fill_col(smartle_col, "SMARTLE", smartle_needs, smartle_missions, Color(0.5, 0.7, 0.9))
@@ -26,16 +27,17 @@ func show_summary(day: int, gritty_needs: NeedsComponent, smartle_needs: NeedsCo
 	# Insight — highlight inequality
 	var sat_diff := smartle_needs.sat_score - gritty_needs.sat_score
 	if sat_diff > 20:
-		insight_label.text = "📊 Smartle está %d pontos SAT à frente. Os recursos fazem diferença." % sat_diff
+		insight_label.text = "📊 Smartle is %d SAT points ahead. Resources make a difference." % sat_diff
 		insight_label.add_theme_color_override("font_color", Color(1, 0.7, 0.4))
 	elif sat_diff < -20:
-		insight_label.text = "📊 Gritty está %d pontos SAT à frente! Determinação supera privilégio!" % abs(sat_diff)
+		insight_label.text = "📊 Gritty is %d SAT points ahead! Determination beats privilege!" % abs(sat_diff)
 		insight_label.add_theme_color_override("font_color", Color(0.5, 1, 0.5))
 	else:
-		insight_label.text = "📊 Os dois estão próximos. A corrida continua."
+		insight_label.text = "📊 They're neck and neck. The race goes on."
 		insight_label.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
 
 	visible = true
+	set_process_unhandled_input(true)
 	GameState.change_state(GameState.State.IN_MENU)
 
 
@@ -49,11 +51,11 @@ func _fill_col(col: VBoxContainer, name: String, needs: NeedsComponent, missions
 	header.add_theme_color_override("font_color", color)
 
 	_add_line(col, "📚 SAT: %d / 1600" % needs.sat_score, Color(0.4, 0.7, 1))
-	_add_line(col, "✅ Missões: %d / 10" % missions_done, Color(0.7, 0.9, 0.5))
-	_add_line(col, "📝 Dever: %s" % ("✅" if needs.homework_done else "❌"), Color.WHITE)
-	_add_line(col, "🍖 Fome: %.0f" % needs.hunger, _bar_color(needs.hunger))
-	_add_line(col, "⚡ Energia: %.0f" % needs.energy, _bar_color(needs.energy))
-	_add_line(col, "🎮 Diversão: %.0f" % needs.fun, _bar_color(needs.fun))
+	_add_line(col, "✅ Missions: %d / 10" % missions_done, Color(0.7, 0.9, 0.5))
+	_add_line(col, "📝 Homework: %s" % ("✅" if needs.homework_done else "❌"), Color.WHITE)
+	_add_line(col, "🍖 Hunger: %.0f" % needs.hunger, _bar_color(needs.hunger))
+	_add_line(col, "⚡ Energy: %.0f" % needs.energy, _bar_color(needs.energy))
+	_add_line(col, "🎮 Fun: %.0f" % needs.fun, _bar_color(needs.fun))
 
 
 func _add_line(col: VBoxContainer, text: String, color: Color) -> void:
@@ -73,6 +75,7 @@ func _bar_color(value: float) -> Color:
 
 func _close() -> void:
 	visible = false
+	set_process_unhandled_input(false)
 	GameState.change_state(GameState.State.PLAYING)
 	summary_closed.emit()
 

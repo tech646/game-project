@@ -7,10 +7,10 @@ signal milestone_reached(character: String, milestone: String, score: int)
 signal game_won(character: String)
 
 const MILESTONES := {
-	400: "Começando a jornada! 📖",
-	800: "Progresso sólido! 📈",
-	1200: "Faixa de aceitação universitária! 🎓",
-	1600: "Pontuação perfeita! Sonho realizado! 🏆",
+	400: "Starting the journey! 📖",
+	800: "Solid progress! 📈",
+	1200: "College acceptance range! 🎓",
+	1600: "Perfect score! Dream achieved! 🏆",
 }
 
 var _reached_milestones: Dictionary = {}  # {character: [reached scores]}

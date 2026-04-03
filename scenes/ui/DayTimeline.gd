@@ -3,16 +3,16 @@ extends Control
 ## Visual timeline showing the day's schedule with current time marker.
 
 const EVENTS := [
-	{"time": 360, "label": "🌅 Acordar", "color": Color(1, 0.9, 0.5)},
-	{"time": 435, "label": "🚌 Gritty sai", "color": Color(0.9, 0.5, 0.6)},
-	{"time": 465, "label": "🚗 Smartle sai", "color": Color(0.5, 0.7, 0.9)},
-	{"time": 480, "label": "📚 Aula", "color": Color(0.5, 0.8, 0.5)},
-	{"time": 660, "label": "📚 Fim aula", "color": Color(0.5, 0.8, 0.5)},
-	{"time": 690, "label": "🍽 Cantina", "color": Color(0.8, 0.6, 0.3)},
-	{"time": 840, "label": "🍽 Fim cantina", "color": Color(0.8, 0.6, 0.3)},
+	{"time": 360, "label": "🌅 Wake up", "color": Color(1, 0.9, 0.5)},
+	{"time": 435, "label": "🚌 Gritty leaves", "color": Color(0.9, 0.5, 0.6)},
+	{"time": 465, "label": "🚗 Smartle leaves", "color": Color(0.5, 0.7, 0.9)},
+	{"time": 480, "label": "📚 Class", "color": Color(0.5, 0.8, 0.5)},
+	{"time": 660, "label": "📚 Class ends", "color": Color(0.5, 0.8, 0.5)},
+	{"time": 690, "label": "🍽 Cafeteria", "color": Color(0.8, 0.6, 0.3)},
+	{"time": 840, "label": "🍽 Cafeteria ends", "color": Color(0.8, 0.6, 0.3)},
 	{"time": 900, "label": "✏ SAT Extra", "color": Color(0.6, 0.5, 0.9)},
-	{"time": 1020, "label": "✏ Fim SAT", "color": Color(0.6, 0.5, 0.9)},
-	{"time": 1380, "label": "🌙 Dormir", "color": Color(0.5, 0.4, 0.7)},
+	{"time": 1020, "label": "✏ SAT ends", "color": Color(0.6, 0.5, 0.9)},
+	{"time": 1380, "label": "🌙 Sleep", "color": Color(0.5, 0.4, 0.7)},
 ]
 
 const DAY_START := 360   # 06:00

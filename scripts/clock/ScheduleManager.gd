@@ -5,8 +5,8 @@ extends Node
 
 # Activity windows: {name: {start: minutes, end: minutes}}
 var activities := {
-	"english_class": {"start": 480, "end": 660, "label": "Aula de Ingles"},    # 08:00-11:00
-	"cafeteria": {"start": 690, "end": 840, "label": "Cantina"},               # 11:30-14:00
+	"english_class": {"start": 480, "end": 660, "label": "English Class"},      # 08:00-11:00
+	"cafeteria": {"start": 690, "end": 840, "label": "Cafeteria"},             # 11:30-14:00
 	"sat_extra": {"start": 900, "end": 1020, "label": "SAT Extra"},            # 15:00-17:00
 }
 
@@ -85,4 +85,4 @@ func _check_commute_deadlines(total_minutes: int) -> void:
 
 		if minutes_left == 0 and not _warned_deadlines.has(warn_key + "_0"):
 			_warned_deadlines[warn_key + "_0"] = true
-			EventBus.warning_shown.emit("⚠️ Hora de ir à escola!", "yellow")
+			EventBus.warning_shown.emit("⚠️ Time to go to school!", "yellow")

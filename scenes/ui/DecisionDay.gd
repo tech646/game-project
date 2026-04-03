@@ -30,13 +30,13 @@ func show_decisions(gritty_list: Array, smartle_list: Array) -> void:
 			smartle_accepted += 1
 
 	if gritty_accepted > 0 and smartle_accepted > 0:
-		message_label.text = "Os dois conseguiram! Mas o caminho foi muito diferente."
+		message_label.text = "They both made it! But the path was very different."
 	elif gritty_accepted > 0:
-		message_label.text = "Gritty conseguiu contra todas as probabilidades!"
+		message_label.text = "Gritty made it against all odds!"
 	elif smartle_accepted > 0:
-		message_label.text = "Smartle usou seus recursos sabiamente."
+		message_label.text = "Smartle used their resources wisely."
 	else:
-		message_label.text = "Nenhum foi aceito ainda. O sonho continua."
+		message_label.text = "Neither got accepted yet. The dream goes on."
 
 	visible = true
 	GameState.change_state(GameState.State.IN_MENU)
@@ -88,7 +88,7 @@ func _fill_results(col: VBoxContainer, name: String, results: Array, color: Colo
 		vbox.add_child(title)
 
 		var status := Label.new()
-		status.text = ("✅ ACEITO!" if r.accepted else "❌ Não aceito") + "  (%s)" % r.type
+		status.text = ("✅ ACCEPTED!" if r.accepted else "❌ Not accepted") + "  (%s)" % r.type
 		status.add_theme_font_size_override("font_size", 11)
 		status.add_theme_color_override("font_color",
 			Color(0.4, 1, 0.4) if r.accepted else Color(1, 0.5, 0.4))

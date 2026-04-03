@@ -43,7 +43,7 @@ func show_for_object(obj: GameObject) -> void:
 	# Check time lock
 	var schedule_mgr := _get_schedule_manager()
 	if schedule_mgr and not _is_activity_available(obj, schedule_mgr):
-		action_btn.text = "🔒 " + obj.action_name + " — indisponivel agora"
+		action_btn.text = "🔒 " + obj.action_name + " — unavailable now"
 		action_btn.disabled = true
 	else:
 		action_btn.disabled = false
@@ -105,9 +105,9 @@ func _format_restore(need: String, amount: float) -> String:
 
 
 func _is_activity_available(obj: GameObject, schedule_mgr: Node) -> bool:
-	if obj.action_name == "Estudar" and obj.object_name.begins_with("Carteira"):
+	if obj.action_name == "Study" and obj.object_name.begins_with("Desk"):
 		return schedule_mgr.is_activity_available("english_class")
-	if obj.action_name == "Comer" and obj.object_name == "Cantina":
+	if obj.action_name == "Eat" and obj.object_name == "Cafeteria":
 		return schedule_mgr.is_activity_available("cafeteria")
 	return true
 

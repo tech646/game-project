@@ -42,7 +42,7 @@ theme_override_constants/separation = 10
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.7, 0.6, 1, 1)
-text = "🌙 Fim do Dia 1"
+text = "🌙 End of Day 1"
 horizontal_alignment = 1
 
 [node name="HBox" type="HBoxContainer" parent="VBox"]
@@ -84,4 +84,4 @@ autowrap_mode = 2
 [node name="CloseBtn" type="Button" parent="VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "Próximo dia ▶"
+text = "Next day ▶"

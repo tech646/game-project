@@ -21,11 +21,11 @@ const COLLEGES := {
 
 ## Checklist items per college application
 const CHECKLIST_ITEMS := [
-	"sat_score",        # SAT acima do mínimo
-	"english_hours",    # 10+ horas de aula de inglês
-	"essay_written",    # Essay escrito (ação na mesa)
-	"recommendation",   # Carta de recomendação (falar com Brighta)
-	"extracurricular",  # Missões especiais completadas (20+ missões totais)
+	"sat_score",        # SAT above minimum
+	"english_hours",    # 10+ hours of English class
+	"essay_written",    # Essay written (desk action)
+	"recommendation",   # Recommendation letter (talk to Brighta)
+	"extracurricular",  # Special missions completed (20+ total missions)
 ]
 
 # {character: {college_name: {checklist_item: bool}}}
@@ -108,17 +108,17 @@ func evaluate_decisions(character: String, sat_score: int) -> Array:
 
 		if completed == total:
 			accepted = true
-			reason = "Aplicação completa! ✅"
+			reason = "Application complete! ✅"
 		elif completed >= 3 and sat_score >= info.sat_min:
 			# Partial chance — counselor helps
 			if has_counselor.get(character, false):
 				accepted = true
-				reason = "Counselor ajudou a complementar! ✅"
+				reason = "Counselor helped fill the gaps! ✅"
 			else:
 				accepted = (completed >= 4)
-				reason = "Quase lá... %d/%d requisitos." % [completed, total] if not accepted else "Esforço reconhecido! ✅"
+				reason = "Almost there... %d/%d requirements." % [completed, total] if not accepted else "Hard work recognized! ✅"
 		else:
-			reason = "Faltaram requisitos (%d/%d)." % [completed, total]
+			reason = "Missing requirements (%d/%d)." % [completed, total]
 
 		results.append({
 			"college": college_name,

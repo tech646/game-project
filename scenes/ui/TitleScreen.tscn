@@ -42,14 +42,14 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
-text = "Dois Mundos"
+text = "Two Worlds"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.7, 0.65, 0.8, 1)
-text = "Mesmo sonho. Caminhos diferentes."
+text = "Same dream. Different paths."
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="VBox"]
@@ -67,4 +67,4 @@ custom_minimum_size = Vector2(580, 280)
 [node name="StartBtn" type="Button" parent="VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "▶  Começar"
+text = "▶  Start"

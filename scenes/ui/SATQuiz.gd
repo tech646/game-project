@@ -50,7 +50,7 @@ func show_quiz() -> void:
 	option_b.text = _current_question.options[1]
 	option_c.text = _current_question.options[2]
 	option_d.text = _current_question.options[3]
-	source_label.text = "Fonte: %s | %s" % [_current_question.source, _current_question.id]
+	source_label.text = "Source: %s | %s" % [_current_question.source, _current_question.id]
 
 	_set_buttons_enabled(true)
 	visible = true
@@ -68,10 +68,10 @@ func _on_answer(choice: String) -> void:
 	var bonus := CORRECT_BONUS if correct else 0
 
 	if correct:
-		feedback_label.text = "✅ Correto! +%d SAT" % bonus
+		feedback_label.text = "✅ Correct! +%d SAT" % bonus
 		feedback_label.modulate = Color.GREEN
 	else:
-		feedback_label.text = "❌ Errado! Resposta: %s" % _current_question.answer
+		feedback_label.text = "❌ Wrong! Answer: %s" % _current_question.answer
 		feedback_label.modulate = Color.RED
 
 	feedback_label.visible = true

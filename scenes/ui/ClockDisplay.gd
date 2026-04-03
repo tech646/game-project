@@ -22,7 +22,7 @@ func _on_time_tick(_hour: int, _minute: int) -> void:
 
 
 func _on_day_changed(day: int) -> void:
-	day_label.text = "Dia %d" % day
+	day_label.text = "Day %d" % day
 	_stop_pulse()
 
 

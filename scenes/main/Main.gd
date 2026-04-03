@@ -28,11 +28,11 @@ const FORCE_END_HOUR := 0
 const NO_SLEEP_PENALTY := 30.0
 
 const LOCATION_NAMES := {
-	"favela_bedroom": "🏠 Quarto do Gritty",
-	"favela_kitchen": "🏠 Cozinha do Gritty",
-	"mansion": "🏰 Quarto da Smartle",
-	"mansion_kitchen": "🏰 Cozinha da Smartle",
-	"school": "🏫 Escola Bilingue",
+	"favela_bedroom": "🏠 Gritty's Bedroom",
+	"favela_kitchen": "🏠 Gritty's Kitchen",
+	"mansion": "🏰 Smartle's Bedroom",
+	"mansion_kitchen": "🏰 Smartle's Kitchen",
+	"school": "🏫 Bilingual School",
 }
 
 var _sleep_warned: bool = false
@@ -93,18 +93,18 @@ func _create_players() -> void:
 	gritty_data.character_name = "gritty"
 	gritty_data.display_name = "Gritty"
 	gritty_data.sprite_path = "res://assets/characters/Gritty.png"
-	gritty_data.starting_hunger = 50.0
-	gritty_data.starting_energy = 45.0
-	gritty_data.starting_fun = 60.0
+	gritty_data.starting_hunger = 100.0
+	gritty_data.starting_energy = 100.0
+	gritty_data.starting_fun = 100.0
 	gritty_data.overnight_recovery = 50.0
 
 	var smartle_data := CharacterData.new()
 	smartle_data.character_name = "smartle"
 	smartle_data.display_name = "Smartle"
 	smartle_data.sprite_path = "res://assets/characters/Smartle.png"
-	smartle_data.starting_hunger = 80.0
-	smartle_data.starting_energy = 85.0
-	smartle_data.starting_fun = 70.0
+	smartle_data.starting_hunger = 100.0
+	smartle_data.starting_energy = 100.0
+	smartle_data.starting_fun = 100.0
 	smartle_data.overnight_recovery = 85.0
 
 	gritty_player.character_data = gritty_data
@@ -237,7 +237,7 @@ func _on_state_changed(_old: GameState.State, new_state: GameState.State) -> voi
 func _on_hour_changed(hour: int) -> void:
 	if hour == SLEEP_WARNING_HOUR and not _sleep_warned:
 		_sleep_warned = true
-		EventBus.warning_shown.emit("Hora de dormir!", "yellow")
+		EventBus.warning_shown.emit("Time to sleep!", "yellow")
 	if hour == FORCE_END_HOUR and not _day_ended:
 		_force_end_day()
 
@@ -259,7 +259,7 @@ func _on_day_changed(day: int) -> void:
 
 func _force_end_day() -> void:
 	_day_ended = true
-	EventBus.warning_shown.emit("Voce nao dormiu! -%.0f%% energia" % NO_SLEEP_PENALTY, "red")
+	EventBus.warning_shown.emit("You didn't sleep! -%.0f%% energy" % NO_SLEEP_PENALTY, "red")
 	_get_needs(gritty_player).modify_need("energy", -NO_SLEEP_PENALTY)
 	_get_needs(smartle_player).modify_need("energy", -NO_SLEEP_PENALTY)
 	_check_homework()
@@ -291,7 +291,7 @@ func _check_homework() -> void:
 		var needs := _get_needs(player)
 		if not needs.homework_done:
 			needs.modify_sat(-5)
-			EventBus.warning_shown.emit("%s: -5 SAT (sem dever de casa!)" % needs.character_name.capitalize(), "red")
+			EventBus.warning_shown.emit("%s: -5 SAT (no homework done!)" % needs.character_name.capitalize(), "red")
 		needs.homework_done = false
 
 
@@ -313,7 +313,7 @@ func _update_location_label(location: String) -> void:
 
 
 func _show_day_banner(day: int) -> void:
-	day_banner.text = "Dia %d" % day
+	day_banner.text = "Day %d" % day
 	day_banner.visible = true
 	var tween := create_tween()
 	tween.tween_property(day_banner, "modulate", Color.WHITE, 0.3).from(Color(1, 1, 1, 0))
@@ -358,7 +358,7 @@ func _on_action_confirmed(obj: GameObject) -> void:
 
 
 func _on_alt_action_confirmed(obj: GameObject) -> void:
-	## Execute the alt action (e.g., "Jogar" on a desk)
+	## Execute the alt action (e.g., "Play" on a desk)
 	var player := CharacterManager.get_active_player()
 	if not player:
 		return
@@ -403,5 +403,5 @@ func _on_quiz_completed(correct: bool, sat_bonus: int) -> void:
 		var needs := CharacterManager.get_active_needs()
 		if needs:
 			needs.modify_sat(sat_bonus)
-			EventBus.warning_shown.emit("+%d SAT (resposta correta!)" % sat_bonus, "yellow")
+			EventBus.warning_shown.emit("+%d SAT (correct answer!)" % sat_bonus, "yellow")
 			college_progress.check_score(needs.character_name, needs.sat_score)

@@ -50,7 +50,7 @@ func _refresh() -> void:
 		return
 
 	var done_count := _mission_manager.get_completion_count(character)
-	title_label.text = "Missões (%d/%d)" % [done_count, missions.size()]
+	title_label.text = "Missions (%d/%d)" % [done_count, missions.size()]
 
 	for m in missions:
 		var label := Label.new()

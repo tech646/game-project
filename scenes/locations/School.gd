@@ -13,22 +13,22 @@ func _spawn_objects() -> void:
 	setup_background("res://assets/environments/Gemini_Generated_Image_ag7qjrag7qjrag7q.png")
 
 	create_object({
-		"name": "Carteira", "action": "Estudar", "quality": 3,
+		"name": "Desk", "action": "Study", "quality": 3,
 		"need": "", "base_restore": 0.0, "time_cost": 60,
 		"pos": Vector2(-120, -80),
 	})
 	create_object({
-		"name": "Cantina", "action": "Comer", "quality": 2,
+		"name": "Cafeteria", "action": "Eat", "quality": 2,
 		"need": "hunger", "base_restore": 25.0, "time_cost": 30,
 		"pos": Vector2(140, 40),
 	})
 	create_object({
-		"name": "Biblioteca", "action": "Estudar", "quality": 3,
+		"name": "Library", "action": "Study", "quality": 3,
 		"need": "", "base_restore": 0.0, "time_cost": 60,
 		"pos": Vector2(-140, 80),
 	})
 	create_object({
-		"name": "Mesa Brighta", "action": "Falar", "quality": 3,
+		"name": "Brighta's Desk", "action": "Talk", "quality": 3,
 		"need": "", "base_restore": 0.0, "time_cost": 30,
 		"pos": Vector2(60, -100),
 	})
@@ -52,6 +52,6 @@ func _spawn_objects() -> void:
 	name_label.position = Vector2(35, -185)
 	ysort_root.add_child(name_label)
 
-	create_door("🚪 Casa", "home", Vector2(0, 160))
+	create_door("🚪 Home", "home", Vector2(0, 160))
 
 	spawn_point = Vector2(0, 40)
