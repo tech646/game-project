@@ -231,12 +231,13 @@ func _park_player(player: CharacterBody2D) -> void:
 
 # ======== DAY CYCLE ========
 
-func _on_state_changed(_old: GameState.State, new_state: GameState.State) -> void:
+func _on_state_changed(old_state: GameState.State, new_state: GameState.State) -> void:
 	if new_state == GameState.State.PAUSED:
 		pause_overlay.visible = true
 		pause_menu.show_menu()
-	else:
+	elif old_state == GameState.State.PAUSED:
 		pause_overlay.visible = false
+		pause_menu.hide_menu()
 
 
 func _on_hour_changed(hour: int) -> void:
@@ -329,8 +330,23 @@ func _show_day_banner(day: int) -> void:
 
 # ======== INTERACTION ========
 
+func _can_interact() -> bool:
+	## Returns true only when no overlay screen is showing.
+	if interaction_popup.visible: return false
+	if dialogue_box.visible: return false
+	if sat_quiz.visible: return false
+	if title_screen.visible: return false
+	if day_split.visible: return false
+	if commute_anim.visible: return false
+	if day_summary.visible: return false
+	if decision_day.visible: return false
+	if pause_menu.visible: return false
+	if GameState.current_state != GameState.State.PLAYING: return false
+	return true
+
+
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("interact") and not interaction_popup.visible and not dialogue_box.visible and not sat_quiz.visible:
+	if event.is_action_pressed("interact") and _can_interact():
 		var player := CharacterManager.get_active_player()
 		if not player:
 			return

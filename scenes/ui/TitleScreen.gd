@@ -30,6 +30,7 @@ var _narrative_lines := [
 func _ready() -> void:
 	start_btn.pressed.connect(_on_start)
 	start_btn.visible = false
+	set_process_unhandled_input(true)
 	_animate_intro()
 
 
@@ -51,6 +52,7 @@ func _animate_intro() -> void:
 
 
 func _on_start() -> void:
+	set_process_unhandled_input(false)
 	start_game.emit()
 
 

@@ -31,11 +31,13 @@ var _is_running := false
 
 func _ready() -> void:
 	visible = false
+	set_process_unhandled_input(false)
 
 
 func show_commute(character_name: String, mode: String, travel_time: int) -> void:
 	visible = true
 	_is_running = true
+	set_process_unhandled_input(true)
 	GameState.change_state(GameState.State.COMMUTING)
 
 	var is_bus := (mode == "bus")
@@ -81,6 +83,7 @@ func show_commute(character_name: String, mode: String, travel_time: int) -> voi
 func _finish() -> void:
 	_is_running = false
 	visible = false
+	set_process_unhandled_input(false)
 	GameState.change_state(GameState.State.PLAYING)
 	commute_done.emit()
 

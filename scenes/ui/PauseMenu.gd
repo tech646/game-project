@@ -1,6 +1,6 @@
 extends PanelContainer
 
-## Pokemon-style pause menu — slides in from right.
+## Pokemon-style pause menu.
 
 @onready var resume_btn: Button = $Margin/VBox/ResumeBtn
 @onready var speed_label: Label = $Margin/VBox/SpeedLabel
@@ -12,6 +12,7 @@ extends PanelContainer
 
 func _ready() -> void:
 	visible = false
+	set_process_unhandled_input(false)
 	resume_btn.pressed.connect(_resume)
 	speed_up_btn.pressed.connect(func():
 		GameClock.set_speed(minf(GameClock.speed * 2.0, 8.0))
@@ -26,10 +27,12 @@ func _ready() -> void:
 func show_menu() -> void:
 	_update_info()
 	visible = true
-	# Slide in from right
-	position.x = 400
-	var tween := create_tween()
-	tween.tween_property(self, "position:x", 0, 0.2).set_ease(Tween.EASE_OUT)
+	set_process_unhandled_input(true)
+
+
+func hide_menu() -> void:
+	visible = false
+	set_process_unhandled_input(false)
 
 
 func _update_info() -> void:
@@ -40,29 +43,28 @@ func _update_info() -> void:
 	else:
 		character_label.text = ""
 
-	# College list summary
-	var college_sys := get_tree().get_first_node_in_group("college_system")
+	college_label.text = ""
+	var college_sys: Node = null
+	for node in get_tree().root.get_children():
+		if node.name == "CollegeSystem":
+			college_sys = node
+			break
+	# Try finding it under Systems
 	if not college_sys:
-		# Try to find by type
-		for node in get_tree().get_nodes_in_group(""):
-			if node is CollegeSystem:
-				college_sys = node
-				break
+		var systems := get_tree().root.find_child("CollegeSystem", true, false)
+		if systems:
+			college_sys = systems
 
-	if college_sys and needs:
-		var lists: Dictionary = college_sys.college_lists
+	if college_sys and college_sys is CollegeSystem and needs:
+		var cs: CollegeSystem = college_sys as CollegeSystem
 		var char_name := needs.character_name
-		if lists.has(char_name):
-			var colleges: Array = lists[char_name]
+		if cs.college_lists.has(char_name):
+			var colleges: Array = cs.college_lists[char_name]
 			var text := "🎓 College List:\n"
 			for c in colleges:
-				var progress: int = college_sys.get_completion_count(char_name, c)
+				var progress: int = cs.get_completion_count(char_name, c)
 				text += "  %s (%d/5)\n" % [c, progress]
 			college_label.text = text
-		else:
-			college_label.text = ""
-	else:
-		college_label.text = ""
 
 
 func _update_speed_label() -> void:
@@ -70,15 +72,13 @@ func _update_speed_label() -> void:
 
 
 func _resume() -> void:
-	var tween := create_tween()
-	tween.tween_property(self, "position:x", 400, 0.15)
-	tween.tween_callback(func():
-		visible = false
-		GameState.change_state(GameState.State.PLAYING)
-	)
+	hide_menu()
+	GameState.change_state(GameState.State.PLAYING)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed("ui_cancel"):
+	if not visible:
+		return
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause"):
 		_resume()
 		get_viewport().set_input_as_handled()
