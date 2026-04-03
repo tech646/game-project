@@ -4,6 +4,7 @@ extends Node2D
 
 @onready var warning_popup: Control = $HUD/WarningPopup
 @onready var pause_overlay: ColorRect = $HUD/PauseOverlay
+@onready var pause_menu: PanelContainer = $HUD/PauseMenu
 @onready var fade_overlay: ColorRect = $HUD/FadeOverlay
 @onready var day_banner: Label = $HUD/DayBanner
 @onready var interaction_popup: PanelContainer = $HUD/InteractionPopup
@@ -231,7 +232,11 @@ func _park_player(player: CharacterBody2D) -> void:
 # ======== DAY CYCLE ========
 
 func _on_state_changed(_old: GameState.State, new_state: GameState.State) -> void:
-	pause_overlay.visible = (new_state == GameState.State.PAUSED)
+	if new_state == GameState.State.PAUSED:
+		pause_overlay.visible = true
+		pause_menu.show_menu()
+	else:
+		pause_overlay.visible = false
 
 
 func _on_hour_changed(hour: int) -> void:

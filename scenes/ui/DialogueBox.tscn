@@ -1,6 +1,18 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/DialogueBox.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.05, 0.04, 0.08, 0.95)
+border_color = Color(0.4, 0.35, 0.5, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="DialogueBox" type="PanelContainer"]
 anchors_preset = 7
@@ -8,24 +20,43 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -250.0
-offset_top = -120.0
-offset_right = 250.0
-offset_bottom = -20.0
+offset_left = -280.0
+offset_top = -130.0
+offset_right = 280.0
+offset_bottom = -15.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 script = ExtResource("1_script")
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 10
 
-[node name="SpeakerLabel" type="Label" parent="VBox"]
+[node name="VBox" type="VBoxContainer" parent="Margin"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_constants/separation = 6
+
+[node name="SpeakerLabel" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 text = "Speaker"
 
-[node name="TextLabel" type="Label" parent="VBox"]
+[node name="TextLabel" type="Label" parent="Margin/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "Dialogue text here..."
+theme_override_colors/font_color = Color(0.92, 0.9, 0.85, 1)
+text = ""
 autowrap_mode = 2
+custom_minimum_size = Vector2(520, 50)
+
+[node name="ContinueIndicator" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+text = "▼ Press Enter"
+horizontal_alignment = 2

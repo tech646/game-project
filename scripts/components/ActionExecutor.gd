@@ -64,6 +64,13 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		# Trigger quiz
 		study_completed.emit(needs.character_name)
 
+	# Floating text feedback above character
+	if result_text != "":
+		var player := get_parent()
+		if player:
+			var color := Color(0.4, 1, 0.4) if "SAT" in result_text else Color(1, 0.9, 0.3)
+			FloatingText.spawn(player.get_parent(), result_text, player.position, color)
+
 	is_executing = false
 	action_completed.emit(result_text)
 
