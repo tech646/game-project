@@ -39,6 +39,25 @@ func _ready() -> void:
 	add_to_group("game_objects")
 	_update_labels()
 	_setup_visual()
+	# Labels hidden by default — shown when player is near
+	if name_label:
+		name_label.modulate.a = 0.0
+	if quality_label:
+		quality_label.modulate.a = 0.0
+
+
+func _process(_delta: float) -> void:
+	# Show labels when any player is nearby
+	var show := false
+	for player in CharacterManager.players:
+		if is_instance_valid(player) and global_position.distance_to(player.global_position) < 120:
+			show = true
+			break
+	var target_alpha := 1.0 if show else 0.0
+	if name_label:
+		name_label.modulate.a = lerpf(name_label.modulate.a, target_alpha, 0.15)
+	if quality_label:
+		quality_label.modulate.a = lerpf(quality_label.modulate.a, target_alpha, 0.15)
 
 
 func get_restore_amount() -> float:

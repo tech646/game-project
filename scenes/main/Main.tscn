@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -12,6 +12,13 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/MissionPanel.tscn" id="10_missions"]
 [ext_resource type="Script" path="res://scripts/systems/MissionManager.gd" id="11_mission_mgr"]
 [ext_resource type="Script" path="res://scripts/systems/CollegeProgress.gd" id="12_college"]
+[ext_resource type="PackedScene" path="res://scenes/ui/TitleScreen.tscn" id="13_title"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DaySplitScreen.tscn" id="14_split"]
+[ext_resource type="PackedScene" path="res://scenes/ui/CommuteAnimation.tscn" id="15_commute_anim"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DaySummary.tscn" id="16_summary"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DecisionDay.tscn" id="17_decision"]
+[ext_resource type="Script" path="res://scripts/systems/CollegeSystem.gd" id="18_college_sys"]
+[ext_resource type="Script" path="res://scenes/ui/DayTimeline.gd" id="19_timeline"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_script")
@@ -41,8 +48,18 @@ offset_bottom = 35.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.9, 0.85, 0.7, 1)
-text = "🏠 Casa do Gritty — Favela"
+text = ""
 horizontal_alignment = 1
+
+[node name="DayTimeline" type="Control" parent="HUD"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 72.0
+offset_right = -20.0
+offset_bottom = 92.0
+grow_horizontal = 2
+script = ExtResource("19_timeline")
 
 [node name="NeedsBars" parent="HUD" instance=ExtResource("4_needs")]
 anchors_preset = 1
@@ -56,9 +73,9 @@ grow_horizontal = 0
 
 [node name="MissionPanel" parent="HUD" instance=ExtResource("10_missions")]
 offset_left = 20.0
-offset_top = 90.0
+offset_top = 100.0
 offset_right = 220.0
-offset_bottom = 440.0
+offset_bottom = 450.0
 
 [node name="WarningPopup" parent="HUD" instance=ExtResource("3_warning")]
 
@@ -77,10 +94,13 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="InteractionPopup" parent="HUD" instance=ExtResource("7_interact")]
-
 [node name="DialogueBox" parent="HUD" instance=ExtResource("8_dialogue")]
-
 [node name="SATQuiz" parent="HUD" instance=ExtResource("9_quiz")]
+[node name="TitleScreen" parent="HUD" instance=ExtResource("13_title")]
+[node name="DaySplitScreen" parent="HUD" instance=ExtResource("14_split")]
+[node name="CommuteAnimation" parent="HUD" instance=ExtResource("15_commute_anim")]
+[node name="DaySummary" parent="HUD" instance=ExtResource("16_summary")]
+[node name="DecisionDay" parent="HUD" instance=ExtResource("17_decision")]
 
 [node name="FadeOverlay" type="ColorRect" parent="HUD"]
 anchors_preset = 15
@@ -130,3 +150,6 @@ script = ExtResource("11_mission_mgr")
 
 [node name="CollegeProgress" type="Node" parent="Systems"]
 script = ExtResource("12_college")
+
+[node name="CollegeSystem" type="Node" parent="Systems"]
+script = ExtResource("18_college_sys")

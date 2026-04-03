@@ -11,10 +11,16 @@ extends Node2D
 @onready var sat_quiz: PanelContainer = $HUD/SATQuiz
 @onready var mission_panel: PanelContainer = $HUD/MissionPanel
 @onready var location_label: Label = $HUD/LocationLabel
+@onready var title_screen: Control = $HUD/TitleScreen
+@onready var day_split: Control = $HUD/DaySplitScreen
+@onready var commute_anim: Control = $HUD/CommuteAnimation
+@onready var day_summary: Control = $HUD/DaySummary
+@onready var decision_day: Control = $HUD/DecisionDay
 @onready var schedule_manager: Node = $Systems/ScheduleManager
 @onready var commute_manager: Node = $Systems/CommuteManager
 @onready var mission_manager: MissionManager = $Systems/MissionManager
 @onready var college_progress: CollegeProgress = $Systems/CollegeProgress
+@onready var college_system: CollegeSystem = $Systems/CollegeSystem
 @onready var world: Node2D = $World
 
 const SLEEP_WARNING_HOUR := 23
@@ -42,6 +48,11 @@ func _ready() -> void:
 	pause_overlay.visible = false
 	day_banner.visible = false
 
+	# Show title screen first — game starts paused
+	GameState.change_state(GameState.State.IN_MENU)
+	GameClock.pause()
+	title_screen.start_game.connect(_on_title_start)
+
 	SceneManager.setup(world, fade_overlay)
 	SceneManager.location_changed.connect(_on_location_changed)
 
@@ -56,12 +67,21 @@ func _ready() -> void:
 	interaction_popup.alt_action_confirmed.connect(_on_alt_action_confirmed)
 	interaction_popup.popup_closed.connect(_on_popup_closed)
 	sat_quiz.quiz_completed.connect(_on_quiz_completed)
+	day_split.continue_day.connect(func(): pass)  # Just closes itself
+	commute_anim.commute_done.connect(func(): pass)
+	day_summary.summary_closed.connect(func(): pass)
 	schedule_manager.add_to_group("schedule_manager")
 	mission_manager.add_to_group("mission_manager")
 	mission_panel.setup(mission_manager)
 	mission_manager.generate_missions("gritty")
 	mission_manager.generate_missions("smartle")
+	college_system.setup_default_lists()
 
+
+func _on_title_start() -> void:
+	title_screen.visible = false
+	# Show split screen for day 1
+	day_split.show_split(1, _get_needs(gritty_player), _get_needs(smartle_player))
 	_show_day_banner(GameClock.game_day)
 
 
@@ -176,6 +196,20 @@ func _use_door(door: DoorObject) -> void:
 	if char_name != "":
 		SceneManager.character_locations[char_name] = target
 
+	# If going to school, show commute animation first
+	if target == "school" and needs:
+		var mode := "bus" if char_name == "gritty" else "car"
+		var travel := 45 if char_name == "gritty" else 15
+		commute_anim.show_commute(char_name, mode, travel)
+		commute_anim.commute_done.connect(func():
+			_do_door_transition(player, target, char_name)
+		, CONNECT_ONE_SHOT)
+		return
+
+	_do_door_transition(player, target, char_name)
+
+
+func _do_door_transition(player: CharacterBody2D, target: String, char_name: String) -> void:
 	# Park players
 	_park_player(player)
 	var other := CharacterManager.get_inactive_player()
@@ -215,6 +249,13 @@ func _on_day_changed(day: int) -> void:
 	_show_day_banner(day)
 	EventBus.day_started.emit(day)
 
+	# Update college checklist
+	college_system.update_checklist("gritty", _get_needs(gritty_player).sat_score)
+	college_system.update_checklist("smartle", _get_needs(smartle_player).sat_score)
+
+	# Show morning split screen
+	day_split.show_split(day, _get_needs(gritty_player), _get_needs(smartle_player))
+
 
 func _force_end_day() -> void:
 	_day_ended = true
@@ -223,6 +264,26 @@ func _force_end_day() -> void:
 	_get_needs(smartle_player).modify_need("energy", -NO_SLEEP_PENALTY)
 	_check_homework()
 	EventBus.day_ended.emit(GameClock.game_day)
+
+	# Track mission totals for college system
+	college_system.total_missions["gritty"] += mission_manager.get_completion_count("gritty")
+	college_system.total_missions["smartle"] += mission_manager.get_completion_count("smartle")
+
+	# Show end of day summary
+	day_summary.show_summary(
+		GameClock.game_day,
+		_get_needs(gritty_player), _get_needs(smartle_player),
+		mission_manager.get_completion_count("gritty"),
+		mission_manager.get_completion_count("smartle")
+	)
+
+	# Decision Day on day 7
+	if GameClock.game_day >= 7:
+		var gritty_results := college_system.evaluate_decisions("gritty", _get_needs(gritty_player).sat_score)
+		var smartle_results := college_system.evaluate_decisions("smartle", _get_needs(smartle_player).sat_score)
+		day_summary.summary_closed.connect(func():
+			decision_day.show_decisions(gritty_results, smartle_results)
+		, CONNECT_ONE_SHOT)
 
 
 func _check_homework() -> void:
