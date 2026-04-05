@@ -17,11 +17,15 @@ extends Node2D
 @onready var commute_anim: Control = $HUD/CommuteAnimation
 @onready var day_summary: Control = $HUD/DaySummary
 @onready var decision_day: Control = $HUD/DecisionDay
+@onready var upgrade_shop: PanelContainer = $HUD/UpgradeShop
+@onready var coins_label: Label = $HUD/CoinsLabel
 @onready var schedule_manager: Node = $Systems/ScheduleManager
 @onready var commute_manager: Node = $Systems/CommuteManager
 @onready var mission_manager: MissionManager = $Systems/MissionManager
 @onready var college_progress: CollegeProgress = $Systems/CollegeProgress
 @onready var college_system: CollegeSystem = $Systems/CollegeSystem
+@onready var coin_system: CoinSystem = $Systems/CoinSystem
+@onready var furniture_system: FurnitureUpgradeSystem = $Systems/FurnitureUpgradeSystem
 @onready var world: Node2D = $World
 
 const SLEEP_WARNING_HOUR := 23
@@ -77,6 +81,11 @@ func _ready() -> void:
 	mission_manager.generate_missions("gritty")
 	mission_manager.generate_missions("smartle")
 	college_system.setup_default_lists()
+	coin_system.add_to_group("coin_system")
+	furniture_system.add_to_group("furniture_upgrade_system")
+	furniture_system.setup_defaults()
+	coin_system.coins_changed.connect(_on_coins_changed)
+	_update_coins_label()
 
 
 func _on_title_start() -> void:
@@ -183,6 +192,12 @@ func _use_door(door: DoorObject) -> void:
 		return
 	var needs := CharacterManager.get_active_needs()
 	var target: String = door.target_location
+
+	# Special: upgrade shop is a UI overlay, not a location
+	if target == "upgrade_shop":
+		if needs:
+			upgrade_shop.show_shop(needs.character_name)
+		return
 
 	# "home" resolves to character's home bedroom
 	if target == "home":
@@ -341,6 +356,7 @@ func _can_interact() -> bool:
 	if day_summary.visible: return false
 	if decision_day.visible: return false
 	if pause_menu.visible: return false
+	if upgrade_shop.visible: return false
 	if GameState.current_state != GameState.State.PLAYING: return false
 	return true
 
@@ -355,6 +371,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			if result.type == "object":
 				player.lock_for_action()
 				interaction_popup.show_for_object(result.object)
+			elif result.type == "furniture":
+				player.lock_for_action()
+				_interact_furniture(result.furniture)
 			elif result.type == "door":
 				_use_door(result.door)
 
@@ -424,5 +443,41 @@ func _on_quiz_completed(correct: bool, sat_bonus: int) -> void:
 		var needs := CharacterManager.get_active_needs()
 		if needs:
 			needs.modify_sat(sat_bonus)
-			EventBus.warning_shown.emit("+%d SAT (correct answer!)" % sat_bonus, "yellow")
+			# Award coins for correct answer!
+			coin_system.add_coins(needs.character_name, CoinSystem.COINS_PER_CORRECT)
+			EventBus.warning_shown.emit("+%d SAT +%d🪙 (correct!)" % [sat_bonus, CoinSystem.COINS_PER_CORRECT], "yellow")
 			college_progress.check_score(needs.character_name, needs.sat_score)
+
+
+func _interact_furniture(furn: UpgradeableFurniture) -> void:
+	## Create a temporary GameObject-like popup for furniture interaction.
+	var def: Dictionary = FurnitureUpgradeSystem.FURNITURE_DEFS.get(furn.furniture_id, {})
+	if def.is_empty():
+		CharacterManager.get_active_player().unlock_from_action()
+		return
+
+	# Create a temporary GameObject to pass to InteractionPopup
+	var temp_obj := GameObject.new()
+	temp_obj.object_name = furn._name_label.text if furn._name_label else furn.furniture_id
+	temp_obj.action_name = def.get("action", "Use")
+	temp_obj.quality = furn.level
+	temp_obj.need_affected = def.get("need", "")
+	temp_obj.base_restore = def.get("base_restore", 0.0)
+	temp_obj.time_cost = def.get("time_cost", 30)
+	temp_obj.alt_action_name = def.get("alt_action", "")
+	temp_obj.alt_need_affected = def.get("alt_need", "")
+	temp_obj.alt_base_restore = def.get("alt_restore", 0.0)
+	temp_obj.alt_time_cost = def.get("alt_time", 30)
+	interaction_popup.show_for_object(temp_obj)
+
+
+func _on_coins_changed(_character: String, _amount: int) -> void:
+	_update_coins_label()
+
+
+func _update_coins_label() -> void:
+	var needs := CharacterManager.get_active_needs()
+	if needs:
+		coins_label.text = "🪙 %d" % coin_system.get_coins(needs.character_name)
+	else:
+		coins_label.text = "🪙 0"

@@ -1,6 +1,6 @@
 extends LocationBase
 
-## Smartle's mansion kitchen — gourmet kitchen. Door to school.
+## Smartle's mansion kitchen — starts with high-level furniture.
 
 func _init() -> void:
 	location_name = "mansion_kitchen"
@@ -10,19 +10,27 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_background("res://assets/environments/Gemini_Generated_Image_z86tc7z86tc7z86t.png")
 
-	# Image 2730x1536 at 0.25 = ~683x384
-	create_object({
-		"name": "Kitchen", "action": "Cook", "quality": 4,
-		"need": "hunger", "base_restore": 30.0, "time_cost": 30,
-		"pos": Vector2(-100, -20),
-	})
-	create_object({
-		"name": "Cafe", "action": "Eat", "quality": 5,
-		"need": "hunger", "base_restore": 20.0, "time_cost": 10,
-		"pos": Vector2(160, -30),
-	})
+	var upgrade_sys := _get_upgrade_system()
+
+	_spawn_furniture("stove", "smartle", Vector2(-100, -20), upgrade_sys)
+	_spawn_furniture("fridge", "smartle", Vector2(160, -30), upgrade_sys)
 
 	create_door("🚪 Bedroom", "mansion", Vector2(-250, 0))
 	create_door("🚪 School", "school", Vector2(250, 0))
 
 	spawn_point = Vector2(0, 30)
+
+
+func _spawn_furniture(fid: String, owner: String, pos: Vector2, upgrade_sys: Node) -> void:
+	var furn := UpgradeableFurniture.new()
+	var lvl := 1
+	if upgrade_sys:
+		lvl = upgrade_sys.get_level(owner, fid)
+	furn.setup(fid, owner, lvl, pos)
+	ysort_root.add_child(furn)
+
+
+func _get_upgrade_system() -> FurnitureUpgradeSystem:
+	for node in get_tree().get_nodes_in_group("furniture_upgrade_system"):
+		return node as FurnitureUpgradeSystem
+	return null

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -20,6 +20,9 @@
 [ext_resource type="Script" path="res://scripts/systems/CollegeSystem.gd" id="18_college_sys"]
 [ext_resource type="Script" path="res://scenes/ui/DayTimeline.gd" id="19_timeline"]
 [ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="20_pause_menu"]
+[ext_resource type="PackedScene" path="res://scenes/ui/UpgradeShop.tscn" id="21_shop"]
+[ext_resource type="Script" path="res://scripts/systems/CoinSystem.gd" id="22_coins"]
+[ext_resource type="Script" path="res://scripts/systems/FurnitureUpgradeSystem.gd" id="23_furniture"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_script")
@@ -103,6 +106,22 @@ vertical_alignment = 1
 [node name="DaySummary" parent="HUD" instance=ExtResource("16_summary")]
 [node name="DecisionDay" parent="HUD" instance=ExtResource("17_decision")]
 
+[node name="UpgradeShop" parent="HUD" instance=ExtResource("21_shop")]
+
+[node name="CoinsLabel" type="Label" parent="HUD"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 260.0
+offset_right = -10.0
+offset_bottom = 285.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+text = "🪙 0"
+horizontal_alignment = 2
+
 [node name="FadeOverlay" type="ColorRect" parent="HUD"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -138,3 +157,9 @@ script = ExtResource("12_college")
 
 [node name="CollegeSystem" type="Node" parent="Systems"]
 script = ExtResource("18_college_sys")
+
+[node name="CoinSystem" type="Node" parent="Systems"]
+script = ExtResource("22_coins")
+
+[node name="FurnitureUpgradeSystem" type="Node" parent="Systems"]
+script = ExtResource("23_furniture")

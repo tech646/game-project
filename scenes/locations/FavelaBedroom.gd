@@ -1,6 +1,6 @@
 extends LocationBase
 
-## Gritty's favela bedroom — bed, TV/study desk.
+## Gritty's favela bedroom — upgradeable furniture.
 
 func _init() -> void:
 	location_name = "favela_bedroom"
@@ -10,20 +10,28 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_background("res://assets/environments/Gemini_Generated_Image_6e0o6a6e0o6a6e0o.png")
 
-	# Image 2730x1536 at 0.25 = ~683x384. Center is (0,0).
-	create_object({
-		"name": "Bed", "action": "Sleep", "quality": 1,
-		"need": "energy", "base_restore": 40.0, "time_cost": 120,
-		"pos": Vector2(-130, -30),
-	})
-	create_object({
-		"name": "TV / Desk", "action": "Study", "quality": 1,
-		"need": "", "base_restore": 0.0, "time_cost": 60,
-		"pos": Vector2(140, -40),
-		"alt_action": "Play", "alt_need": "fun",
-		"alt_restore": 25.0, "alt_time": 60,
-	})
+	var upgrade_sys := _get_upgrade_system()
+
+	# Spawn upgradeable furniture
+	_spawn_furniture("bed", "gritty", Vector2(-130, -30), upgrade_sys)
+	_spawn_furniture("desk", "gritty", Vector2(140, -40), upgrade_sys)
 
 	create_door("🚪 Kitchen", "favela_kitchen", Vector2(20, -120))
+	create_door("🛋 Upgrade Room", "upgrade_shop", Vector2(-200, 60))
 
 	spawn_point = Vector2(0, 20)
+
+
+func _spawn_furniture(fid: String, owner: String, pos: Vector2, upgrade_sys: Node) -> void:
+	var furn := UpgradeableFurniture.new()
+	var lvl := 1
+	if upgrade_sys:
+		lvl = upgrade_sys.get_level(owner, fid)
+	furn.setup(fid, owner, lvl, pos)
+	ysort_root.add_child(furn)
+
+
+func _get_upgrade_system() -> FurnitureUpgradeSystem:
+	for node in get_tree().get_nodes_in_group("furniture_upgrade_system"):
+		return node as FurnitureUpgradeSystem
+	return null
