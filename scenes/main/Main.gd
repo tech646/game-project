@@ -147,8 +147,9 @@ func _load_starting_locations() -> void:
 
 
 func _setup_players() -> void:
-	gritty_player.setup(gritty_player.character_data)
+	# Smartle registered FIRST — she's the active player on screen
 	smartle_player.setup(smartle_player.character_data)
+	gritty_player.setup(gritty_player.character_data)
 
 
 # ======== SCENE TRANSITIONS ========
