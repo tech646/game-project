@@ -1,47 +1,83 @@
 extends Node
 class_name FurnitureUpgradeSystem
 
-## Manages furniture levels per character. Each furniture can be upgraded 1→5★.
+## Manages furniture levels (3 tiers) per character.
+## Level 1 = 1.5★, Level 2 = 3.25★, Level 3 = 5★
 
 signal furniture_upgraded(character: String, furniture_id: String, new_level: int)
 
-# Upgrade costs per level
-const UPGRADE_COSTS := {
-	2: 30,
-	3: 75,
-	4: 150,
-	5: 300,
-}
+const MAX_LEVEL := 3
 
-# Furniture definitions: {id: {name, base_restore, need, time_cost, sprites...}}
+# Star values per level
+const STAR_VALUES := {1: 1.5, 2: 3.25, 3: 5.0}
+
+# Quality multipliers based on star value
+const QUALITY_MULTIPLIERS := {1: 0.55, 2: 1.0, 3: 1.6}
+
+# Upgrade costs
+const UPGRADE_COSTS := {2: 50, 3: 150}
+
+# All furniture types with their gameplay properties
 const FURNITURE_DEFS := {
-	"bed": {"name": "Bed", "action": "Sleep", "need": "energy", "base_restore": 40.0, "time_cost": 120},
-	"desk": {"name": "Desk", "action": "Study", "need": "", "base_restore": 0.0, "time_cost": 60,
-			 "alt_action": "Play", "alt_need": "fun", "alt_restore": 25.0, "alt_time": 60},
-	"stove": {"name": "Stove", "action": "Cook", "need": "hunger", "base_restore": 30.0, "time_cost": 30},
-	"fridge": {"name": "Fridge", "action": "Eat", "need": "hunger", "base_restore": 15.0, "time_cost": 10},
+	"bed": {"name": ["Old Bed", "Comfy Bed", "Luxury Bed"],
+			"action": "Sleep", "need": "energy", "base_restore": 40.0, "time_cost": 120,
+			"path": "res://assets/furniture/bed/Cama %d.png"},
+	"desk": {"name": ["Old Desk", "Wooden Desk", "Pro Setup"],
+			 "action": "Study", "need": "", "base_restore": 0.0, "time_cost": 60,
+			 "alt_action": "Play", "alt_need": "fun", "alt_restore": 25.0, "alt_time": 60,
+			 "path": "res://assets/furniture/desk/Mesa %d.png"},
+	"stove": {"name": ["Hot Plate", "Basic Stove", "Chef Kitchen"],
+			  "action": "Cook", "need": "hunger", "base_restore": 30.0, "time_cost": 30,
+			  "path": "res://assets/furniture/stove/%s"},
+	"fridge": {"name": ["Cooler Box", "Fridge", "Gourmet Fridge"],
+			   "action": "Eat", "need": "hunger", "base_restore": 15.0, "time_cost": 10,
+			   "path": "res://assets/furniture/fridge/%s"},
+	"tv": {"name": ["Old TV", "Flat Screen", "Home Theater"],
+		   "action": "Watch", "need": "fun", "base_restore": 30.0, "time_cost": 60,
+		   "path": "res://assets/furniture/tv/%s"},
+	"sofa": {"name": ["Old Sofa", "Comfy Sofa", "Luxury Sofa"],
+			 "action": "Relax", "need": "fun", "base_restore": 20.0, "time_cost": 45,
+			 "path": "res://assets/furniture/sofa/Sofa %d.png"},
+	"bookshelf": {"name": ["Small Shelf", "Bookshelf", "Library"],
+				  "action": "Read", "need": "", "base_restore": 0.0, "time_cost": 45,
+				  "path": "res://assets/furniture/bookshelf/%s"},
+	"closet": {"name": ["Box", "Wardrobe", "Walk-in Closet"],
+			   "action": "Organize", "need": "fun", "base_restore": 10.0, "time_cost": 20,
+			   "path": "res://assets/furniture/closet/Armario %d.png"},
+	"table": {"name": ["Crate Table", "Dining Table", "Grand Table"],
+			  "action": "Eat", "need": "hunger", "base_restore": 20.0, "time_cost": 20,
+			  "path": "res://assets/furniture/table/Mesa jantar %d.png"},
+	"rug": {"name": ["Old Mat", "Rug", "Persian Rug"],
+			"action": "", "need": "", "base_restore": 0.0, "time_cost": 0,
+			"path": "res://assets/furniture/rug/%s", "decorative": true},
+	"sink": {"name": ["Bucket", "Sink", "Designer Sink"],
+			 "action": "Wash", "need": "energy", "base_restore": 5.0, "time_cost": 10,
+			 "path": "res://assets/furniture/kitchen sink/%s"},
 }
 
-# Level names per furniture
-const LEVEL_NAMES := {
-	"bed": ["Old Mattress", "Basic Bed", "Comfy Bed", "Queen Bed", "King Bed"],
-	"desk": ["Cardboard Box", "Old Desk", "Wooden Desk", "Gaming Setup", "Pro Studio"],
-	"stove": ["Hot Plate", "Basic Stove", "Gas Stove", "Electric Range", "Chef Kitchen"],
-	"fridge": ["Cooler Box", "Mini Fridge", "Fridge", "Smart Fridge", "Gourmet Fridge"],
+# Filename mappings for files with inconsistent naming
+const FILE_NAMES := {
+	"stove": ["Fogao 1.png", "fogao 2.png", "Fogao 3.png"],
+	"fridge": ["Geladeira 1.png", "Geladeira2.png", "Geladeira 3.png"],
+	"tv": ["Tv 1.png", "Tv2.png", "Tv 3.png"],
+	"bookshelf": ["Estante 1.png", "estante 2.png", "Estante 3.png"],
+	"rug": ["tapete 1.png", "tapete2.png", "tapete3.png"],
+	"sink": ["Pia 1.png", "pia2.png", "pia 3.png"],
+	"desk": ["Mesa 1.png", "Mesa2.png", "Mesa 3.png"],
 }
 
-# {character: {furniture_id: level}}
+# {character: {furniture_id: level (1-3)}}
 var furniture_levels: Dictionary = {}
 
 
 func setup_defaults() -> void:
-	# Gritty starts with everything at level 1
 	furniture_levels["gritty"] = {
 		"bed": 1, "desk": 1, "stove": 1, "fridge": 1,
+		"tv": 1, "sofa": 1, "rug": 1,
 	}
-	# Smartle starts with everything at level 4-5 (privilege)
 	furniture_levels["smartle"] = {
-		"bed": 5, "desk": 5, "stove": 4, "fridge": 4,
+		"bed": 3, "desk": 3, "stove": 3, "fridge": 3,
+		"tv": 3, "sofa": 3, "bookshelf": 3, "closet": 3, "rug": 3,
 	}
 
 
@@ -51,21 +87,43 @@ func get_level(character: String, furniture_id: String) -> int:
 	return 1
 
 
+func get_star_value(level: int) -> float:
+	return STAR_VALUES.get(level, 1.5)
+
+
+func get_quality_multiplier(level: int) -> float:
+	return QUALITY_MULTIPLIERS.get(level, 0.55)
+
+
 func get_name_for_level(furniture_id: String, level: int) -> String:
-	if LEVEL_NAMES.has(furniture_id):
-		var names: Array = LEVEL_NAMES[furniture_id]
+	if FURNITURE_DEFS.has(furniture_id):
+		var names: Array = FURNITURE_DEFS[furniture_id].name
 		return names[clampi(level - 1, 0, names.size() - 1)]
 	return "Unknown"
 
 
+func get_texture_path(furniture_id: String, level: int) -> String:
+	if not FURNITURE_DEFS.has(furniture_id):
+		return ""
+	var def: Dictionary = FURNITURE_DEFS[furniture_id]
+	# Use filename mapping if available
+	if FILE_NAMES.has(furniture_id):
+		var files: Array = FILE_NAMES[furniture_id]
+		var idx := clampi(level - 1, 0, files.size() - 1)
+		var base_dir: String = def.path.get_base_dir()
+		return base_dir + "/" + files[idx]
+	# Standard naming: "Name %d.png"
+	return def.path % level
+
+
 func get_upgrade_cost(current_level: int) -> int:
-	var next_level := current_level + 1
-	return UPGRADE_COSTS.get(next_level, -1)  # -1 = max level
+	var next := current_level + 1
+	return UPGRADE_COSTS.get(next, -1)
 
 
 func can_upgrade(character: String, furniture_id: String) -> bool:
 	var level := get_level(character, furniture_id)
-	if level >= 5:
+	if level >= MAX_LEVEL:
 		return false
 	var cost := get_upgrade_cost(level)
 	var coin_sys := _get_coin_system()
@@ -76,24 +134,21 @@ func can_upgrade(character: String, furniture_id: String) -> bool:
 
 func do_upgrade(character: String, furniture_id: String) -> bool:
 	var level := get_level(character, furniture_id)
-	if level >= 5:
+	if level >= MAX_LEVEL:
 		return false
 	var cost := get_upgrade_cost(level)
 	var coin_sys := _get_coin_system()
 	if not coin_sys or not coin_sys.spend_coins(character, cost):
 		return false
-
 	furniture_levels[character][furniture_id] = level + 1
 	furniture_upgraded.emit(character, furniture_id, level + 1)
 	return true
 
 
 func get_all_furniture(character: String) -> Array:
-	## Returns array of {id, name, level, max_level, next_cost, can_upgrade}
 	var result: Array = []
 	if not furniture_levels.has(character):
 		return result
-
 	for fid in furniture_levels[character]:
 		var level: int = furniture_levels[character][fid]
 		var next_cost := get_upgrade_cost(level)
@@ -101,7 +156,8 @@ func get_all_furniture(character: String) -> Array:
 			"id": fid,
 			"name": get_name_for_level(fid, level),
 			"level": level,
-			"max_level": 5,
+			"max_level": MAX_LEVEL,
+			"stars": get_star_value(level),
 			"next_cost": next_cost,
 			"can_upgrade": can_upgrade(character, fid),
 		})

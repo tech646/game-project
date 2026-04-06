@@ -73,22 +73,22 @@ func _create_item_row(item: Dictionary, upgrade_sys: FurnitureUpgradeSystem, coi
 	name_l.add_theme_color_override("font_color", Color(1, 0.95, 0.8))
 	info_vbox.add_child(name_l)
 
-	var stars := ""
-	for i in range(5):
-		stars += "★" if i < item.level else "☆"
+	var star_val: float = item.get("stars", 1.5)
 	var stars_l := Label.new()
-	stars_l.text = stars
+	stars_l.text = "%.1f ★  (Level %d/%d)" % [star_val, item.level, item.max_level]
 	stars_l.add_theme_font_size_override("font_size", 11)
-	if item.level >= 4:
+	if item.level >= 3:
 		stars_l.add_theme_color_override("font_color", Color(1, 0.85, 0.3))
+	elif item.level >= 2:
+		stars_l.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
 	else:
-		stars_l.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+		stars_l.add_theme_color_override("font_color", Color(0.6, 0.5, 0.4))
 	info_vbox.add_child(stars_l)
 
 	hbox.add_child(info_vbox)
 
 	# Upgrade button
-	if item.level < 5:
+	if item.level < item.max_level:
 		var btn := Button.new()
 		var cost: int = item.next_cost
 		btn.text = "⬆ Upgrade (%d🪙)" % cost

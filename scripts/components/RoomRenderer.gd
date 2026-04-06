@@ -17,17 +17,71 @@ var _wall_top: float = 0.0
 var _left: float = 0.0
 var _right: float = 0.0
 
-var _upgrade_level: int = 0  # 0-5, affects wall/floor quality
+var _upgrade_level: int = 0  # 0-3, affects wall/floor quality
+
+var _wall_sprite: Sprite2D = null
+var _floor_sprite: Sprite2D = null
+
+const WALL_TEXTURES := [
+	"res://assets/furniture/walls/Parede1.png",
+	"res://assets/furniture/walls/parede2.png",
+	"res://assets/furniture/walls/parede3.png",
+]
+const FLOOR_TEXTURES := [
+	"res://assets/furniture/floors/Chao 1.png",
+	"res://assets/furniture/floors/Chao 2.png",
+	"res://assets/furniture/floors/Chao 3.png",
+]
 
 
 func _ready() -> void:
 	z_index = -5
 	_calculate_bounds()
+	_setup_texture_sprites()
 	queue_redraw()
 
 
+func _setup_texture_sprites() -> void:
+	# Try to load wall texture based on upgrade level
+	var wall_idx := clampi(_upgrade_level, 0, WALL_TEXTURES.size() - 1)
+	var floor_idx := clampi(_upgrade_level, 0, FLOOR_TEXTURES.size() - 1)
+
+	# Wall sprite (covers back wall area)
+	if ResourceLoader.exists(WALL_TEXTURES[wall_idx]):
+		_wall_sprite = Sprite2D.new()
+		_wall_sprite.texture = load(WALL_TEXTURES[wall_idx])
+		_wall_sprite.z_index = -6
+		var wall_height := room_height * 0.65
+		var scale_y := wall_height / float(_wall_sprite.texture.get_height())
+		var scale_x := room_width / float(_wall_sprite.texture.get_width())
+		_wall_sprite.scale = Vector2(scale_x, scale_y)
+		_wall_sprite.position = Vector2(0, _wall_top + wall_height / 2.0)
+		add_child(_wall_sprite)
+
+	# Floor sprite (covers floor area)
+	if ResourceLoader.exists(FLOOR_TEXTURES[floor_idx]):
+		_floor_sprite = Sprite2D.new()
+		_floor_sprite.texture = load(FLOOR_TEXTURES[floor_idx])
+		_floor_sprite.z_index = -6
+		var scale_x := room_width / float(_floor_sprite.texture.get_width())
+		var scale_y := _floor_y / float(_floor_sprite.texture.get_height())
+		_floor_sprite.scale = Vector2(scale_x, scale_y)
+		_floor_sprite.position = Vector2(0, _floor_y / 2.0)
+		add_child(_floor_sprite)
+
+
 func set_upgrade_level(level: int) -> void:
-	_upgrade_level = clampi(level, 0, 5)
+	var old := _upgrade_level
+	_upgrade_level = clampi(level, 0, 2)
+	if old != _upgrade_level:
+		# Swap wall texture
+		var wall_idx := clampi(_upgrade_level, 0, WALL_TEXTURES.size() - 1)
+		if _wall_sprite and ResourceLoader.exists(WALL_TEXTURES[wall_idx]):
+			_wall_sprite.texture = load(WALL_TEXTURES[wall_idx])
+		# Swap floor texture
+		var floor_idx := clampi(_upgrade_level, 0, FLOOR_TEXTURES.size() - 1)
+		if _floor_sprite and ResourceLoader.exists(FLOOR_TEXTURES[floor_idx]):
+			_floor_sprite.texture = load(FLOOR_TEXTURES[floor_idx])
 	queue_redraw()
 
 

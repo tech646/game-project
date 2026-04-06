@@ -5,12 +5,12 @@ extends Control
 
 const THRESHOLDS := [
 	{"score": 0, "label": "Condemned", "color": Color(0.8, 0.3, 0.2)},
-	{"score": 5, "label": "Livable", "color": Color(0.8, 0.7, 0.2)},
-	{"score": 12, "label": "Cozy", "color": Color(0.4, 0.75, 0.3)},
-	{"score": 18, "label": "Luxurious", "color": Color(0.8, 0.7, 0.4)},
+	{"score": 8, "label": "Livable", "color": Color(0.8, 0.7, 0.2)},
+	{"score": 15, "label": "Cozy", "color": Color(0.4, 0.75, 0.3)},
+	{"score": 20, "label": "Luxurious", "color": Color(0.8, 0.7, 0.4)},
 ]
 
-const MAX_SCORE := 20  # 4 furniture × 5 levels max
+const MAX_SCORE := 21  # 7 furniture × 3 levels max
 
 var _current_score: int = 0
 var _label: Label = null
