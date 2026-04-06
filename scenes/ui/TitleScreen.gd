@@ -1,6 +1,6 @@
 extends Control
 
-## Title screen with intro narrative and start button.
+## Title screen — press Enter or click Start to begin.
 
 signal start_game
 
@@ -26,6 +26,9 @@ var _narrative_lines := [
 	"You'll play as both. You'll feel the difference.",
 ]
 
+var _intro_tween: Tween = null
+var _can_start := false
+
 
 func _ready() -> void:
 	start_btn.pressed.connect(_on_start)
@@ -36,27 +39,44 @@ func _ready() -> void:
 
 func _animate_intro() -> void:
 	narrative.text = ""
-	var tween := create_tween()
-	tween.tween_property(title, "modulate:a", 1.0, 1.0).from(0.0)
-	tween.tween_interval(0.5)
-	tween.tween_property(subtitle, "modulate:a", 1.0, 0.8).from(0.0)
-	tween.tween_interval(1.0)
+	_intro_tween = create_tween()
+	_intro_tween.tween_property(title, "modulate:a", 1.0, 0.5).from(0.0)
+	_intro_tween.tween_property(subtitle, "modulate:a", 1.0, 0.5).from(0.0)
+	_intro_tween.tween_interval(0.5)
 
 	for line in _narrative_lines:
-		tween.tween_callback(func(): narrative.text += line + "\n")
-		tween.tween_interval(0.4 if line != "" else 0.2)
+		_intro_tween.tween_callback(func(): narrative.text += line + "\n")
+		_intro_tween.tween_interval(0.3 if line != "" else 0.15)
 
-	tween.tween_interval(0.5)
-	tween.tween_callback(func(): start_btn.visible = true)
-	tween.tween_property(start_btn, "modulate:a", 1.0, 0.5).from(0.0)
+	_intro_tween.tween_callback(func():
+		start_btn.visible = true
+		_can_start = true
+	)
+	_intro_tween.tween_property(start_btn, "modulate:a", 1.0, 0.3).from(0.0)
 
 
 func _on_start() -> void:
+	if _intro_tween and _intro_tween.is_running():
+		_intro_tween.kill()
+	_can_start = false
 	set_process_unhandled_input(false)
 	start_game.emit()
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("interact") and start_btn.visible:
-		_on_start()
+	if not visible:
+		return
+	if event.is_action_pressed("interact"):
+		if _can_start:
+			_on_start()
+		else:
+			# Skip intro — show everything immediately
+			if _intro_tween and _intro_tween.is_running():
+				_intro_tween.kill()
+			title.modulate.a = 1.0
+			subtitle.modulate.a = 1.0
+			narrative.text = "\n".join(_narrative_lines)
+			start_btn.visible = true
+			start_btn.modulate.a = 1.0
+			_can_start = true
 		get_viewport().set_input_as_handled()

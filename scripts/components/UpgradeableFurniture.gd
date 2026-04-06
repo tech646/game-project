@@ -61,8 +61,7 @@ func setup(fid: String, owner: String, lvl: int, pos: Vector2) -> void:
 	owner_character = owner
 	level = lvl
 	position = pos
-	if _sprite:
-		_update_visual()
+	# _update_visual will be called in _ready when sprite is available
 
 
 func set_level(new_level: int) -> void:

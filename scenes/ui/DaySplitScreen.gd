@@ -115,14 +115,11 @@ func _add_bar_info(panel: VBoxContainer, label_text: String, value: float) -> vo
 
 
 func _on_continue() -> void:
-	var tween := create_tween()
-	tween.tween_property(self, "modulate:a", 0.0, 0.3)
-	tween.tween_callback(func():
-		visible = false
-		set_process_unhandled_input(false)
-		GameState.change_state(GameState.State.PLAYING)
-		continue_day.emit()
-	)
+	visible = false
+	set_process_unhandled_input(false)
+	GameState.change_state(GameState.State.PLAYING)
+	GameClock.resume()
+	continue_day.emit()
 
 
 func _unhandled_input(event: InputEvent) -> void:

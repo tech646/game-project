@@ -73,9 +73,6 @@ func _ready() -> void:
 	interaction_popup.alt_action_confirmed.connect(_on_alt_action_confirmed)
 	interaction_popup.popup_closed.connect(_on_popup_closed)
 	sat_quiz.quiz_completed.connect(_on_quiz_completed)
-	day_split.continue_day.connect(func(): pass)  # Just closes itself
-	commute_anim.commute_done.connect(func(): pass)
-	day_summary.summary_closed.connect(func(): pass)
 	schedule_manager.add_to_group("schedule_manager")
 	mission_manager.add_to_group("mission_manager")
 	mission_panel.setup(mission_manager)
