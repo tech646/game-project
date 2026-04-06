@@ -51,6 +51,6 @@ func _spawn_objects() -> void:
 		name_label.position = Vector2(35, -105)
 		ysort_root.add_child(name_label)
 
-	create_door("🚪 Home", "home", Vector2(-200, 20))
+	create_door(">> Home", "home", Vector2(-200, 20))
 
 	spawn_point = Vector2(0, 80)

@@ -20,7 +20,7 @@ func _ready() -> void:
 
 func show_shop(character: String) -> void:
 	_character = character
-	title_label.text = "🏠 %s's Room Upgrades" % character.capitalize()
+	title_label.text = "[H] %s's Room Upgrades" % character.capitalize()
 	visible = true
 	set_process_unhandled_input(true)
 	GameState.change_state(GameState.State.IN_MENU)
@@ -37,7 +37,7 @@ func _refresh() -> void:
 	if not coin_sys or not upgrade_sys:
 		return
 
-	coins_label.text = "🪙 Coins: %d" % coin_sys.get_coins(_character)
+	coins_label.text = "$ Coins: %d" % coin_sys.get_coins(_character)
 
 	var furniture_list := upgrade_sys.get_all_furniture(_character)
 	for item in furniture_list:
@@ -91,13 +91,13 @@ func _create_item_row(item: Dictionary, upgrade_sys: FurnitureUpgradeSystem, coi
 	if item.level < item.max_level:
 		var btn := Button.new()
 		var cost: int = item.next_cost
-		btn.text = "⬆ Upgrade (%d🪙)" % cost
+		btn.text = "^ Upgrade (%d$)" % cost
 		btn.add_theme_font_size_override("font_size", 11)
 		btn.disabled = not item.can_upgrade
 		var fid: String = item.id
 		btn.pressed.connect(func():
 			if upgrade_sys.do_upgrade(_character, fid):
-				FloatingText.spawn(self, "⬆ Upgraded!", Vector2(200, 100), Color(0.4, 1, 0.4))
+				FloatingText.spawn(self, "^ Upgraded!", Vector2(200, 100), Color(0.4, 1, 0.4))
 				_refresh()
 				_update_scene_furniture(fid)
 				# Play upgrade particle effect on the furniture
@@ -108,7 +108,7 @@ func _create_item_row(item: Dictionary, upgrade_sys: FurnitureUpgradeSystem, coi
 		hbox.add_child(btn)
 	else:
 		var max_l := Label.new()
-		max_l.text = "✨ MAX"
+		max_l.text = "* MAX"
 		max_l.add_theme_font_size_override("font_size", 12)
 		max_l.add_theme_color_override("font_color", Color(1, 0.85, 0.3))
 		hbox.add_child(max_l)

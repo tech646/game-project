@@ -87,7 +87,7 @@ func _update_bar(bar: ProgressBar, val_label: Label, value: float) -> void:
 
 func _update_sat(score: int, target: int) -> void:
 	sat_bar.value = float(score) / float(target) * 100.0
-	sat_label.text = "📚 SAT: %d / %d" % [score, target]
+	sat_label.text = "[SAT] SAT: %d / %d" % [score, target]
 
 	var style := StyleBoxFlat.new()
 	style.bg_color = COLOR_BLUE

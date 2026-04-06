@@ -24,10 +24,10 @@ func show_split(day: int, gritty_needs: NeedsComponent, smartle_needs: NeedsComp
 	_gritty_needs = gritty_needs
 	_smartle_needs = smartle_needs
 
-	day_label.text = "☀ Day %d — Good morning!" % day
+	day_label.text = "* Day %d — Good morning!" % day
 
-	_fill_panel(gritty_panel, "GRITTY", "🏠 Favela", gritty_needs, Color(0.9, 0.5, 0.6))
-	_fill_panel(smartle_panel, "SMARTLE", "🏰 Mansion", smartle_needs, Color(0.5, 0.7, 0.9))
+	_fill_panel(gritty_panel, "GRITTY", "[H] Favela", gritty_needs, Color(0.9, 0.5, 0.6))
+	_fill_panel(smartle_panel, "SMARTLE", "[M] Mansion", smartle_needs, Color(0.5, 0.7, 0.9))
 
 	visible = true
 	set_process_unhandled_input(true)
@@ -50,19 +50,19 @@ func _fill_panel(panel: VBoxContainer, name: String, location: String, needs: Ne
 	header.add_theme_color_override("font_color", color)
 
 	_add_info(panel, location, Color(0.7, 0.7, 0.7))
-	_add_bar_info(panel, "🍖 Hunger", needs.hunger)
-	_add_bar_info(panel, "⚡ Energy", needs.energy)
-	_add_bar_info(panel, "🎮 Fun", needs.fun)
-	_add_info(panel, "📚 SAT: %d/1600" % needs.sat_score, Color(0.4, 0.7, 1))
+	_add_bar_info(panel, "[Food] Hunger", needs.hunger)
+	_add_bar_info(panel, "[Nrg] Energy", needs.energy)
+	_add_bar_info(panel, "[Fun] Fun", needs.fun)
+	_add_info(panel, "[SAT] SAT: %d/1600" % needs.sat_score, Color(0.4, 0.7, 1))
 
 	# Comparison commentary
 	if needs.energy < 30:
-		_add_info(panel, "😩 Tired...", Color(1, 0.5, 0.4))
+		_add_info(panel, ":( Tired...", Color(1, 0.5, 0.4))
 	elif needs.energy > 70:
-		_add_info(panel, "😊 Well rested!", Color(0.5, 1, 0.5))
+		_add_info(panel, ":) Well rested!", Color(0.5, 1, 0.5))
 
 	if needs.hunger < 30:
-		_add_info(panel, "🍽 Hungry...", Color(1, 0.6, 0.3))
+		_add_info(panel, "Hungry...", Color(1, 0.6, 0.3))
 
 
 func _add_info(panel: VBoxContainer, text: String, color: Color) -> void:

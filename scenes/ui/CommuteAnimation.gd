@@ -11,19 +11,19 @@ signal commute_done
 @onready var thought_label: Label = $VBox/ThoughtLabel
 
 const BUS_THOUGHTS := [
-	"🚌 The bus is packed as always...",
-	"🚌 At least I can review notes on the way.",
-	"🚌 30 minutes standing... my legs hurt.",
-	"🚌 Wish I had a seat.",
-	"🚌 Almost there... I think.",
+	"[Bus] The bus is packed as always...",
+	"[Bus] At least I can review notes on the way.",
+	"[Bus] 30 minutes standing... my legs hurt.",
+	"[Bus] Wish I had a seat.",
+	"[Bus] Almost there... I think.",
 ]
 
 const CAR_THOUGHTS := [
-	"🚗 The driver is already waiting.",
-	"🚗 AC set just right.",
-	"🚗 I can review on the tablet.",
-	"🚗 Getting there in no time.",
-	"🚗 I can already see the school!",
+	"[Car] The driver is already waiting.",
+	"[Car] AC set just right.",
+	"[Car] I can review on the tablet.",
+	"[Car] Getting there in no time.",
+	"[Car] I can already see the school!",
 ]
 
 var _is_running := false
@@ -44,7 +44,7 @@ func show_commute(character_name: String, mode: String, travel_time: int) -> voi
 	var thoughts := BUS_THOUGHTS if is_bus else CAR_THOUGHTS
 
 	scene_label.text = "%s heading to school..." % character_name.capitalize()
-	vehicle_label.text = "🚌 Bus (packed)" if is_bus else "🚗 Private car"
+	vehicle_label.text = "[Bus] Bus (packed)" if is_bus else "[Car] Private car"
 	vehicle_label.add_theme_color_override("font_color",
 		Color(0.8, 0.6, 0.3) if is_bus else Color(0.5, 0.8, 0.5))
 	progress_bar.value = 0
@@ -67,12 +67,12 @@ func show_commute(character_name: String, mode: String, travel_time: int) -> voi
 	# Energy drain notification for bus
 	if is_bus:
 		tween.tween_callback(func():
-			thought_label.text = "😓 Arrived exhausted... -15 ⚡"
+			thought_label.text = ":( Arrived exhausted... -15 [Nrg]"
 			thought_label.add_theme_color_override("font_color", Color(1, 0.5, 0.3))
 		)
 	else:
 		tween.tween_callback(func():
-			thought_label.text = "😊 Arrived fresh! -5 ⚡"
+			thought_label.text = ":) Arrived fresh! -5 [Nrg]"
 			thought_label.add_theme_color_override("font_color", Color(0.5, 1, 0.5))
 		)
 

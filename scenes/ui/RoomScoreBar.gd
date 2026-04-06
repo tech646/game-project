@@ -23,7 +23,7 @@ func _ready() -> void:
 	hbox.add_theme_constant_override("separation", 6)
 
 	var icon := Label.new()
-	icon.text = "🏠"
+	icon.text = "[H]"
 	icon.add_theme_font_size_override("font_size", 11)
 	hbox.add_child(icon)
 

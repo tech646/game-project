@@ -46,7 +46,7 @@ func show_dialogue(speaker: String, text: String) -> void:
 
 func show_brighta() -> void:
 	var phrase: String = BRIGHTA_PHRASES[randi() % BRIGHTA_PHRASES.size()]
-	show_dialogue("Mrs Brighta 👩‍🏫", phrase)
+	show_dialogue("Mrs Brighta", phrase)
 
 
 func _type_next() -> void:

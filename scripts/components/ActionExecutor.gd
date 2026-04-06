@@ -48,7 +48,7 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 	if obj.need_affected == "" and (obj.action_name == "Study" or obj.action_name == "Talk"):
 		var sat_gain := int(float(SAT_PER_STUDY) * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0))
 		needs.modify_sat(sat_gain)
-		result_text = "+%d 📚 SAT" % sat_gain
+		result_text = "+%d [SAT] SAT" % sat_gain
 
 		_complete_mission(needs.character_name, "action_study")
 
@@ -91,7 +91,7 @@ func _get_mission_manager() -> MissionManager:
 
 func _need_icon(need: String) -> String:
 	match need:
-		"hunger": return "🍖"
-		"energy": return "⚡"
-		"fun": return "🎮"
+		"hunger": return "[Food]"
+		"energy": return "[Nrg]"
+		"fun": return "[Fun]"
 	return ""

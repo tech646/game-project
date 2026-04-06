@@ -21,8 +21,8 @@ func _spawn_objects() -> void:
 	spawn_furniture("sofa", "gritty", Vector2(-60, 60))
 	spawn_furniture("rug", "gritty", Vector2(0, 80))
 
-	create_door("🚪 Kitchen", "favela_kitchen", Vector2(-190, 20))
-	create_door("🛋 Upgrades", "upgrade_shop", Vector2(200, 20))
+	create_door(">> Kitchen", "favela_kitchen", Vector2(-190, 20))
+	create_door(">> Upgrades", "upgrade_shop", Vector2(200, 20))
 
 	spawn_point = Vector2(0, 60)
 

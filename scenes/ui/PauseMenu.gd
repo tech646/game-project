@@ -39,7 +39,7 @@ func _update_info() -> void:
 	_update_speed_label()
 	var needs := CharacterManager.get_active_needs()
 	if needs:
-		character_label.text = "👤 %s" % needs.character_name.capitalize()
+		character_label.text = "%s" % needs.character_name.capitalize()
 	else:
 		character_label.text = ""
 
@@ -60,7 +60,7 @@ func _update_info() -> void:
 		var char_name := needs.character_name
 		if cs.college_lists.has(char_name):
 			var colleges: Array = cs.college_lists[char_name]
-			var text := "🎓 College List:\n"
+			var text := "College List:\n"
 			for c in colleges:
 				var progress: int = cs.get_completion_count(char_name, c)
 				text += "  %s (%d/5)\n" % [c, progress]
@@ -68,7 +68,7 @@ func _update_info() -> void:
 
 
 func _update_speed_label() -> void:
-	speed_label.text = "⏱ Speed: %.0fx" % GameClock.speed
+	speed_label.text = "Speed: %.0fx" % GameClock.speed
 
 
 func _resume() -> void:

@@ -34,11 +34,11 @@ const FORCE_END_HOUR := 0
 const NO_SLEEP_PENALTY := 30.0
 
 const LOCATION_NAMES := {
-	"favela_bedroom": "🏠 Gritty's Bedroom",
-	"favela_kitchen": "🏠 Gritty's Kitchen",
-	"mansion": "🏰 Smartle's Bedroom",
-	"mansion_kitchen": "🏰 Smartle's Kitchen",
-	"school": "🏫 Bilingual School",
+	"favela_bedroom": "[H] Gritty's Bedroom",
+	"favela_kitchen": "[H] Gritty's Kitchen",
+	"mansion": "[M] Smartle's Bedroom",
+	"mansion_kitchen": "[M] Smartle's Kitchen",
+	"school": "[S] Bilingual School",
 }
 
 var _sleep_warned: bool = false
@@ -53,11 +53,8 @@ var _pending_player_placement: Dictionary = {}  # Used after scene swap
 func _ready() -> void:
 	pause_overlay.visible = false
 	day_banner.visible = false
-
-	# Show title screen first — game starts paused
-	GameState.change_state(GameState.State.IN_MENU)
-	GameClock.pause()
-	title_screen.start_game.connect(_on_title_start)
+	title_screen.visible = false
+	title_screen.set_process_unhandled_input(false)
 
 	SceneManager.setup(world, fade_overlay)
 	SceneManager.location_changed.connect(_on_location_changed)
@@ -86,19 +83,11 @@ func _ready() -> void:
 	furniture_system.furniture_upgraded.connect(_on_furniture_upgraded)
 	_update_coins_label()
 
-
-func _on_title_start() -> void:
-	title_screen.visible = false
-	title_screen.set_process_unhandled_input(false)
-	# Show split screen for day 1
-	day_split.show_split(1, _get_needs(gritty_player), _get_needs(smartle_player))
-	day_split.continue_day.connect(_on_first_day_start, CONNECT_ONE_SHOT)
-
-
-func _on_first_day_start() -> void:
+	# Start the game directly — PLAYING state
 	GameState.change_state(GameState.State.PLAYING)
 	GameClock.resume()
 	_show_day_banner(GameClock.game_day)
+	_update_room_score()
 
 
 func _create_players() -> void:
@@ -421,9 +410,9 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 		needs.modify_need(obj.alt_need_affected, restore)
 		var icon := ""
 		match obj.alt_need_affected:
-			"fun": icon = "🎮"
-			"energy": icon = "⚡"
-			"hunger": icon = "🍖"
+			"fun": icon = "[Fun]"
+			"energy": icon = "[Nrg]"
+			"hunger": icon = "[Food]"
 		EventBus.warning_shown.emit("+%.0f %s %s" % [restore, icon, obj.alt_need_affected.capitalize()], "yellow")
 
 		# Mission event
@@ -452,7 +441,7 @@ func _on_quiz_completed(correct: bool, sat_bonus: int) -> void:
 			needs.modify_sat(sat_bonus)
 			# Award coins for correct answer!
 			coin_system.add_coins(needs.character_name, CoinSystem.COINS_PER_CORRECT)
-			EventBus.warning_shown.emit("+%d SAT +%d🪙 (correct!)" % [sat_bonus, CoinSystem.COINS_PER_CORRECT], "yellow")
+			EventBus.warning_shown.emit("+%d SAT +%d$ (correct!)" % [sat_bonus, CoinSystem.COINS_PER_CORRECT], "yellow")
 			college_progress.check_score(needs.character_name, needs.sat_score)
 
 
@@ -485,9 +474,9 @@ func _on_coins_changed(_character: String, _amount: int) -> void:
 func _update_coins_label() -> void:
 	var needs := CharacterManager.get_active_needs()
 	if needs:
-		coins_label.text = "🪙 %d" % coin_system.get_coins(needs.character_name)
+		coins_label.text = "$ %d" % coin_system.get_coins(needs.character_name)
 	else:
-		coins_label.text = "🪙 0"
+		coins_label.text = "$ 0"
 
 
 func _on_furniture_upgraded(_character: String, _furniture_id: String, _new_level: int) -> void:

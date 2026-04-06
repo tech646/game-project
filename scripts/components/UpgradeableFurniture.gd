@@ -53,7 +53,8 @@ func _ready() -> void:
 	_stars_label.modulate.a = 0.0
 	add_child(_stars_label)
 
-	_update_visual()
+	# Defer visual update to ensure upgrade system is registered
+	call_deferred("_update_visual")
 
 
 func setup(fid: String, owner: String, lvl: int, pos: Vector2) -> void:

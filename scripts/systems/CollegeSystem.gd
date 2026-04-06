@@ -7,16 +7,16 @@ signal application_updated(character: String, college: String)
 signal decision_day(character: String, results: Array)
 
 const COLLEGES := {
-	"MIT": {"type": "dream", "sat_min": 1500, "label": "Massachusetts Institute of Technology", "icon": "🏛"},
-	"Stanford": {"type": "dream", "sat_min": 1480, "label": "Stanford University", "icon": "🌲"},
-	"Harvard": {"type": "dream", "sat_min": 1510, "label": "Harvard University", "icon": "📕"},
-	"Columbia": {"type": "match", "sat_min": 1400, "label": "Columbia University", "icon": "🗽"},
-	"BU": {"type": "match", "sat_min": 1300, "label": "Boston University", "icon": "🏙"},
-	"UC Davis": {"type": "match", "sat_min": 1200, "label": "UC Davis", "icon": "🌻"},
-	"NYU": {"type": "match", "sat_min": 1350, "label": "New York University", "icon": "🍎"},
-	"ASU": {"type": "safety", "sat_min": 1000, "label": "Arizona State University", "icon": "🌵"},
-	"UCF": {"type": "safety", "sat_min": 1050, "label": "University of Central Florida", "icon": "☀"},
-	"UMass": {"type": "safety", "sat_min": 1100, "label": "UMass Amherst", "icon": "🍂"},
+	"MIT": {"type": "dream", "sat_min": 1500, "label": "Massachusetts Institute of Technology", "icon": ""},
+	"Stanford": {"type": "dream", "sat_min": 1480, "label": "Stanford University", "icon": ""},
+	"Harvard": {"type": "dream", "sat_min": 1510, "label": "Harvard University", "icon": ""},
+	"Columbia": {"type": "match", "sat_min": 1400, "label": "Columbia University", "icon": ""},
+	"BU": {"type": "match", "sat_min": 1300, "label": "Boston University", "icon": ""},
+	"UC Davis": {"type": "match", "sat_min": 1200, "label": "UC Davis", "icon": ""},
+	"NYU": {"type": "match", "sat_min": 1350, "label": "New York University", "icon": ""},
+	"ASU": {"type": "safety", "sat_min": 1000, "label": "Arizona State University", "icon": ""},
+	"UCF": {"type": "safety", "sat_min": 1050, "label": "University of Central Florida", "icon": "*"},
+	"UMass": {"type": "safety", "sat_min": 1100, "label": "UMass Amherst", "icon": ""},
 }
 
 ## Checklist items per college application
@@ -108,15 +108,15 @@ func evaluate_decisions(character: String, sat_score: int) -> Array:
 
 		if completed == total:
 			accepted = true
-			reason = "Application complete! ✅"
+			reason = "Application complete! [x]"
 		elif completed >= 3 and sat_score >= info.sat_min:
 			# Partial chance — counselor helps
 			if has_counselor.get(character, false):
 				accepted = true
-				reason = "Counselor helped fill the gaps! ✅"
+				reason = "Counselor helped fill the gaps! [x]"
 			else:
 				accepted = (completed >= 4)
-				reason = "Almost there... %d/%d requirements." % [completed, total] if not accepted else "Hard work recognized! ✅"
+				reason = "Almost there... %d/%d requirements." % [completed, total] if not accepted else "Hard work recognized! [x]"
 		else:
 			reason = "Missing requirements (%d/%d)." % [completed, total]
 

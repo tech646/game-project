@@ -55,17 +55,17 @@ func _update_expression() -> void:
 	var new_text := ""
 
 	if _needs.energy < 20.0:
-		new_text = "💤"
+		new_text = "zzz"
 	elif _needs.hunger < 20.0:
-		new_text = "🍽"
+		new_text = ""
 	elif _needs.energy < 40.0:
-		new_text = "😪"
+		new_text = ":("
 	elif _needs.hunger < 40.0:
-		new_text = "🍖"
+		new_text = "[Food]"
 	elif _needs.fun < 30.0:
-		new_text = "😑"
+		new_text = ":|"
 	elif _needs.hunger > 60.0 and _needs.energy > 60.0 and _needs.fun > 60.0:
-		new_text = "😊"
+		new_text = ":)"
 
 	if text != new_text:
 		text = new_text
