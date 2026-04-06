@@ -68,10 +68,10 @@ func _on_answer(choice: String) -> void:
 	var bonus := CORRECT_BONUS if correct else 0
 
 	if correct:
-		feedback_label.text = "✅ Correct! +%d SAT" % bonus
+		feedback_label.text = "[x] Correct! +%d SAT" % bonus
 		feedback_label.modulate = Color.GREEN
 	else:
-		feedback_label.text = "❌ Wrong! Answer: %s" % _current_question.answer
+		feedback_label.text = "Wrong! Answer: %s" % _current_question.answer
 		feedback_label.modulate = Color.RED
 
 	feedback_label.visible = true

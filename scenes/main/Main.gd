@@ -56,12 +56,23 @@ func _ready() -> void:
 	title_screen.visible = false
 	title_screen.set_process_unhandled_input(false)
 
+	# Register systems in groups FIRST — before loading locations
+	schedule_manager.add_to_group("schedule_manager")
+	mission_manager.add_to_group("mission_manager")
+	coin_system.add_to_group("coin_system")
+	furniture_system.add_to_group("furniture_upgrade_system")
+	furniture_system.setup_defaults()
+	college_system.setup_default_lists()
+
+	# Setup scene manager
 	SceneManager.setup(world, fade_overlay)
 	SceneManager.location_changed.connect(_on_location_changed)
 
+	# Create and load
 	_create_players()
 	_load_starting_locations()
 
+	# Connect signals
 	GameState.state_changed.connect(_on_state_changed)
 	GameClock.hour_changed.connect(_on_hour_changed)
 	GameClock.day_changed.connect(_on_day_changed)
@@ -70,24 +81,21 @@ func _ready() -> void:
 	interaction_popup.alt_action_confirmed.connect(_on_alt_action_confirmed)
 	interaction_popup.popup_closed.connect(_on_popup_closed)
 	sat_quiz.quiz_completed.connect(_on_quiz_completed)
-	schedule_manager.add_to_group("schedule_manager")
-	mission_manager.add_to_group("mission_manager")
+	coin_system.coins_changed.connect(_on_coins_changed)
+	furniture_system.furniture_upgraded.connect(_on_furniture_upgraded)
+
+	# Setup UI
 	mission_panel.setup(mission_manager)
 	mission_manager.generate_missions("gritty")
 	mission_manager.generate_missions("smartle")
-	college_system.setup_default_lists()
-	coin_system.add_to_group("coin_system")
-	furniture_system.add_to_group("furniture_upgrade_system")
-	furniture_system.setup_defaults()
-	coin_system.coins_changed.connect(_on_coins_changed)
-	furniture_system.furniture_upgraded.connect(_on_furniture_upgraded)
 	_update_coins_label()
 
-	# Start the game directly — PLAYING state
+	# START PLAYING
 	GameState.change_state(GameState.State.PLAYING)
 	GameClock.resume()
 	_show_day_banner(GameClock.game_day)
 	_update_room_score()
+	print("[Main] Game started - State: ", GameState.State.keys()[GameState.current_state])
 
 
 func _create_players() -> void:

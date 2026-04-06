@@ -120,7 +120,7 @@ offset_bottom = 285.0
 grow_horizontal = 0
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
-text = "🪙 0"
+text = "$ 0"
 horizontal_alignment = 2
 
 [node name="RoomScoreBar" type="Control" parent="HUD"]

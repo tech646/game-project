@@ -59,7 +59,7 @@ layout_mode = 2
 [node name="ActionBtn" type="Button" parent="MarginContainer/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "Usar (30min) +20 ⚡"
+text = "Usar (30min) +20 [Nrg]"
 
 [node name="AltActionBtn" type="Button" parent="MarginContainer/VBox"]
 layout_mode = 2

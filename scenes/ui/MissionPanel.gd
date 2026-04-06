@@ -54,7 +54,7 @@ func _refresh() -> void:
 
 	for m in missions:
 		var label := Label.new()
-		var status := "✅" if m.done else "⬜"
+		var status := "[x]" if m.done else "[ ]"
 		label.text = "%s %s %s" % [status, m.icon, m.desc]
 		label.add_theme_font_size_override("font_size", 11)
 		if m.done:

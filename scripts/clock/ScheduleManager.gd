@@ -85,4 +85,4 @@ func _check_commute_deadlines(total_minutes: int) -> void:
 
 		if minutes_left == 0 and not _warned_deadlines.has(warn_key + "_0"):
 			_warned_deadlines[warn_key + "_0"] = true
-			EventBus.warning_shown.emit("⚠️ Time to go to school!", "yellow")
+			EventBus.warning_shown.emit("! Time to go to school!", "yellow")

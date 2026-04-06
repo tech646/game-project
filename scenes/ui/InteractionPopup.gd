@@ -43,7 +43,7 @@ func show_for_object(obj: GameObject) -> void:
 	# Check time lock
 	var schedule_mgr := _get_schedule_manager()
 	if schedule_mgr and not _is_activity_available(obj, schedule_mgr):
-		action_btn.text = "🔒 " + obj.action_name + " — unavailable now"
+		action_btn.text = "[X] " + obj.action_name + " — unavailable now"
 		action_btn.disabled = true
 	else:
 		action_btn.disabled = false
@@ -98,9 +98,9 @@ func _format_restore(need: String, amount: float) -> String:
 		return "+SAT"
 	var icon := ""
 	match need:
-		"hunger": icon = "🍖"
-		"energy": icon = "⚡"
-		"fun": icon = "🎮"
+		"hunger": icon = "[Food]"
+		"energy": icon = "[Nrg]"
+		"fun": icon = "[Fun]"
 	return "+%.0f %s" % [amount, icon]
 
 

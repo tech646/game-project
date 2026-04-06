@@ -35,7 +35,7 @@ offset_bottom = 70.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
-text = "☀ Day 1 — Good morning!"
+text = "* Day 1 — Good morning!"
 horizontal_alignment = 1
 
 [node name="HBox" type="HBoxContainer" parent="."]
@@ -94,4 +94,4 @@ offset_bottom = -30.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 16
-text = "Continue ▶"
+text = "Continue >"

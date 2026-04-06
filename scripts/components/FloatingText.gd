@@ -1,7 +1,7 @@
 extends Label
 class_name FloatingText
 
-## Floating text that rises and fades — "+20 ⚡" style feedback.
+## Floating text that rises and fades — "+20 [Nrg]" style feedback.
 
 static func spawn(parent: Node, text: String, pos: Vector2, color: Color = Color.WHITE) -> void:
 	var ft := FloatingText.new()

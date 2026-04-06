@@ -13,22 +13,22 @@ const ALL_COMPLETE_BONUS := 10
 
 # Mission templates
 const FIXED_MISSIONS := [
-	{"id": "go_school", "icon": "📚", "desc": "Go to school", "event": "commute_arrived"},
-	{"id": "study", "icon": "✏️", "desc": "Study", "event": "action_study"},
-	{"id": "eat", "icon": "🥣", "desc": "Eat", "event": "action_eat"},
-	{"id": "sleep", "icon": "😴", "desc": "Sleep", "event": "action_sleep"},
-	{"id": "fun", "icon": "🎮", "desc": "Have fun", "event": "action_fun"},
-	{"id": "homework", "icon": "📖", "desc": "Do homework", "event": "homework_done"},
-	{"id": "on_time", "icon": "🕐", "desc": "Arrive on time", "event": "arrived_on_time"},
+	{"id": "go_school", "icon": "[SAT]", "desc": "Go to school", "event": "commute_arrived"},
+	{"id": "study", "icon": "-", "desc": "Study", "event": "action_study"},
+	{"id": "eat", "icon": "-", "desc": "Eat", "event": "action_eat"},
+	{"id": "sleep", "icon": "-", "desc": "Sleep", "event": "action_sleep"},
+	{"id": "fun", "icon": "[Fun]", "desc": "Have fun", "event": "action_fun"},
+	{"id": "homework", "icon": "-", "desc": "Do homework", "event": "homework_done"},
+	{"id": "on_time", "icon": "-", "desc": "Arrive on time", "event": "arrived_on_time"},
 ]
 
 const BONUS_MISSIONS := [
-	{"id": "study2", "icon": "✏️", "desc": "Study again", "event": "action_study"},
-	{"id": "eat2", "icon": "🥣", "desc": "Eat again", "event": "action_eat"},
-	{"id": "talk_brighta", "icon": "💬", "desc": "Talk to Brighta", "event": "talk_npc"},
-	{"id": "explore", "icon": "🗺️", "desc": "Explore the area", "event": "action_any"},
-	{"id": "sleep_early", "icon": "🌙", "desc": "Sleep early", "event": "action_sleep"},
-	{"id": "study3", "icon": "📝", "desc": "Extra study session", "event": "action_study"},
+	{"id": "study2", "icon": "-", "desc": "Study again", "event": "action_study"},
+	{"id": "eat2", "icon": "-", "desc": "Eat again", "event": "action_eat"},
+	{"id": "talk_brighta", "icon": "-", "desc": "Talk to Brighta", "event": "talk_npc"},
+	{"id": "explore", "icon": "-", "desc": "Explore the area", "event": "action_any"},
+	{"id": "sleep_early", "icon": "*", "desc": "Sleep early", "event": "action_sleep"},
+	{"id": "study3", "icon": "-", "desc": "Extra study session", "event": "action_study"},
 ]
 
 # {character_name: [{mission_data + "done": bool}]}
