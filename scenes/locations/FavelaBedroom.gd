@@ -9,22 +9,25 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_room(RoomRenderer.RoomStyle.FAVELA, 500, 350)
 
-	# Set room upgrade level based on average furniture
 	var avg := _get_avg_level("gritty")
 	if room_renderer:
 		room_renderer.set_upgrade_level(avg - 1)
 
-	# Furniture
-	spawn_furniture("bed", "gritty", Vector2(-140, 40))
-	spawn_furniture("desk", "gritty", Vector2(130, 30))
-	spawn_furniture("tv", "gritty", Vector2(0, 20))
-	spawn_furniture("sofa", "gritty", Vector2(-60, 60))
-	spawn_furniture("rug", "gritty", Vector2(0, 80))
+	# Layout: furniture against the back wall, player walks in front
+	#   Left side: bed
+	#   Center: tv on wall, rug on floor
+	#   Right side: desk/sofa
 
-	create_door(">> Kitchen", "favela_kitchen", Vector2(-190, 20))
-	create_door(">> Upgrades", "upgrade_shop", Vector2(200, 20))
+	spawn_furniture("bed", "gritty", Vector2(-160, -30))
+	spawn_furniture("tv", "gritty", Vector2(0, -50))
+	spawn_furniture("sofa", "gritty", Vector2(100, -20))
+	spawn_furniture("desk", "gritty", Vector2(170, -40))
+	spawn_furniture("rug", "gritty", Vector2(0, 50))
 
-	spawn_point = Vector2(0, 60)
+	create_door(">> Kitchen", "favela_kitchen", Vector2(-210, 50))
+	create_door(">> Upgrades", "upgrade_shop", Vector2(210, 50))
+
+	spawn_point = Vector2(0, 80)
 
 
 func _get_avg_level(character: String) -> int:

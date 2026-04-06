@@ -17,13 +17,26 @@ const FURNITURE_HEIGHT := 80.0
 func _ready() -> void:
 	add_to_group("game_objects")
 	add_to_group("upgradeable_furniture")
-	collision_layer = 1
-	collision_mask = 0
 
+	# Check if decorative (no collision needed)
+	var def: Dictionary = FurnitureUpgradeSystem.FURNITURE_DEFS.get(furniture_id, {})
+	var is_decorative: bool = def.get("decorative", false)
+
+	if is_decorative:
+		# No collision at all — just a visual
+		collision_layer = 0
+		collision_mask = 0
+	else:
+		# Furniture doesn't block player movement — only used for interaction detection
+		collision_layer = 0
+		collision_mask = 0
+
+	# Small collision shape just for interaction detection (Area2D on player handles this)
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
-	rect.size = Vector2(60, 40)
+	rect.size = Vector2(40, 20)
 	shape.shape = rect
+	shape.disabled = true  # Disable physics collision — interaction uses distance check
 	add_child(shape)
 
 	_sprite = Sprite2D.new()
