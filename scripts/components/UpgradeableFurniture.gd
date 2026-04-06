@@ -89,21 +89,27 @@ func _update_visual() -> void:
 	if upgrade_sys:
 		tex_path = upgrade_sys.get_texture_path(furniture_id, level)
 
-	if tex_path != "" and ResourceLoader.exists(tex_path):
-		var tex: Texture2D = load(tex_path)
-		if tex:
-			_sprite.texture = tex
-			var scale_factor := FURNITURE_HEIGHT / float(tex.get_height())
-			_sprite.scale = Vector2(scale_factor, scale_factor)
-			_sprite.offset = Vector2(0, -float(tex.get_height()) / 2.0)
-			# Clear any programmatic children
-			for child in _sprite.get_children():
-				child.queue_free()
-	else:
-		# Fallback: programmatic drawer
-		_sprite.texture = null
-		for child in _sprite.get_children():
-			child.queue_free()
+	# Clear old programmatic children
+	for child in _sprite.get_children():
+		child.queue_free()
+	_sprite.texture = null
+
+	# Try to load PNG
+	var loaded := false
+	if tex_path != "":
+		if ResourceLoader.exists(tex_path):
+			var tex: Texture2D = load(tex_path)
+			if tex:
+				_sprite.texture = tex
+				var scale_factor := FURNITURE_HEIGHT / float(tex.get_height())
+				_sprite.scale = Vector2(scale_factor, scale_factor)
+				_sprite.offset = Vector2(0, -float(tex.get_height()) / 2.0)
+				loaded = true
+		else:
+			print("[Furniture] PNG not found: ", tex_path)
+
+	# Fallback: programmatic drawer
+	if not loaded:
 		var drawer := FurnitureLevelDrawer.new()
 		drawer.furniture_id = furniture_id
 		drawer.level = level

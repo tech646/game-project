@@ -5,11 +5,12 @@ extends CharacterBody2D
 @export var speed: float = 200.0
 @export var character_data: CharacterData = null
 
-const ISO_UP    = Vector2(1, -0.5)
-const ISO_DOWN  = Vector2(-1, 0.5)
-const ISO_LEFT  = Vector2(-1, -0.5)
-const ISO_RIGHT = Vector2(1, 0.5)
-const TARGET_HEIGHT := 120.0
+## Movement directions (front-view rooms, not isometric)
+const DIR_UP    = Vector2(0, -1)
+const DIR_DOWN  = Vector2(0, 1)
+const DIR_LEFT  = Vector2(-1, 0)
+const DIR_RIGHT = Vector2(1, 0)
+const TARGET_HEIGHT := 80.0
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var needs: NeedsComponent = $NeedsComponent
@@ -43,13 +44,13 @@ func _physics_process(_delta: float) -> void:
 
 	var direction := Vector2.ZERO
 	if Input.is_action_pressed("move_up"):
-		direction += ISO_UP
+		direction += DIR_UP
 	if Input.is_action_pressed("move_down"):
-		direction += ISO_DOWN
+		direction += DIR_DOWN
 	if Input.is_action_pressed("move_left"):
-		direction += ISO_LEFT
+		direction += DIR_LEFT
 	if Input.is_action_pressed("move_right"):
-		direction += ISO_RIGHT
+		direction += DIR_RIGHT
 
 	if direction != Vector2.ZERO:
 		direction = direction.normalized()

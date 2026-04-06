@@ -92,8 +92,15 @@ func _ready() -> void:
 
 func _on_title_start() -> void:
 	title_screen.visible = false
+	title_screen.set_process_unhandled_input(false)
 	# Show split screen for day 1
 	day_split.show_split(1, _get_needs(gritty_player), _get_needs(smartle_player))
+	day_split.continue_day.connect(_on_first_day_start, CONNECT_ONE_SHOT)
+
+
+func _on_first_day_start() -> void:
+	GameState.change_state(GameState.State.PLAYING)
+	GameClock.resume()
 	_show_day_banner(GameClock.game_day)
 
 
