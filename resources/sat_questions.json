@@ -268,5 +268,671 @@
     "options": ["A) 7", "B) 14", "C) 25", "D) 49"],
     "answer": "D",
     "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-016",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which choice completes the text so that it conforms to the conventions of Standard English?\n\nThe children _____ playing outside when it started to rain.",
+    "options": ["A) was", "B) were", "C) is", "D) has been"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-017",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Choose the correct word to complete the sentence.\n\nThe cat sat on _____ favorite blanket.",
+    "options": ["A) it's", "B) its", "C) its'", "D) their's"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-018",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which sentence is written correctly?",
+    "options": ["A) Me and him went to the store.", "B) Him and I went to the store.", "C) He and I went to the store.", "D) He and me went to the store."],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-019",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which word best completes the sentence?\n\nThe sunset was so beautiful that it left us completely _____.",
+    "options": ["A) bored", "B) speechless", "C) hungry", "D) confused"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-020",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which choice most effectively combines the two sentences?\n\nThe museum opened in 1985. It has attracted millions of visitors since then.",
+    "options": ["A) The museum opened in 1985, it has attracted millions of visitors since then.", "B) Since opening in 1985, the museum has attracted millions of visitors.", "C) The museum opened in 1985 and it has attracted millions of visitors since then.", "D) Opening in 1985 the museum has attracted millions of visitors since then."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-021",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "What does the word 'ephemeral' most likely mean in the following sentence?\n\n'The beauty of cherry blossoms is ephemeral, lasting only a few days each spring.'",
+    "options": ["A) Eternal", "B) Short-lived", "C) Colorful", "D) Fragrant"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-022",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which sentence correctly uses a semicolon?",
+    "options": ["A) I love reading; and writing stories.", "B) The sun was setting; we decided to head home.", "C) She went to the store; because she needed milk.", "D) He is tall; but she is short."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-023",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Read the following passage:\n\n'Although electric vehicles are becoming more affordable, many consumers remain hesitant to switch from traditional gasoline-powered cars. Range anxiety and limited charging infrastructure continue to be significant barriers.'\n\nWhat is the author's primary purpose?",
+    "options": ["A) To promote electric vehicles", "B) To explain obstacles to electric vehicle adoption", "C) To criticize the automobile industry", "D) To compare different car brands"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-024",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which word best replaces 'big' to make the sentence more precise?\n\nThe scientist made a big discovery that changed the field of genetics.",
+    "options": ["A) large", "B) huge", "C) groundbreaking", "D) wide"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-025",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Which choice correctly punctuates the sentence?\n\nThe three countries that produce the most coffee _____ Brazil, Vietnam, and Colombia _____ account for over 60% of the world's supply.",
+    "options": ["A) — ... —", "B) , ... ,", "C) ; ... ;", "D) ( ... )"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-026",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Read the passage:\n\n'Dr. Martinez argued that the new treatment protocol showed promise in early trials. However, Dr. Chen contended that the sample size was too small to draw meaningful conclusions and that the methodology contained several flaws.'\n\nWhat is the relationship between the two claims presented?",
+    "options": ["A) Dr. Chen provides evidence supporting Dr. Martinez's argument.", "B) Dr. Chen challenges the validity of Dr. Martinez's findings.", "C) Both doctors agree on the treatment's effectiveness.", "D) Dr. Chen proposes an alternative treatment."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-027",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Which choice best maintains the formal tone of the passage?\n\nThe research team's findings _____ that previous assumptions about ocean currents were fundamentally incorrect.",
+    "options": ["A) pretty much showed", "B) demonstrated", "C) totally proved", "D) kind of suggested"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-028",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Identify the sentence that contains a dangling modifier.",
+    "options": ["A) Running through the park, the dog chased the squirrel.", "B) Running through the park, the fresh air was invigorating.", "C) The jogger, running through the park, enjoyed the scenery.", "D) While running through the park, she noticed a rare bird."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-029",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Which transition best connects the two sentences?\n\nThe city invested heavily in public transportation infrastructure. _____, traffic congestion decreased by 30% within two years.",
+    "options": ["A) Nevertheless", "B) Conversely", "C) As a result", "D) In contrast"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-030",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "What does the word 'pragmatic' mean in the following sentence?\n\n'Rather than pursuing idealistic goals, the mayor took a pragmatic approach to solving the city's budget crisis.'",
+    "options": ["A) Theoretical", "B) Practical", "C) Reckless", "D) Idealistic"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-031",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which sentence uses the correct form of 'there/their/they're'?",
+    "options": ["A) Their going to the park after school.", "B) They're house is on the corner.", "C) They're planning to visit next week.", "D) There very excited about the trip."],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-032",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which sentence correctly uses parallel structure?",
+    "options": ["A) She likes hiking, swimming, and to ride bikes.", "B) She likes hiking, swimming, and biking.", "C) She likes to hike, swimming, and biking.", "D) She likes hiking, to swim, and biking."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-033",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Read the passage:\n\n'The phenomenon of bioluminescence, while common in deep-sea organisms, has recently been observed in certain terrestrial species. Researchers hypothesize that this adaptation may serve as a defense mechanism, though alternative explanations, including mate attraction and prey luring, have not been ruled out.'\n\nWhich statement best describes the researchers' position?",
+    "options": ["A) They are certain bioluminescence is a defense mechanism.", "B) They favor one explanation while acknowledging other possibilities.", "C) They have no hypothesis about the purpose of bioluminescence.", "D) They believe bioluminescence serves no evolutionary purpose."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-034",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which choice completes the sentence correctly?\n\nEach of the students _____ required to submit a final project.",
+    "options": ["A) are", "B) is", "C) were", "D) have been"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-035",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "What does the word 'ambiguous' mean?\n\nThe instructions were so ambiguous that no one knew what to do.",
+    "options": ["A) Clear and detailed", "B) Open to more than one interpretation", "C) Extremely long", "D) Written in a foreign language"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-036",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Which sentence correctly uses a colon?",
+    "options": ["A) The recipe requires: flour, sugar, and eggs.", "B) She had one goal: to finish the marathon.", "C) He went to: the store, the bank, and the gym.", "D) They traveled to: Paris and London."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-037",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Read the passage:\n\n'While some historians attribute the fall of the Roman Empire primarily to external invasions, others point to internal factors such as political corruption, economic instability, and overextension of military resources. A comprehensive analysis suggests that no single cause can fully account for such a complex historical event.'\n\nWhat is the author's main argument?",
+    "options": ["A) External invasions were the primary cause of Rome's fall.", "B) Political corruption alone destroyed the Roman Empire.", "C) The fall of Rome resulted from a combination of factors.", "D) Military overextension was more important than economic issues."],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-038",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which word is an antonym of 'generous'?",
+    "options": ["A) Kind", "B) Stingy", "C) Wealthy", "D) Humble"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-039",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which sentence avoids redundancy?",
+    "options": ["A) The reason is because he was late.", "B) She returned back to the office.", "C) They collaborated together on the project.", "D) The forecast predicts rain tomorrow."],
+    "answer": "D",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-040",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Which choice provides the most logical conclusion to the paragraph?\n\n'Urban green spaces provide numerous benefits to city residents. They reduce air pollution, lower ambient temperatures, and offer recreational areas. Studies have also shown that access to parks and gardens can reduce stress and improve mental health. _____'",
+    "options": ["A) Therefore, cities should reduce the number of parks to build more housing.", "B) Consequently, investing in urban green spaces is both an environmental and public health priority.", "C) However, most people prefer to stay indoors.", "D) In addition, pollution levels have been rising steadily."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-041",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which choice correctly completes the sentence?\n\nThe committee, along with its advisors, _____ to meet every Thursday.",
+    "options": ["A) plan", "B) plans", "C) are planning", "D) have planned"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-042",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which word means 'to make something less severe'?",
+    "options": ["A) Aggravate", "B) Mitigate", "C) Eliminate", "D) Accelerate"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-043",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "In which sentence is the underlined word used correctly?\n\nNote: the underlined word is indicated in caps.",
+    "options": ["A) The AFFECT of the new policy was immediate.", "B) The new policy will EFFECT thousands of workers.", "C) The new regulations will AFFECT all employees.", "D) She wanted to AFFECT a new company policy."],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-044",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which sentence demonstrates correct apostrophe usage?",
+    "options": ["A) The dog's were playing in the yard.", "B) The children's toys were scattered everywhere.", "C) The student's are taking a test.", "D) The tree's are blooming in spring."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-045",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Choose the correct word.\n\nShe performed _____ on the exam than she expected.",
+    "options": ["A) good", "B) better", "C) best", "D) more good"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-046",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Read the passage:\n\n'Proponents of renewable energy argue that solar and wind power can meet the world's energy demands within decades. Skeptics counter that intermittency issues and storage limitations make a full transition impractical without significant technological breakthroughs.'\n\nWhich statement best captures the skeptics' position?",
+    "options": ["A) Renewable energy is too expensive to pursue.", "B) Current technology cannot yet support a complete shift to renewables.", "C) Solar power is superior to wind power.", "D) Renewable energy has no future."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-016",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "Solve for x:\n\n5x - 3 = 22",
+    "options": ["A) x = 3", "B) x = 4", "C) x = 5", "D) x = 7"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-017",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "What is the perimeter of a square with side length 9?",
+    "options": ["A) 18", "B) 27", "C) 36", "D) 81"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-018",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "What is 3/4 expressed as a decimal?",
+    "options": ["A) 0.25", "B) 0.50", "C) 0.75", "D) 0.80"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-019",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "If a shirt costs $25 and sales tax is 8%, what is the total cost?",
+    "options": ["A) $25.80", "B) $26.00", "C) $27.00", "D) $33.00"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-020",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "What is the median of the data set: 3, 7, 9, 12, 15?",
+    "options": ["A) 7", "B) 9", "C) 9.2", "D) 12"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-021",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "Simplify: 4(2x + 3)",
+    "options": ["A) 8x + 3", "B) 8x + 12", "C) 6x + 7", "D) 8x + 7"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-022",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "What is the y-intercept of the line y = 3x - 7?",
+    "options": ["A) 3", "B) -7", "C) 7", "D) -3"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-023",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "A bag contains 4 red balls, 3 blue balls, and 5 green balls. What is the probability of randomly selecting a blue ball?",
+    "options": ["A) 1/4", "B) 3/12", "C) 1/3", "D) 5/12"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-024",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "If the circumference of a circle is 10π, what is the diameter?",
+    "options": ["A) 5", "B) 10", "C) 20", "D) 25"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-025",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "Solve for x:\n\n|2x - 6| = 10",
+    "options": ["A) x = 2 or x = -8", "B) x = 8 or x = -2", "C) x = 8 or x = 2", "D) x = -8 or x = -2"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-026",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "A car travels 180 miles in 3 hours. What is its average speed in miles per hour?",
+    "options": ["A) 45 mph", "B) 50 mph", "C) 55 mph", "D) 60 mph"],
+    "answer": "D",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-027",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "What is the value of x in the equation 2^x = 32?",
+    "options": ["A) 4", "B) 5", "C) 6", "D) 8"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-028",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "In a right triangle, if one leg is 6 and the hypotenuse is 10, what is the length of the other leg?",
+    "options": ["A) 4", "B) 7", "C) 8", "D) 9"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-029",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "Factor completely: x² - 9",
+    "options": ["A) (x - 3)(x - 3)", "B) (x + 3)(x - 3)", "C) (x + 9)(x - 1)", "D) (x - 9)(x + 1)"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-030",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "A data set has a mean of 50 and a standard deviation of 5. Which value is within one standard deviation of the mean?",
+    "options": ["A) 40", "B) 44", "C) 48", "D) 56"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-031",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "What are the solutions to x² - 5x + 6 = 0?",
+    "options": ["A) x = 1 and x = 6", "B) x = 2 and x = 3", "C) x = -2 and x = -3", "D) x = -1 and x = -6"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-032",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "A cone has a radius of 3 and a height of 4. What is its volume?",
+    "options": ["A) 12π", "B) 36π", "C) 16π", "D) 48π"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-033",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "If log₂(x) = 5, what is the value of x?",
+    "options": ["A) 10", "B) 16", "C) 25", "D) 32"],
+    "answer": "D",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-034",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "The function f(x) = x³ - 3x² + 2x has how many x-intercepts?",
+    "options": ["A) 1", "B) 2", "C) 3", "D) 4"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-035",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "A population of bacteria doubles every 3 hours. If the initial population is 500, what will the population be after 12 hours?",
+    "options": ["A) 2,000", "B) 4,000", "C) 6,000", "D) 8,000"],
+    "answer": "D",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-036",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "What is the sum of the interior angles of a hexagon?",
+    "options": ["A) 540°", "B) 620°", "C) 720°", "D) 900°"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-037",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "Solve the system of equations:\n\n3x + 2y = 16\nx - y = 2",
+    "options": ["A) x = 4, y = 2", "B) x = 3, y = 1", "C) x = 2, y = 5", "D) x = 5, y = 3"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-038",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "What is the value of (-3)²?",
+    "options": ["A) -9", "B) -6", "C) 6", "D) 9"],
+    "answer": "D",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-039",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "If a line is parallel to y = 2x + 5, what is its slope?",
+    "options": ["A) -2", "B) 1/2", "C) 2", "D) 5"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-040",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "The price of a laptop decreased from $800 to $680. What was the percent decrease?",
+    "options": ["A) 12%", "B) 15%", "C) 18%", "D) 20%"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-041",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "What is the distance between points (1, 3) and (4, 7)?",
+    "options": ["A) 4", "B) 5", "C) 6", "D) 7"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-042",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "What is the greatest common factor (GCF) of 24 and 36?",
+    "options": ["A) 6", "B) 8", "C) 12", "D) 18"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-043",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "If f(x) = 3x - 1, what is f(-2)?",
+    "options": ["A) -7", "B) -5", "C) 5", "D) 7"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-044",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "A rectangular prism has dimensions 3 × 4 × 5. What is its surface area?",
+    "options": ["A) 60", "B) 84", "C) 94", "D) 120"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-045",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "In a scatter plot, data points form a pattern that slopes downward from left to right. This indicates:",
+    "options": ["A) A positive correlation", "B) A negative correlation", "C) No correlation", "D) A perfect correlation"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-046",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "What is the vertex of the parabola y = x² - 6x + 8?",
+    "options": ["A) (3, -1)", "B) (3, 1)", "C) (-3, -1)", "D) (6, 8)"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-047",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "Convert 0.4 to a fraction in simplest form.",
+    "options": ["A) 4/100", "B) 4/10", "C) 2/5", "D) 1/4"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-048",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "A survey found that 60% of 250 students prefer online classes. How many students prefer online classes?",
+    "options": ["A) 125", "B) 140", "C) 150", "D) 160"],
+    "answer": "C",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-049",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "If sin(θ) = 3/5 and θ is in the first quadrant, what is cos(θ)?",
+    "options": ["A) 3/5", "B) 4/5", "C) 5/3", "D) 5/4"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-050",
+    "domain": "math",
+    "difficulty": "hard",
+    "question": "Simplify: (x² - 4) / (x + 2)",
+    "options": ["A) x + 2", "B) x - 2", "C) x² - 2", "D) x - 4"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-051",
+    "domain": "math",
+    "difficulty": "medium",
+    "question": "A triangle has sides of length 5, 12, and 13. Is it a right triangle?",
+    "options": ["A) Yes, because 5 + 12 = 13", "B) Yes, because 5² + 12² = 13²", "C) No, because the sides are not equal", "D) No, because 5² + 12² ≠ 13²"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "MATH-052",
+    "domain": "math",
+    "difficulty": "easy",
+    "question": "What is the least common multiple (LCM) of 6 and 8?",
+    "options": ["A) 12", "B) 24", "C) 36", "D) 48"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-047",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Which sentence contains a spelling error?",
+    "options": ["A) The restaurant served excellent food.", "B) She recieved a scholarship to the university.", "C) The building was constructed in 1920.", "D) His argument was persuasive and well-reasoned."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-048",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which sentence correctly uses 'who' vs. 'whom'?",
+    "options": ["A) Who did you give the book to?", "B) Whom is coming to the party?", "C) The student whom scored highest received an award.", "D) To whom should I address this letter?"],
+    "answer": "D",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-049",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Read the passage:\n\n'The discovery of penicillin by Alexander Fleming in 1928 was largely accidental. Fleming noticed that a mold growing on a petri dish had killed surrounding bacteria. This serendipitous observation led to the development of antibiotics, which have since saved countless lives.'\n\nWhat does 'serendipitous' most nearly mean in context?",
+    "options": ["A) Carefully planned", "B) Fortunate and unexpected", "C) Scientifically rigorous", "D) Controversial"],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-050",
+    "domain": "reading_writing",
+    "difficulty": "medium",
+    "question": "Which sentence demonstrates correct subject-verb agreement?",
+    "options": ["A) The group of students are going on a field trip.", "B) The group of students is going on a field trip.", "C) The group of students were going on a field trip.", "D) The group of students have gone on a field trip."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-051",
+    "domain": "reading_writing",
+    "difficulty": "hard",
+    "question": "Which revision eliminates the comma splice?\n\n'The concert was sold out, we had to watch it online instead.'",
+    "options": ["A) The concert was sold out we had to watch it online instead.", "B) The concert was sold out; we had to watch it online instead.", "C) The concert was sold out, and so we had to watch it online instead therefore.", "D) The concert, was sold out we had to watch it online instead."],
+    "answer": "B",
+    "source": "CollegeBoard Question Bank"
+  },
+  {
+    "id": "RW-052",
+    "domain": "reading_writing",
+    "difficulty": "easy",
+    "question": "Choose the correct word to complete the sentence.\n\nThe students worked _____ to prepare for the exam.",
+    "options": ["A) hard", "B) hardly", "C) harder", "D) hardest"],
+    "answer": "A",
+    "source": "CollegeBoard Question Bank"
   }
 ]
