@@ -129,18 +129,18 @@ func _create_players() -> void:
 
 
 func _load_starting_locations() -> void:
-	# Smartle starts in favela (she lives there)
+	# Smartle starts in favela bedroom (active player)
 	var favela := SceneManager.load_location_immediate("favela_bedroom")
 	var ysort: Node2D = favela.get_node("YSortRoot")
 	ysort.add_child(smartle_player)
 	smartle_player.position = favela.get_spawn_world_pos()
 
-	# Inactive player holder (hidden)
+	# Gritty goes in hidden holder (inactive until Tab)
 	var holder := Node2D.new()
 	holder.name = "InactivePlayerHolder"
 	holder.visible = false
 	add_child(holder)
-	holder.add_child(smartle_player)
+	holder.add_child(gritty_player)
 
 	_update_location_label("favela_bedroom")
 	call_deferred("_setup_players")
