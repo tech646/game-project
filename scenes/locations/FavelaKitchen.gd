@@ -9,12 +9,12 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_room(RoomRenderer.RoomStyle.FAVELA, 500, 350)
 
-	spawn_furniture("stove", "smartle", Vector2(-150, -5))
-	spawn_furniture("fridge", "smartle", Vector2(150, -15))
-	spawn_furniture("sink", "smartle", Vector2(-30, -10))
-	spawn_furniture("table", "smartle", Vector2(60, 40))
+	spawn_furniture("stove", "smartle", Vector2(-140, 20))
+	spawn_furniture("fridge", "smartle", Vector2(150, 15))
+	spawn_furniture("sink", "smartle", Vector2(-20, 18))
+	spawn_furniture("table", "smartle", Vector2(60, 50))
 
-	create_door(">> Bedroom", "favela_bedroom", Vector2(-210, 70))
-	create_door(">> School", "school", Vector2(210, 70))
+	create_door(">> Bedroom", "favela_bedroom", Vector2(-200, 95))
+	create_door(">> School", "school", Vector2(200, 95))
 
-	spawn_point = Vector2(0, 90)
+	spawn_point = Vector2(0, 65)

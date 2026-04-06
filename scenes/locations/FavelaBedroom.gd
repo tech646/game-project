@@ -13,17 +13,17 @@ func _spawn_objects() -> void:
 	if room_renderer:
 		room_renderer.set_upgrade_level(avg - 1)
 
-	# Furniture on the back wall, player walks in front
-	spawn_furniture("bed", "smartle", Vector2(-170, 0))
-	spawn_furniture("desk", "smartle", Vector2(160, -10))
-	spawn_furniture("tv", "smartle", Vector2(-30, -20))
-	spawn_furniture("sofa", "smartle", Vector2(70, 10))
-	spawn_furniture("rug", "smartle", Vector2(0, 70))
+	# Y=0 is wall/floor line. Furniture ON floor (Y > 0)
+	spawn_furniture("bed", "smartle", Vector2(-160, 20))
+	spawn_furniture("desk", "smartle", Vector2(150, 20))
+	spawn_furniture("tv", "smartle", Vector2(-20, 15))
+	spawn_furniture("sofa", "smartle", Vector2(70, 35))
+	spawn_furniture("rug", "smartle", Vector2(0, 80))
 
-	create_door(">> Kitchen", "favela_kitchen", Vector2(-210, 70))
-	create_door(">> Upgrades", "upgrade_shop", Vector2(210, 70))
+	create_door(">> Kitchen", "favela_kitchen", Vector2(-200, 95))
+	create_door(">> Upgrades", "upgrade_shop", Vector2(200, 95))
 
-	spawn_point = Vector2(0, 90)
+	spawn_point = Vector2(0, 65)
 
 
 func _get_avg_level(character: String) -> int:

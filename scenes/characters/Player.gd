@@ -34,7 +34,7 @@ func setup(data: CharacterData) -> void:
 	CharacterManager.register_player(self)
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if GameState.current_state != GameState.State.PLAYING:
 		velocity = Vector2.ZERO
 		return
@@ -64,7 +64,7 @@ func _physics_process(_delta: float) -> void:
 
 	velocity = direction * speed
 	move_and_slide()
-	_animate_walk(_delta)
+	_animate_walk(delta)
 
 
 func _animate_walk(delta: float) -> void:
