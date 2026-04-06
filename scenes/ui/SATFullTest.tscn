@@ -1,0 +1,88 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/SATFullTest.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.08, 0.06, 0.14, 0.97)
+border_color = Color(0.6, 0.5, 0.2, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="SATFullTest" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -200.0
+offset_right = 280.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HeaderLabel" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+text = "-- SAT Practice Test --"
+horizontal_alignment = 1
+
+[node name="ProgressLabel" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Question 1 / 5"
+horizontal_alignment = 1
+
+[node name="QuestionLabel" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Question..."
+autowrap_mode = 2
+custom_minimum_size = Vector2(520, 50)
+
+[node name="OptionA" type="Button" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "A) ..."
+
+[node name="OptionB" type="Button" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "B) ..."
+
+[node name="OptionC" type="Button" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "C) ..."
+
+[node name="OptionD" type="Button" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "D) ..."
+
+[node name="FeedbackLabel" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = ""
+horizontal_alignment = 1

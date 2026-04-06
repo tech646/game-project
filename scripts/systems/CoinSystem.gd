@@ -10,8 +10,8 @@ const COINS_PER_CORRECT := 10
 const COINS_PER_PERFECT_DAY := 25  # Bonus for all missions complete
 
 var coins: Dictionary = {
-	"gritty": 0,
-	"smartle": 50,  # Smartle starts with pocket money (privilege)
+	"gritty": 30,   # Middle class — some allowance
+	"smartle": 0,    # Favela — no spare money
 }
 
 

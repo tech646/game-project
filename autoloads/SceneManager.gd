@@ -14,8 +14,8 @@ const LOCATIONS := {
 }
 
 var character_locations := {
-	"gritty": "favela_bedroom",
-	"smartle": "mansion",
+	"gritty": "mansion",         # Gritty = middle class home
+	"smartle": "favela_bedroom", # Smartle = favela
 }
 
 var _fade_overlay: ColorRect = null

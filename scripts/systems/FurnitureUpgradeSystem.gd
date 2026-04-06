@@ -20,11 +20,12 @@ const UPGRADE_COSTS := {2: 50, 3: 150}
 # All furniture types with their gameplay properties
 const FURNITURE_DEFS := {
 	"bed": {"name": ["Old Bed", "Comfy Bed", "Luxury Bed"],
-			"action": "Sleep", "need": "energy", "base_restore": 40.0, "time_cost": 120,
+			"action": "Sleep 8h", "need": "energy", "base_restore": 60.0, "time_cost": 480,
+			"alt_action": "Nap 2h", "alt_need": "energy", "alt_restore": 20.0, "alt_time": 120,
 			"path": "res://assets/furniture/bed/Cama %d.png"},
 	"desk": {"name": ["Old Desk", "Wooden Desk", "Pro Setup"],
-			 "action": "Study", "need": "", "base_restore": 0.0, "time_cost": 60,
-			 "alt_action": "Play", "alt_need": "fun", "alt_restore": 25.0, "alt_time": 60,
+			 "action": "Study 2h", "need": "", "base_restore": 0.0, "time_cost": 120,
+			 "alt_action": "Study 1h", "alt_need": "", "alt_restore": 0.0, "alt_time": 60,
 			 "path": "res://assets/furniture/desk/Mesa %d.png"},
 	"stove": {"name": ["Hot Plate", "Basic Stove", "Chef Kitchen"],
 			  "action": "Cook", "need": "hunger", "base_restore": 30.0, "time_cost": 30,
@@ -33,10 +34,12 @@ const FURNITURE_DEFS := {
 			   "action": "Eat", "need": "hunger", "base_restore": 15.0, "time_cost": 10,
 			   "path": "res://assets/furniture/fridge/%s"},
 	"tv": {"name": ["Old TV", "Flat Screen", "Home Theater"],
-		   "action": "Watch", "need": "fun", "base_restore": 30.0, "time_cost": 60,
+		   "action": "Watch 2h", "need": "fun", "base_restore": 35.0, "time_cost": 120,
+		   "alt_action": "Watch 30min", "alt_need": "fun", "alt_restore": 15.0, "alt_time": 30,
 		   "path": "res://assets/furniture/tv/%s"},
 	"sofa": {"name": ["Old Sofa", "Comfy Sofa", "Luxury Sofa"],
-			 "action": "Relax", "need": "fun", "base_restore": 20.0, "time_cost": 45,
+			 "action": "Relax 1h", "need": "fun", "base_restore": 20.0, "time_cost": 60,
+			 "alt_action": "Quick Rest", "alt_need": "energy", "alt_restore": 10.0, "alt_time": 30,
 			 "path": "res://assets/furniture/sofa/Sofa %d.png"},
 	"bookshelf": {"name": ["Small Shelf", "Bookshelf", "Library"],
 				  "action": "Read", "need": "", "base_restore": 0.0, "time_cost": 45,
@@ -71,13 +74,15 @@ var furniture_levels: Dictionary = {}
 
 
 func setup_defaults() -> void:
+	# Gritty — middle class, level 2 furniture (parents work hard)
 	furniture_levels["gritty"] = {
+		"bed": 2, "desk": 2, "stove": 2, "fridge": 2,
+		"tv": 2, "sofa": 2, "bookshelf": 2, "rug": 2,
+	}
+	# Smartle — favela, level 1 furniture (limited resources)
+	furniture_levels["smartle"] = {
 		"bed": 1, "desk": 1, "stove": 1, "fridge": 1,
 		"tv": 1, "sofa": 1, "rug": 1,
-	}
-	furniture_levels["smartle"] = {
-		"bed": 3, "desk": 3, "stove": 3, "fridge": 3,
-		"tv": 3, "sofa": 3, "bookshelf": 3, "closet": 3, "rug": 3,
 	}
 
 

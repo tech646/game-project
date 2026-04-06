@@ -18,6 +18,7 @@ extends Node2D
 @onready var day_summary: Control = $HUD/DaySummary
 @onready var decision_day: Control = $HUD/DecisionDay
 @onready var upgrade_shop: PanelContainer = $HUD/UpgradeShop
+@onready var sat_full_test: PanelContainer = $HUD/SATFullTest
 @onready var coins_label: Label = $HUD/CoinsLabel
 @onready var room_score_bar: Control = $HUD/RoomScoreBar
 @onready var schedule_manager: Node = $Systems/ScheduleManager
@@ -34,11 +35,11 @@ const FORCE_END_HOUR := 0
 const NO_SLEEP_PENALTY := 30.0
 
 const LOCATION_NAMES := {
-	"favela_bedroom": "[H] Gritty's Bedroom",
-	"favela_kitchen": "[H] Gritty's Kitchen",
-	"mansion": "[M] Smartle's Bedroom",
-	"mansion_kitchen": "[M] Smartle's Kitchen",
-	"school": "[S] Bilingual School",
+	"favela_bedroom": "Smartle's Bedroom",
+	"favela_kitchen": "Smartle's Kitchen",
+	"mansion": "Gritty's Bedroom",
+	"mansion_kitchen": "Gritty's Kitchen",
+	"school": "Bilingual School",
 }
 
 var _sleep_warned: bool = false
@@ -81,6 +82,7 @@ func _ready() -> void:
 	interaction_popup.alt_action_confirmed.connect(_on_alt_action_confirmed)
 	interaction_popup.popup_closed.connect(_on_popup_closed)
 	sat_quiz.quiz_completed.connect(_on_quiz_completed)
+	sat_full_test.test_completed.connect(_on_full_test_completed)
 	coin_system.coins_changed.connect(_on_coins_changed)
 	furniture_system.furniture_upgraded.connect(_on_furniture_upgraded)
 
@@ -102,6 +104,7 @@ func _create_players() -> void:
 	gritty_player = _player_scene.instantiate()
 	smartle_player = _player_scene.instantiate()
 
+	# GRITTY — middle class, parents work hard for his education
 	var gritty_data := CharacterData.new()
 	gritty_data.character_name = "gritty"
 	gritty_data.display_name = "Gritty"
@@ -109,8 +112,9 @@ func _create_players() -> void:
 	gritty_data.starting_hunger = 100.0
 	gritty_data.starting_energy = 100.0
 	gritty_data.starting_fun = 100.0
-	gritty_data.overnight_recovery = 50.0
+	gritty_data.overnight_recovery = 75.0  # Decent bed, good rest
 
+	# SMARTLE — lives in favela, fewer resources but determined
 	var smartle_data := CharacterData.new()
 	smartle_data.character_name = "smartle"
 	smartle_data.display_name = "Smartle"
@@ -118,17 +122,18 @@ func _create_players() -> void:
 	smartle_data.starting_hunger = 100.0
 	smartle_data.starting_energy = 100.0
 	smartle_data.starting_fun = 100.0
-	smartle_data.overnight_recovery = 85.0
+	smartle_data.overnight_recovery = 50.0  # Old bed, less recovery
 
 	gritty_player.character_data = gritty_data
 	smartle_player.character_data = smartle_data
 
 
 func _load_starting_locations() -> void:
+	# Smartle starts in favela (she lives there)
 	var favela := SceneManager.load_location_immediate("favela_bedroom")
 	var ysort: Node2D = favela.get_node("YSortRoot")
-	ysort.add_child(gritty_player)
-	gritty_player.position = favela.get_spawn_world_pos()
+	ysort.add_child(smartle_player)
+	smartle_player.position = favela.get_spawn_world_pos()
 
 	# Inactive player holder (hidden)
 	var holder := Node2D.new()
@@ -204,10 +209,10 @@ func _use_door(door: DoorObject) -> void:
 
 	# "home" resolves to character's home bedroom
 	if target == "home":
-		if needs and needs.character_name == "gritty":
-			target = "favela_bedroom"
-		elif needs and needs.character_name == "smartle":
-			target = "mansion"
+		if needs and needs.character_name == "smartle":
+			target = "favela_bedroom"  # Smartle lives in favela
+		elif needs and needs.character_name == "gritty":
+			target = "mansion"  # Gritty lives in middle-class home
 		else:
 			target = "favela_bedroom"
 
@@ -361,6 +366,7 @@ func _can_interact() -> bool:
 	if decision_day.visible: return false
 	if pause_menu.visible: return false
 	if upgrade_shop.visible: return false
+	if sat_full_test.visible: return false
 	if GameState.current_state != GameState.State.PLAYING: return false
 	return true
 
@@ -391,6 +397,8 @@ func _on_action_confirmed(obj: GameObject) -> void:
 
 	if not executor.study_completed.is_connected(_on_study_completed):
 		executor.study_completed.connect(_on_study_completed)
+	if not executor.full_test_requested.is_connected(_on_full_test_requested):
+		executor.full_test_requested.connect(_on_full_test_requested)
 
 	executor.execute(obj, needs)
 	executor.action_completed.connect(func(text: String):
@@ -439,7 +447,13 @@ func _on_popup_closed() -> void:
 
 
 func _on_study_completed(_character: String) -> void:
+	# 1h study → single quiz question
 	sat_quiz.show_quiz()
+
+
+func _on_full_test_requested(_character: String) -> void:
+	# 2h study → full 5-question practice test (more coins!)
+	sat_full_test.start_test()
 
 
 func _on_quiz_completed(correct: bool, sat_bonus: int) -> void:
@@ -447,10 +461,17 @@ func _on_quiz_completed(correct: bool, sat_bonus: int) -> void:
 		var needs := CharacterManager.get_active_needs()
 		if needs:
 			needs.modify_sat(sat_bonus)
-			# Award coins for correct answer!
 			coin_system.add_coins(needs.character_name, CoinSystem.COINS_PER_CORRECT)
 			EventBus.warning_shown.emit("+%d SAT +%d$ (correct!)" % [sat_bonus, CoinSystem.COINS_PER_CORRECT], "yellow")
 			college_progress.check_score(needs.character_name, needs.sat_score)
+
+
+func _on_full_test_completed(correct_count: int, _total: int, coins_earned: int) -> void:
+	var needs := CharacterManager.get_active_needs()
+	if needs:
+		needs.modify_sat(correct_count * 8)
+		coin_system.add_coins(needs.character_name, coins_earned)
+		college_progress.check_score(needs.character_name, needs.sat_score)
 
 
 func _interact_furniture(furn: UpgradeableFurniture) -> void:

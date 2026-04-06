@@ -1,6 +1,6 @@
 extends LocationBase
 
-## Gritty's kitchen.
+## Smartle's kitchen in the favela.
 
 func _init() -> void:
 	location_name = "favela_kitchen"
@@ -9,12 +9,12 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_room(RoomRenderer.RoomStyle.FAVELA, 500, 350)
 
-	spawn_furniture("stove", "gritty", Vector2(-140, -30))
-	spawn_furniture("fridge", "gritty", Vector2(150, -40))
-	spawn_furniture("sink", "gritty", Vector2(-20, -35))
-	spawn_furniture("table", "gritty", Vector2(50, 30))
+	spawn_furniture("stove", "smartle", Vector2(-150, -5))
+	spawn_furniture("fridge", "smartle", Vector2(150, -15))
+	spawn_furniture("sink", "smartle", Vector2(-30, -10))
+	spawn_furniture("table", "smartle", Vector2(60, 40))
 
-	create_door(">> Bedroom", "favela_bedroom", Vector2(-210, 50))
-	create_door(">> School", "school", Vector2(210, 50))
+	create_door(">> Bedroom", "favela_bedroom", Vector2(-210, 70))
+	create_door(">> School", "school", Vector2(210, 70))
 
-	spawn_point = Vector2(0, 80)
+	spawn_point = Vector2(0, 90)

@@ -1,6 +1,6 @@
 extends LocationBase
 
-## Gritty's bedroom — upgradeable furniture with PNG sprites.
+## Smartle's bedroom in the favela.
 
 func _init() -> void:
 	location_name = "favela_bedroom"
@@ -9,25 +9,21 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_room(RoomRenderer.RoomStyle.FAVELA, 500, 350)
 
-	var avg := _get_avg_level("gritty")
+	var avg := _get_avg_level("smartle")
 	if room_renderer:
 		room_renderer.set_upgrade_level(avg - 1)
 
-	# Layout: furniture against the back wall, player walks in front
-	#   Left side: bed
-	#   Center: tv on wall, rug on floor
-	#   Right side: desk/sofa
+	# Furniture on the back wall, player walks in front
+	spawn_furniture("bed", "smartle", Vector2(-170, 0))
+	spawn_furniture("desk", "smartle", Vector2(160, -10))
+	spawn_furniture("tv", "smartle", Vector2(-30, -20))
+	spawn_furniture("sofa", "smartle", Vector2(70, 10))
+	spawn_furniture("rug", "smartle", Vector2(0, 70))
 
-	spawn_furniture("bed", "gritty", Vector2(-160, -30))
-	spawn_furniture("tv", "gritty", Vector2(0, -50))
-	spawn_furniture("sofa", "gritty", Vector2(100, -20))
-	spawn_furniture("desk", "gritty", Vector2(170, -40))
-	spawn_furniture("rug", "gritty", Vector2(0, 50))
+	create_door(">> Kitchen", "favela_kitchen", Vector2(-210, 70))
+	create_door(">> Upgrades", "upgrade_shop", Vector2(210, 70))
 
-	create_door(">> Kitchen", "favela_kitchen", Vector2(-210, 50))
-	create_door(">> Upgrades", "upgrade_shop", Vector2(210, 50))
-
-	spawn_point = Vector2(0, 80)
+	spawn_point = Vector2(0, 90)
 
 
 func _get_avg_level(character: String) -> int:

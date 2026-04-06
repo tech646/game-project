@@ -3,17 +3,22 @@ extends Node
 ## Manages time-locked activity windows and commute deadlines.
 ## Emits lock/unlock events and deadline warnings.
 
+# School schedule
+const SCHOOL_ENTRY := 480    # 08:00
+const SCHOOL_EXIT := 960     # 16:00
+
 # Activity windows: {name: {start: minutes, end: minutes}}
 var activities := {
-	"english_class": {"start": 480, "end": 660, "label": "English Class"},      # 08:00-11:00
-	"cafeteria": {"start": 690, "end": 840, "label": "Cafeteria"},             # 11:30-14:00
-	"sat_extra": {"start": 900, "end": 1020, "label": "SAT Extra"},            # 15:00-17:00
+	"english_class": {"start": 480, "end": 600, "label": "English Class"},     # 08:00-10:00
+	"math_class": {"start": 600, "end": 720, "label": "Math Class"},           # 10:00-12:00
+	"cafeteria": {"start": 720, "end": 810, "label": "Lunch Break"},           # 12:00-13:30
+	"sat_extra": {"start": 810, "end": 960, "label": "SAT Prep"},             # 13:30-16:00
 }
 
-# Commute deadlines per character
+# Commute deadlines per character (SWAPPED: Smartle=bus, Gritty=car)
 var commute_deadlines := {
-	"gritty": {"leave_by": 435, "travel_time": 45, "mode": "bus"},    # 07:15, 45min
-	"smartle": {"leave_by": 465, "travel_time": 15, "mode": "car"},   # 07:45, 15min
+	"smartle": {"leave_by": 435, "travel_time": 45, "mode": "bus"},   # 07:15, 45min bus (favela)
+	"gritty": {"leave_by": 465, "travel_time": 15, "mode": "car"},    # 07:45, 15min car (middle class)
 }
 
 # Homework: always available at home, but penalty if not done by 22:00 (1320 min)

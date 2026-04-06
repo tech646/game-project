@@ -6,7 +6,8 @@ class_name ActionExecutor
 
 signal action_started(object_name: String)
 signal action_completed(result_text: String)
-signal study_completed(character: String)  # triggers SAT quiz
+signal study_completed(character: String)  # triggers SAT single quiz
+signal full_test_requested(character: String)  # triggers SAT full test
 
 const SAT_PER_STUDY := 10
 
@@ -45,15 +46,16 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		_complete_mission(needs.character_name, "action_any")
 
 	# Study → SAT gain + quiz trigger
-	if obj.need_affected == "" and (obj.action_name == "Study" or obj.action_name == "Talk"):
+	var is_study := obj.need_affected == "" and (obj.action_name.begins_with("Study") or obj.action_name == "Talk" or obj.action_name == "Read")
+	if is_study:
 		var sat_gain := int(float(SAT_PER_STUDY) * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0))
 		needs.modify_sat(sat_gain)
-		result_text = "+%d [SAT] SAT" % sat_gain
+		result_text = "+%d SAT" % sat_gain
 
 		_complete_mission(needs.character_name, "action_study")
 
 		# Home desk study = homework done
-		if obj.object_name.contains("Desk") or obj.object_name.contains("Tutor"):
+		if obj.object_name.contains("Desk") or obj.object_name.contains("Setup"):
 			needs.homework_done = true
 			_complete_mission(needs.character_name, "homework_done")
 
@@ -61,8 +63,11 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		if obj.action_name == "Talk":
 			_complete_mission(needs.character_name, "talk_npc")
 
-		# Trigger quiz
-		study_completed.emit(needs.character_name)
+		# 2h study = full practice test (more coins), 1h = single quiz
+		if obj.time_cost >= 120:
+			full_test_requested.emit(needs.character_name)
+		else:
+			study_completed.emit(needs.character_name)
 
 	# Floating text feedback above character
 	if result_text != "":
