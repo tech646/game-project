@@ -1,38 +1,31 @@
 extends LocationBase
 
 ## Smartle's bedroom in the favela.
+## Background: isometric pixel art room with bed, desk, TV, sofa, bookshelf.
 
 func _init() -> void:
 	location_name = "favela_bedroom"
 
 
 func _spawn_objects() -> void:
-	setup_room(RoomRenderer.RoomStyle.FAVELA, 500, 350)
+	setup_background("res://assets/rooms/Quarto Smartle.png", 0.25)
 
-	var avg := _get_avg_level("smartle")
-	if room_renderer:
-		room_renderer.set_upgrade_level(avg - 1)
+	# Hitboxes positioned over furniture in the image
+	# Image is 2760x1504 at 0.25 = 690x376, centered at (0,0)
+	# Left side: closet, rug, desk
+	# Center: bed, bookshelf
+	# Right: sofa, TV
 
-	# Y=0 is wall/floor line. Furniture ON floor (Y > 0)
-	spawn_furniture("bed", "smartle", Vector2(-160, 20))
-	spawn_furniture("desk", "smartle", Vector2(150, 20))
-	spawn_furniture("tv", "smartle", Vector2(-20, 15))
-	spawn_furniture("sofa", "smartle", Vector2(70, 35))
-	spawn_furniture("rug", "smartle", Vector2(0, 80))
+	spawn_furniture("bed", "smartle", Vector2(-20, -50))
+	spawn_furniture("desk", "smartle", Vector2(-80, 40))
+	spawn_furniture("tv", "smartle", Vector2(120, 20))
+	spawn_furniture("sofa", "smartle", Vector2(180, -20))
+	spawn_furniture("closet", "smartle", Vector2(-210, -30))
+	spawn_furniture("bookshelf", "smartle", Vector2(60, -60))
+	spawn_furniture("rug", "smartle", Vector2(-160, 30))
 
-	create_door(">> Kitchen", "favela_kitchen", Vector2(-200, 95))
-	create_door(">> Upgrades", "upgrade_shop", Vector2(200, 95))
+	# Door to kitchen (through the door opening in the image, right side)
+	create_door(">> Kitchen", "favela_kitchen", Vector2(150, -70))
+	create_door(">> Upgrades", "upgrade_shop", Vector2(-250, 80))
 
-	spawn_point = Vector2(0, 65)
-
-
-func _get_avg_level(character: String) -> int:
-	var sys := _get_upgrade_system()
-	if not sys or not sys.furniture_levels.has(character):
-		return 1
-	var total := 0
-	var count := 0
-	for fid in sys.furniture_levels[character]:
-		total += sys.furniture_levels[character][fid]
-		count += 1
-	return total / max(count, 1)
+	spawn_point = Vector2(-40, 50)
