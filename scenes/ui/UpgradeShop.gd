@@ -99,8 +99,11 @@ func _create_item_row(item: Dictionary, upgrade_sys: FurnitureUpgradeSystem, coi
 			if upgrade_sys.do_upgrade(_character, fid):
 				FloatingText.spawn(self, "⬆ Upgraded!", Vector2(200, 100), Color(0.4, 1, 0.4))
 				_refresh()
-				# Update actual furniture in scene
 				_update_scene_furniture(fid)
+				# Play upgrade particle effect on the furniture
+				for node in get_tree().get_nodes_in_group("upgradeable_furniture"):
+					if node is UpgradeableFurniture and node.furniture_id == fid and node.owner_character == _character:
+						UpgradeEffect.play_at(node, Vector2.ZERO)
 		)
 		hbox.add_child(btn)
 	else:

@@ -19,6 +19,7 @@ extends Node2D
 @onready var decision_day: Control = $HUD/DecisionDay
 @onready var upgrade_shop: PanelContainer = $HUD/UpgradeShop
 @onready var coins_label: Label = $HUD/CoinsLabel
+@onready var room_score_bar: Control = $HUD/RoomScoreBar
 @onready var schedule_manager: Node = $Systems/ScheduleManager
 @onready var commute_manager: Node = $Systems/CommuteManager
 @onready var mission_manager: MissionManager = $Systems/MissionManager
@@ -85,6 +86,7 @@ func _ready() -> void:
 	furniture_system.add_to_group("furniture_upgrade_system")
 	furniture_system.setup_defaults()
 	coin_system.coins_changed.connect(_on_coins_changed)
+	furniture_system.furniture_upgraded.connect(_on_furniture_upgraded)
 	_update_coins_label()
 
 
@@ -285,6 +287,7 @@ func _force_end_day() -> void:
 	_get_needs(smartle_player).modify_need("energy", -NO_SLEEP_PENALTY)
 	_check_homework()
 	EventBus.day_ended.emit(GameClock.game_day)
+	_auto_save()
 
 	# Track mission totals for college system
 	college_system.total_missions["gritty"] += mission_manager.get_completion_count("gritty")
@@ -481,3 +484,43 @@ func _update_coins_label() -> void:
 		coins_label.text = "🪙 %d" % coin_system.get_coins(needs.character_name)
 	else:
 		coins_label.text = "🪙 0"
+
+
+func _on_furniture_upgraded(_character: String, _furniture_id: String, _new_level: int) -> void:
+	_update_room_score()
+	# Update room mood lighting
+	var loc := SceneManager.get_current_location_node()
+	if loc and loc.room_renderer:
+		var avg_level := _get_avg_furniture_level(_character)
+		loc.room_renderer.set_upgrade_level(avg_level)
+
+
+func _update_room_score() -> void:
+	var needs := CharacterManager.get_active_needs()
+	if needs and room_score_bar:
+		room_score_bar.update_score(needs.character_name)
+
+
+func _get_avg_furniture_level(character: String) -> int:
+	if not furniture_system.furniture_levels.has(character):
+		return 1
+	var total := 0
+	var count := 0
+	for fid in furniture_system.furniture_levels[character]:
+		total += furniture_system.furniture_levels[character][fid]
+		count += 1
+	if count == 0:
+		return 1
+	return total / count
+
+
+func _auto_save() -> void:
+	var data := SaveSystem.build_save_data(
+		_get_needs(gritty_player),
+		_get_needs(smartle_player),
+		coin_system,
+		furniture_system,
+		college_system,
+		GameClock.game_day
+	)
+	SaveSystem.save_game(data)
