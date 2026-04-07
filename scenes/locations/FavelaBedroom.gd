@@ -1,7 +1,6 @@
 extends LocationBase
 
 ## Smartle's bedroom in the favela.
-## Background: isometric pixel art room with bed, desk, TV, sofa, bookshelf.
 
 func _init() -> void:
 	location_name = "favela_bedroom"
@@ -10,22 +9,18 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_background("res://assets/rooms/Quarto Smartle.png", 0.25)
 
-	# Hitboxes positioned over furniture in the image
-	# Image is 2760x1504 at 0.25 = 690x376, centered at (0,0)
-	# Left side: closet, rug, desk
-	# Center: bed, bookshelf
-	# Right: sofa, TV
+	# Positions mapped to furniture in the isometric image:
+	# Image 690x376 centered at (0,0). Top-left ~(-345,-188), bottom-right ~(345,188)
 
-	spawn_furniture("bed", "smartle", Vector2(-20, -50))
-	spawn_furniture("desk", "smartle", Vector2(-80, 40))
-	spawn_furniture("tv", "smartle", Vector2(120, 20))
-	spawn_furniture("sofa", "smartle", Vector2(180, -20))
-	spawn_furniture("closet", "smartle", Vector2(-210, -30))
-	spawn_furniture("bookshelf", "smartle", Vector2(60, -60))
-	spawn_furniture("rug", "smartle", Vector2(-160, 30))
+	spawn_furniture("closet", "smartle", Vector2(-225, -15))   # Far left wall
+	spawn_furniture("bed", "smartle", Vector2(-30, -85))       # Center, upper
+	spawn_furniture("bookshelf", "smartle", Vector2(85, -85))  # Right of bed
+	spawn_furniture("desk", "smartle", Vector2(-105, 25))      # Front-left, near chair
+	spawn_furniture("rug", "smartle", Vector2(-155, 15))       # Under/near desk
+	spawn_furniture("tv", "smartle", Vector2(90, 35))          # Right side, low
+	spawn_furniture("sofa", "smartle", Vector2(195, 5))        # Far right
 
-	# Door to kitchen (through the door opening in the image, right side)
-	create_door(">> Kitchen", "favela_kitchen", Vector2(150, -70))
-	create_door(">> Upgrades", "upgrade_shop", Vector2(-250, 80))
+	create_door(">> Kitchen", "favela_kitchen", Vector2(175, -80))
+	create_door(">> Upgrades", "upgrade_shop", Vector2(-260, 75))
 
 	spawn_point = Vector2(-40, 50)
