@@ -16,7 +16,7 @@ func _spawn_objects() -> void:
 	if tex:
 		var brighta_sprite := Sprite2D.new()
 		brighta_sprite.texture = tex
-		var scale_factor := 60.0 / float(tex.get_height())
+		var scale_factor := 120.0 / float(tex.get_height())
 		brighta_sprite.scale = Vector2(scale_factor, scale_factor)
 		brighta_sprite.position = Vector2(17, -42)
 		brighta_sprite.z_index = 5
@@ -57,6 +57,6 @@ func _spawn_objects() -> void:
 	# Doors
 	create_invisible_door("library", Vector2(-183, -29))
 	create_invisible_door("home", Vector2(252, -1))
-	create_invisible_door("cafeteria", Vector2(254, -8))
+	create_invisible_door("cafeteria", Vector2(329, 57))
 
 	spawn_point = Vector2(0, 70)
