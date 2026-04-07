@@ -19,8 +19,8 @@ extends Node2D
 @onready var decision_day: Control = $HUD/DecisionDay
 @onready var upgrade_shop: PanelContainer = $HUD/UpgradeShop
 @onready var sat_full_test: PanelContainer = $HUD/SATFullTest
-@onready var coins_label: Label = $HUD/CoinsLabel
-@onready var room_score_bar: Control = $HUD/RoomScoreBar
+@onready var needs_bars_panel: PanelContainer = $HUD/NeedsBars
+# Room score removed from HUD — shown in pause menu instead
 @onready var schedule_manager: Node = $Systems/ScheduleManager
 @onready var commute_manager: Node = $Systems/CommuteManager
 @onready var mission_manager: MissionManager = $Systems/MissionManager
@@ -577,13 +577,8 @@ func _update_coins_label() -> void:
 	var amount := 0
 	if needs:
 		amount = coin_system.get_coins(needs.character_name)
-	# Update in needs panel
-	var needs_bars_node := get_node_or_null("HUD/NeedsBars")
-	if needs_bars_node and needs_bars_node.has_method("update_coins"):
-		needs_bars_node.update_coins(amount)
-	# Also update standalone label if exists
-	if coins_label:
-		coins_label.text = "Coins: $%d" % amount
+	if needs_bars_panel and needs_bars_panel.has_method("update_coins"):
+		needs_bars_panel.update_coins(amount)
 
 
 func _on_furniture_upgraded(_character: String, _furniture_id: String, _new_level: int) -> void:
@@ -597,8 +592,7 @@ func _on_furniture_upgraded(_character: String, _furniture_id: String, _new_leve
 
 func _update_room_score() -> void:
 	var needs := CharacterManager.get_active_needs()
-	if needs and room_score_bar:
-		room_score_bar.update_score(needs.character_name)
+	pass  # Room score can be shown in pause menu
 
 
 func _get_avg_furniture_level(character: String) -> int:

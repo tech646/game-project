@@ -111,31 +111,6 @@ vertical_alignment = 1
 
 [node name="UpgradeShop" parent="HUD" instance=ExtResource("21_shop")]
 
-[node name="CoinsLabel" type="Label" parent="HUD"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -180.0
-offset_top = 290.0
-offset_right = -10.0
-offset_bottom = 318.0
-grow_horizontal = 0
-theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
-text = "Coins: $0"
-horizontal_alignment = 2
-
-[node name="RoomScoreBar" type="Control" parent="HUD"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -180.0
-offset_top = 288.0
-offset_right = -10.0
-offset_bottom = 310.0
-grow_horizontal = 0
-script = ExtResource("24_roomscore")
-
 [node name="FadeOverlay" type="ColorRect" parent="HUD"]
 anchors_preset = 15
 anchor_right = 1.0
