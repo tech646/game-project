@@ -112,13 +112,16 @@ func _show_morning_split() -> void:
 
 
 func _on_split_continue() -> void:
+	# Initialize both characters' clocks at 6:00
+	GameClock.save_time_for("smartle")
+	GameClock.save_time_for("gritty")
+
 	# Start playing!
 	GameState.change_state(GameState.State.PLAYING)
 	GameClock.resume()
 	_show_day_banner(GameClock.game_day)
 	_update_room_score()
 	_update_coins_label()
-	print("[Main] Game started - State: ", GameState.State.keys()[GameState.current_state])
 
 
 func _create_players() -> void:
@@ -179,6 +182,15 @@ func _on_character_switched(active_name: String) -> void:
 	var active := CharacterManager.get_active_player()
 	var inactive := CharacterManager.get_inactive_player()
 	var target := SceneManager.get_location(active_name)
+
+	# Save current character's time before switching
+	if inactive:
+		var inactive_needs: NeedsComponent = inactive.get_node_or_null("NeedsComponent")
+		if inactive_needs:
+			GameClock.save_time_for(inactive_needs.character_name)
+
+	# Restore the new character's time
+	GameClock.restore_time_for(active_name)
 
 	# Park inactive in holder
 	_park_player(inactive)
