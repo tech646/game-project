@@ -8,6 +8,9 @@ extends PanelContainer
 @onready var speed_down_btn: Button = $Margin/VBox/SpeedRow/SpeedDownBtn
 @onready var character_label: Label = $Margin/VBox/CharacterLabel
 @onready var college_label: Label = $Margin/VBox/CollegeLabel
+@onready var upgrades_btn: Button = $Margin/VBox/UpgradesBtn
+
+signal open_upgrades
 
 
 func _ready() -> void:
@@ -21,6 +24,10 @@ func _ready() -> void:
 	speed_down_btn.pressed.connect(func():
 		GameClock.set_speed(maxf(GameClock.speed / 2.0, 1.0))
 		_update_speed_label()
+	)
+	upgrades_btn.pressed.connect(func():
+		hide_menu()
+		open_upgrades.emit()
 	)
 
 

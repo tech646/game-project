@@ -18,7 +18,7 @@ func _spawn_objects() -> void:
 	spawn_furniture("closet", "smartle", Vector2(-225, -6))
 	spawn_furniture("bookshelf", "smartle", Vector2(63, -73))
 
-	create_door(">> Kitchen", "favela_kitchen", Vector2(156, -62))
-	create_door(">> Upgrades", "upgrade_shop", Vector2(-280, 100))
+	# Invisible door at the kitchen doorway in the image
+	create_invisible_door("favela_kitchen", Vector2(156, -62))
 
 	spawn_point = Vector2(-40, 60)

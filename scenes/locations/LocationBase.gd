@@ -98,6 +98,19 @@ func create_door(door_name: String, target: String, pos: Vector2, color: Color =
 	ysort_root.add_child(door)
 
 
+func create_invisible_door(target: String, pos: Vector2) -> void:
+	## Door with no visual — just a hitbox. Player walks to it and presses Enter.
+	var door := DoorObject.new()
+	door.door_name = ""
+	door.target_location = target
+	door.collision_layer = 0
+	door.collision_mask = 0
+	door.position = pos
+	door.add_to_group("game_objects")
+	door.add_to_group("doors")
+	ysort_root.add_child(door)
+
+
 func get_spawn_world_pos() -> Vector2:
 	return spawn_point
 

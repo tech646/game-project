@@ -74,6 +74,7 @@ func _ready() -> void:
 	_load_starting_locations()
 
 	# Connect signals
+	pause_menu.open_upgrades.connect(_on_open_upgrades)
 	GameState.state_changed.connect(_on_state_changed)
 	GameClock.hour_changed.connect(_on_hour_changed)
 	GameClock.day_changed.connect(_on_day_changed)
@@ -499,6 +500,12 @@ func _interact_furniture(furn: UpgradeableFurniture) -> void:
 
 func _on_coins_changed(_character: String, _amount: int) -> void:
 	_update_coins_label()
+
+
+func _on_open_upgrades() -> void:
+	var needs := CharacterManager.get_active_needs()
+	if needs:
+		upgrade_shop.show_shop(needs.character_name)
 
 
 func _update_coins_label() -> void:
