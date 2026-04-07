@@ -238,6 +238,20 @@ func _use_door(door: DoorObject) -> void:
 		else:
 			target = "favela_bedroom"
 
+	# Check school hours (8:00 - 16:00)
+	if target in ["classroom", "library", "cafeteria"]:
+		var time := GameClock.get_total_minutes()
+		if time < 480 or time > 960:  # Before 8:00 or after 16:00
+			EventBus.warning_shown.emit("School is closed! Open 8:00-16:00", "red")
+			return
+
+	# Check cafeteria hours (12:00 - 13:30)
+	if target == "cafeteria":
+		var time := GameClock.get_total_minutes()
+		if time < 720 or time > 810:
+			EventBus.warning_shown.emit("Cafeteria is closed! Open 12:00-13:30", "red")
+			return
+
 	var char_name: String = needs.character_name if needs else ""
 	if char_name != "":
 		SceneManager.character_locations[char_name] = target
@@ -437,7 +451,7 @@ func _on_action_confirmed(obj: GameObject) -> void:
 
 
 func _on_alt_action_confirmed(obj: GameObject) -> void:
-	## Execute the alt action (e.g., "Play" on a desk)
+	## Execute the alt action
 	var player := CharacterManager.get_active_player()
 	if not player:
 		return
@@ -447,8 +461,19 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 	for i in range(obj.alt_time_cost):
 		GameClock._advance_minute()
 
-	# Restore alt need
-	if obj.alt_need_affected != "":
+	# Check if alt action is study-related
+	var is_study := obj.alt_need_affected == "" and (
+		obj.alt_action_name.begins_with("Study") or
+		obj.alt_action_name.begins_with("Participate"))
+
+	if is_study:
+		# SAT gain
+		var sat_gain := int(10.0 * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0))
+		needs.modify_sat(sat_gain)
+		EventBus.warning_shown.emit("+%d SAT" % sat_gain, "yellow")
+		# Always trigger quiz when studying
+		sat_quiz.show_quiz()
+	elif obj.alt_need_affected != "":
 		var restore: float = obj.alt_base_restore * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0)
 		needs.modify_need(obj.alt_need_affected, restore)
 		var icon := ""
@@ -456,13 +481,17 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 			"fun": icon = "[Fun]"
 			"energy": icon = "[Nrg]"
 			"hunger": icon = "[Food]"
+			"mental_health": icon = "[MH]"
 		EventBus.warning_shown.emit("+%.0f %s %s" % [restore, icon, obj.alt_need_affected.capitalize()], "yellow")
 
-		# Mission event
-		var mm := get_tree().get_first_node_in_group("mission_manager") as MissionManager
-		if mm:
+	# Mission events
+	var mm := get_tree().get_first_node_in_group("mission_manager") as MissionManager
+	if mm:
+		if is_study:
+			mm.complete_mission_by_event(needs.character_name, "action_study")
+		else:
 			mm.complete_mission_by_event(needs.character_name, "action_fun")
-			mm.complete_mission_by_event(needs.character_name, "action_any")
+		mm.complete_mission_by_event(needs.character_name, "action_any")
 
 	player.unlock_from_action()
 

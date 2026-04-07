@@ -45,8 +45,15 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		# Any action counts for explore mission
 		_complete_mission(needs.character_name, "action_any")
 
-	# Study → SAT gain + quiz trigger
-	var is_study := obj.need_affected == "" and (obj.action_name.begins_with("Study") or obj.action_name == "Talk" or obj.action_name == "Read")
+	# Study → SAT quiz ALWAYS triggers when studying
+	var is_study := obj.need_affected == "" and (
+		obj.action_name.begins_with("Study") or
+		obj.action_name.begins_with("SAT") or
+		obj.action_name.begins_with("Participate") or
+		obj.action_name == "Talk" or
+		obj.action_name == "Office Hour" or
+		obj.action_name == "Read"
+	)
 	if is_study:
 		var sat_gain := int(float(SAT_PER_STUDY) * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0))
 		needs.modify_sat(sat_gain)
@@ -54,16 +61,14 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 
 		_complete_mission(needs.character_name, "action_study")
 
-		# Home desk study = homework done
-		if obj.object_name.contains("Desk") or obj.object_name.contains("Setup"):
+		if obj.object_name.contains("Desk") or obj.object_name.contains("Setup") or obj.object_name.contains("Notebook"):
 			needs.homework_done = true
 			_complete_mission(needs.character_name, "homework_done")
 
-		# Brighta interaction
-		if obj.action_name == "Talk":
+		if obj.action_name == "Talk" or obj.action_name == "Office Hour":
 			_complete_mission(needs.character_name, "talk_npc")
 
-		# 2h study = full practice test (more coins), 1h = single quiz
+		# 2h+ study = full test (3+ questions), otherwise single quiz
 		if obj.time_cost >= 120:
 			full_test_requested.emit(needs.character_name)
 		else:
