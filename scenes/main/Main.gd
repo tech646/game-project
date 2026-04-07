@@ -216,14 +216,20 @@ func _on_location_changed(_character: String, location: String) -> void:
 			ysort.add_child(player)
 			player.position = loc.get_spawn_world_pos()
 
-			# If both at same location (school), show both
+			# If both at school, show both in same room
+			var school_locations := ["classroom", "library", "cafeteria", "gym"]
 			var other := CharacterManager.get_inactive_player()
-			if other:
+			if other and location in school_locations:
 				var other_needs: NeedsComponent = other.get_node_or_null("NeedsComponent")
-				if other_needs and SceneManager.get_location(other_needs.character_name) == location:
-					_park_player(other)
-					ysort.add_child(other)
-					other.position = loc.get_spawn_world_pos() + Vector2(80, 40)
+				if other_needs:
+					var other_loc := SceneManager.get_location(other_needs.character_name)
+					if other_loc in school_locations:
+						# Both at school — show inactive player too
+						if other.get_parent():
+							other.get_parent().remove_child(other)
+						ysort.add_child(other)
+						other.visible = true
+						other.position = loc.get_spawn_world_pos() + Vector2(60, 30)
 
 		_pending_player_placement = {}
 	_update_location_label(location)
