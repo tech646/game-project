@@ -160,6 +160,8 @@ func try_interact() -> Dictionary:
 			return {"type": "object", "object": result.node}
 		elif result.type == "furniture":
 			return {"type": "furniture", "furniture": result.node}
+		elif result.type == "player":
+			return {"type": "player", "player": result.node}
 	return {}
 
 

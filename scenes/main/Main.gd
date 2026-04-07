@@ -437,6 +437,34 @@ func _unhandled_input(event: InputEvent) -> void:
 				_interact_furniture(result.furniture)
 			elif result.type == "door":
 				_use_door(result.door)
+			elif result.type == "player":
+				player.lock_for_action()
+				_interact_with_friend(result.player)
+
+
+func _interact_with_friend(other_player: CharacterBody2D) -> void:
+	## Show interaction options when near the other student.
+	var my_needs := CharacterManager.get_active_needs()
+	var other_needs: NeedsComponent = other_player.get_node_or_null("NeedsComponent")
+	if not my_needs or not other_needs:
+		CharacterManager.get_active_player().unlock_from_action()
+		return
+
+	var other_name: String = other_needs.character_name.capitalize()
+
+	# Create temporary interaction object with friend options
+	var temp := GameObject.new()
+	temp.object_name = other_name
+	temp.quality = 3
+	temp.action_name = "Chat & Destress (30min)"
+	temp.need_affected = "mental_health"
+	temp.base_restore = 25.0
+	temp.time_cost = 30
+	temp.alt_action_name = "Study Together (1h)"
+	temp.alt_need_affected = ""
+	temp.alt_base_restore = 0.0
+	temp.alt_time_cost = 60
+	interaction_popup.show_for_object(temp)
 
 
 func _on_action_confirmed(obj: GameObject) -> void:
@@ -477,11 +505,25 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 		obj.alt_action_name.begins_with("Participate"))
 
 	if is_study:
-		# SAT gain
+		# SAT gain — bonus if studying together with friend!
 		var sat_gain := int(10.0 * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0))
+		var is_together := obj.alt_action_name.contains("Together")
+		if is_together:
+			sat_gain = int(sat_gain * 1.5)  # 50% bonus studying together!
+			needs.modify_need("mental_health", 10.0)  # Friendship helps mental health
+			EventBus.warning_shown.emit("+%d SAT (study buddy bonus!) +10 Mental" % sat_gain, "yellow")
+		else:
+			EventBus.warning_shown.emit("+%d SAT" % sat_gain, "yellow")
 		needs.modify_sat(sat_gain)
-		EventBus.warning_shown.emit("+%d SAT" % sat_gain, "yellow")
-		# Always trigger quiz when studying
+		# Give the other player some SAT too when studying together
+		if is_together:
+			var other := CharacterManager.get_inactive_player()
+			if other:
+				var other_needs: NeedsComponent = other.get_node_or_null("NeedsComponent")
+				if other_needs:
+					other_needs.modify_sat(int(sat_gain * 0.5))
+					other_needs.modify_need("mental_health", 10.0)
+		# Trigger quiz
 		sat_quiz.show_quiz()
 	elif obj.alt_need_affected != "":
 		var restore: float = obj.alt_base_restore * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0)
