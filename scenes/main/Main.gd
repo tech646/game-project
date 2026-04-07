@@ -271,17 +271,17 @@ func _use_door(door: DoorObject) -> void:
 			return
 
 	var char_name: String = needs.character_name if needs else ""
-	if char_name != "":
-		SceneManager.character_locations[char_name] = target
 
-	# If going to school, show commute animation first
-	# Commute animation — going TO school from home
-	var is_going_to_school := target == "classroom"
-	# Commute animation — going HOME from school
-	var is_going_home := target in ["favela_bedroom", "mansion", "home"]
+	# Check commute BEFORE updating location
 	var current_loc := SceneManager.get_location(char_name) if char_name != "" else ""
+	var is_going_to_school := target == "classroom"
+	var is_going_home := target in ["favela_bedroom", "mansion", "home"]
 	var at_school := current_loc in ["classroom", "library", "cafeteria", "gym"]
 	var at_home := current_loc in ["favela_kitchen", "mansion_kitchen", "favela_bedroom", "mansion"]
+
+	# Now update location tracking
+	if char_name != "":
+		SceneManager.character_locations[char_name] = target
 
 	if (is_going_to_school and at_home) or (is_going_home and at_school):
 		# Smartle: bus 2 hours each way (120 min). Gritty: car 20 min each way.
