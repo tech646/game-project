@@ -37,10 +37,22 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 			"hunger":
 				_complete_mission(needs.character_name, "action_eat")
 			"energy":
-				if obj.action_name == "Sleep":
+				if obj.action_name.begins_with("Sleep"):
 					_complete_mission(needs.character_name, "action_sleep")
 			"fun":
 				_complete_mission(needs.character_name, "action_fun")
+			"mental_health":
+				# Gym/exercise missions
+				if obj.action_name.contains("Run") or obj.action_name.contains("Workout") or obj.action_name.contains("Meditate") or obj.action_name.contains("Exercise"):
+					_complete_mission(needs.character_name, "action_gym")
+
+		# Wash dishes mission
+		if obj.action_name == "Wash":
+			_complete_mission(needs.character_name, "action_wash")
+
+		# Organize closet mission
+		if obj.action_name == "Organize":
+			_complete_mission(needs.character_name, "action_organize")
 
 		# Any action counts for explore mission
 		_complete_mission(needs.character_name, "action_any")

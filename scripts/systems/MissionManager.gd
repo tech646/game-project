@@ -11,15 +11,26 @@ signal missions_reset(character: String)
 const SAT_PER_MISSION := 3
 const ALL_COMPLETE_BONUS := 10
 
-# Mission templates
-const FIXED_MISSIONS := [
-	{"id": "go_school", "icon": "[SAT]", "desc": "Go to school", "event": "commute_arrived"},
+# Shared missions (both characters)
+const SHARED_MISSIONS := [
+	{"id": "go_school", "icon": "-", "desc": "Go to school", "event": "commute_arrived"},
 	{"id": "study", "icon": "-", "desc": "Study", "event": "action_study"},
 	{"id": "eat", "icon": "-", "desc": "Eat", "event": "action_eat"},
 	{"id": "sleep", "icon": "-", "desc": "Sleep", "event": "action_sleep"},
-	{"id": "fun", "icon": "[Fun]", "desc": "Have fun", "event": "action_fun"},
+	{"id": "fun", "icon": "-", "desc": "Have fun", "event": "action_fun"},
 	{"id": "homework", "icon": "-", "desc": "Do homework", "event": "homework_done"},
 	{"id": "on_time", "icon": "-", "desc": "Arrive on time", "event": "arrived_on_time"},
+]
+
+# Smartle-only missions (chores at home)
+const SMARTLE_MISSIONS := [
+	{"id": "wash_dishes", "icon": "-", "desc": "Wash the dishes", "event": "action_wash"},
+	{"id": "organize_closet", "icon": "-", "desc": "Organize closet", "event": "action_organize"},
+]
+
+# Gritty-only missions
+const GRITTY_MISSIONS := [
+	{"id": "gym", "icon": "-", "desc": "Go to the gym (30min)", "event": "action_gym"},
 ]
 
 const BONUS_MISSIONS := [
@@ -27,7 +38,7 @@ const BONUS_MISSIONS := [
 	{"id": "eat2", "icon": "-", "desc": "Eat again", "event": "action_eat"},
 	{"id": "talk_brighta", "icon": "-", "desc": "Talk to Brighta", "event": "talk_npc"},
 	{"id": "explore", "icon": "-", "desc": "Explore the area", "event": "action_any"},
-	{"id": "sleep_early", "icon": "*", "desc": "Sleep early", "event": "action_sleep"},
+	{"id": "sleep_early", "icon": "-", "desc": "Sleep early", "event": "action_sleep"},
 	{"id": "study3", "icon": "-", "desc": "Extra study session", "event": "action_study"},
 ]
 
@@ -43,15 +54,21 @@ func _ready() -> void:
 func generate_missions(character: String) -> void:
 	var missions: Array[Dictionary] = []
 
-	# Add 7 fixed missions
-	for m in FIXED_MISSIONS:
+	# Add shared missions
+	for m in SHARED_MISSIONS:
 		missions.append(m.duplicate())
 		missions[-1]["done"] = false
 
-	# Add 3 random bonus missions
+	# Add character-specific missions
+	var specific := SMARTLE_MISSIONS if character == "smartle" else GRITTY_MISSIONS
+	for m in specific:
+		missions.append(m.duplicate())
+		missions[-1]["done"] = false
+
+	# Add 1 random bonus mission
 	var shuffled := BONUS_MISSIONS.duplicate()
 	shuffled.shuffle()
-	for i in range(min(3, shuffled.size())):
+	for i in range(min(1, shuffled.size())):
 		var m: Dictionary = shuffled[i].duplicate()
 		m["done"] = false
 		missions.append(m)
