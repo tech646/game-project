@@ -56,10 +56,8 @@ var _pending_player_placement: Dictionary = {}  # Used after scene swap
 func _ready() -> void:
 	pause_overlay.visible = false
 	day_banner.visible = false
-	title_screen.visible = false
-	title_screen.set_process_unhandled_input(false)
 
-	# Register systems in groups FIRST — before loading locations
+	# Register systems in groups FIRST
 	schedule_manager.add_to_group("schedule_manager")
 	mission_manager.add_to_group("mission_manager")
 	coin_system.add_to_group("coin_system")
@@ -88,6 +86,8 @@ func _ready() -> void:
 	sat_full_test.test_completed.connect(_on_full_test_completed)
 	coin_system.coins_changed.connect(_on_coins_changed)
 	furniture_system.furniture_upgraded.connect(_on_furniture_upgraded)
+	title_screen.start_game.connect(_on_title_start)
+	day_split.continue_day.connect(_on_split_continue)
 
 	# Setup UI
 	mission_panel.setup(mission_manager)
@@ -95,11 +95,29 @@ func _ready() -> void:
 	mission_manager.generate_missions("smartle")
 	_update_coins_label()
 
-	# START PLAYING
+	# Start paused — show title screen
+	GameState.change_state(GameState.State.IN_MENU)
+	GameClock.pause()
+
+
+func _on_title_start() -> void:
+	title_screen.visible = false
+	title_screen.set_process_unhandled_input(false)
+	# Show morning split screen
+	call_deferred("_show_morning_split")
+
+
+func _show_morning_split() -> void:
+	day_split.show_split(GameClock.game_day, _get_needs(gritty_player), _get_needs(smartle_player))
+
+
+func _on_split_continue() -> void:
+	# Start playing!
 	GameState.change_state(GameState.State.PLAYING)
 	GameClock.resume()
 	_show_day_banner(GameClock.game_day)
 	_update_room_score()
+	_update_coins_label()
 	print("[Main] Game started - State: ", GameState.State.keys()[GameState.current_state])
 
 
@@ -225,14 +243,19 @@ func _use_door(door: DoorObject) -> void:
 		SceneManager.character_locations[char_name] = target
 
 	# If going to school, show commute animation first
-	if target == "school" and needs:
-		var mode := "bus" if char_name == "gritty" else "car"
-		var travel := 45 if char_name == "gritty" else 15
-		commute_anim.show_commute(char_name, mode, travel)
-		commute_anim.commute_done.connect(func():
-			_do_door_transition(player, target, char_name)
-		, CONNECT_ONE_SHOT)
-		return
+	# Commute animation when going to school (classroom)
+	if target == "classroom" and needs:
+		# Only show commute if coming from home (kitchen)
+		var current_loc := SceneManager.get_location(char_name)
+		var is_from_home := current_loc in ["favela_kitchen", "mansion_kitchen"]
+		if is_from_home:
+			var mode := "bus" if char_name == "smartle" else "car"
+			var travel := 45 if char_name == "smartle" else 15
+			commute_anim.show_commute(char_name, mode, travel)
+			commute_anim.commute_done.connect(func():
+				_do_door_transition(player, target, char_name)
+			, CONNECT_ONE_SHOT)
+			return
 
 	_do_door_transition(player, target, char_name)
 

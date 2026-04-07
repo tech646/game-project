@@ -26,8 +26,8 @@ func show_split(day: int, gritty_needs: NeedsComponent, smartle_needs: NeedsComp
 
 	day_label.text = "* Day %d — Good morning!" % day
 
-	_fill_panel(gritty_panel, "GRITTY", "[H] Favela", gritty_needs, Color(0.9, 0.5, 0.6))
-	_fill_panel(smartle_panel, "SMARTLE", "[M] Mansion", smartle_needs, Color(0.5, 0.7, 0.9))
+	_fill_panel(gritty_panel, "GRITTY", "Middle Class", gritty_needs, Color(0.5, 0.7, 0.9))
+	_fill_panel(smartle_panel, "SMARTLE", "Favela", smartle_needs, Color(0.9, 0.5, 0.6))
 
 	visible = true
 	set_process_unhandled_input(true)
