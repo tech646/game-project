@@ -1,8 +1,6 @@
 extends LocationBase
 
-## Gritty's kitchen — middle class, modern equipment.
-## Background: isometric kitchen with stove, fridge, table.
-## Has doors labeled "QUARTO" and "SAIDA".
+## Gritty's kitchen — middle class.
 
 func _init() -> void:
 	location_name = "mansion_kitchen"
@@ -16,9 +14,7 @@ func _spawn_objects() -> void:
 	spawn_furniture("sink", "gritty", Vector2(170, -30))
 	spawn_furniture("table", "gritty", Vector2(-40, 30))
 
-	# QUARTO door (left) → bedroom
-	create_door(">> Bedroom", "mansion", Vector2(-220, -40))
-	# SAIDA door (right) → school
-	create_door(">> School", "school", Vector2(200, -30))
+	create_invisible_door("mansion", Vector2(-220, -40))
+	create_invisible_door("school", Vector2(200, -30))
 
 	spawn_point = Vector2(0, 30)
