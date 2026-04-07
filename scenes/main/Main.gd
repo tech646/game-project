@@ -262,19 +262,24 @@ func _use_door(door: DoorObject) -> void:
 		SceneManager.character_locations[char_name] = target
 
 	# If going to school, show commute animation first
-	# Commute animation when going to school (classroom)
-	if target == "classroom" and needs:
-		# Only show commute if coming from home (kitchen)
-		var current_loc := SceneManager.get_location(char_name)
-		var is_from_home := current_loc in ["favela_kitchen", "mansion_kitchen"]
-		if is_from_home:
-			var mode := "bus" if char_name == "smartle" else "car"
-			var travel := 45 if char_name == "smartle" else 15
-			commute_anim.show_commute(char_name, mode, travel)
-			commute_anim.commute_done.connect(func():
-				_do_door_transition(player, target, char_name)
-			, CONNECT_ONE_SHOT)
-			return
+	# Commute animation — going TO school from home
+	var is_going_to_school := target == "classroom"
+	# Commute animation — going HOME from school
+	var is_going_home := target in ["favela_bedroom", "mansion", "home"]
+	var current_loc := SceneManager.get_location(char_name) if char_name != "" else ""
+	var at_school := current_loc in ["classroom", "library", "cafeteria"]
+	var at_home := current_loc in ["favela_kitchen", "mansion_kitchen", "favela_bedroom", "mansion"]
+
+	if (is_going_to_school and at_home) or (is_going_home and at_school):
+		# Smartle: bus 2 hours (120 min). Gritty: car 30 min.
+		var mode := "bus" if char_name == "smartle" else "car"
+		var travel := 120 if char_name == "smartle" else 30
+		var direction := "to school" if is_going_to_school else "home"
+		commute_anim.show_commute(char_name + " going " + direction, mode, travel)
+		commute_anim.commute_done.connect(func():
+			_do_door_transition(player, target, char_name)
+		, CONNECT_ONE_SHOT)
+		return
 
 	_do_door_transition(player, target, char_name)
 
