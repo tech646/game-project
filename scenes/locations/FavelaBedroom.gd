@@ -9,18 +9,18 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_background("res://assets/rooms/Quarto Smartle.png", 0.25)
 
-	# Positions mapped to furniture in the isometric image:
-	# Image 690x376 centered at (0,0). Top-left ~(-345,-188), bottom-right ~(345,188)
+	# Positions from annotated image (2760x1504 at 0.25 = 690x376)
+	# Center of image = (0,0). X: -345 to +345, Y: -188 to +188
 
-	spawn_furniture("closet", "smartle", Vector2(-225, -15))   # Far left wall
-	spawn_furniture("bed", "smartle", Vector2(-30, -85))       # Center, upper
-	spawn_furniture("bookshelf", "smartle", Vector2(85, -85))  # Right of bed
-	spawn_furniture("desk", "smartle", Vector2(-105, 25))      # Front-left, near chair
-	spawn_furniture("rug", "smartle", Vector2(-155, 15))       # Under/near desk
-	spawn_furniture("tv", "smartle", Vector2(90, 35))          # Right side, low
-	spawn_furniture("sofa", "smartle", Vector2(195, 5))        # Far right
+	spawn_furniture("closet", "smartle", Vector2(-255, -35))   # Armario - far left
+	spawn_furniture("bed", "smartle", Vector2(-60, -100))      # Cama - center upper
+	spawn_furniture("rug", "smartle", Vector2(-175, 10))       # Tapete - left floor
+	spawn_furniture("desk", "smartle", Vector2(-85, 40))       # Mesa de estudos - center floor
+	spawn_furniture("tv", "smartle", Vector2(100, 50))         # TV - right lower
+	spawn_furniture("sofa", "smartle", Vector2(220, -10))      # Sofa - far right
 
-	create_door(">> Kitchen", "favela_kitchen", Vector2(175, -80))
-	create_door(">> Upgrades", "upgrade_shop", Vector2(-260, 75))
+	# Porta para cozinha - right upper (door opening)
+	create_door(">> Kitchen", "favela_kitchen", Vector2(120, -100))
+	create_door(">> Upgrades", "upgrade_shop", Vector2(-280, 80))
 
 	spawn_point = Vector2(-40, 50)
