@@ -238,18 +238,23 @@ func _use_door(door: DoorObject) -> void:
 		else:
 			target = "favela_bedroom"
 
-	# Check school hours (8:00 - 16:00)
+	# Check school hours — allow leaving home early for commute
+	# School open 8:00-16:00, but commute takes time
 	if target in ["classroom", "library", "cafeteria"]:
 		var time := GameClock.get_total_minutes()
-		if time < 480 or time > 960:  # Before 8:00 or after 16:00
-			EventBus.warning_shown.emit("School is closed! Open 8:00-16:00", "red")
+		# Allow leaving from 7:00 onward (earliest commute departure)
+		# Block after 16:00
+		if time > 960:
+			EventBus.warning_shown.emit("School is closed! Come back tomorrow.", "red")
 			return
 
-	# Check cafeteria hours (12:00 - 13:30)
+	# Check cafeteria hours (12:00 - 13:30) — only if already at school
 	if target == "cafeteria":
 		var time := GameClock.get_total_minutes()
-		if time < 720 or time > 810:
-			EventBus.warning_shown.emit("Cafeteria is closed! Open 12:00-13:30", "red")
+		var current_loc := SceneManager.get_location(needs.character_name if needs else "")
+		var at_school := current_loc in ["classroom", "library"]
+		if at_school and (time < 720 or time > 810):
+			EventBus.warning_shown.emit("Cafeteria open 12:00-13:30 only!", "red")
 			return
 
 	var char_name: String = needs.character_name if needs else ""
