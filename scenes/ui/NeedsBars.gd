@@ -9,6 +9,8 @@ extends PanelContainer
 @onready var energy_val: Label = $Margin/VBox/EnergyRow/Val
 @onready var fun_bar: ProgressBar = $Margin/VBox/FunRow/Bar
 @onready var fun_val: Label = $Margin/VBox/FunRow/Val
+@onready var mental_bar: ProgressBar = $Margin/VBox/MentalRow/Bar
+@onready var mental_val: Label = $Margin/VBox/MentalRow/Val
 @onready var sat_label: Label = $Margin/VBox/SATLabel
 @onready var sat_bar: ProgressBar = $Margin/VBox/SATBar
 
@@ -47,6 +49,7 @@ func _bind_to_active() -> void:
 	_update_bar(hunger_bar, hunger_val, _current_needs.hunger)
 	_update_bar(energy_bar, energy_val, _current_needs.energy)
 	_update_bar(fun_bar, fun_val, _current_needs.fun)
+	_update_bar(mental_bar, mental_val, _current_needs.mental_health)
 	_update_sat(_current_needs.sat_score, NeedsComponent.SAT_TARGET)
 
 
@@ -55,6 +58,7 @@ func _on_need_changed(need_name: String, value: float, _max_value: float) -> voi
 		"hunger": _update_bar(hunger_bar, hunger_val, value)
 		"energy": _update_bar(energy_bar, energy_val, value)
 		"fun": _update_bar(fun_bar, fun_val, value)
+		"mental_health": _update_bar(mental_bar, mental_val, value)
 
 
 func _on_sat_changed(score: int, target: int) -> void:

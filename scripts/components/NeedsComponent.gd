@@ -15,10 +15,12 @@ const SAT_TARGET := 1600
 const DECAY_HUNGER := 0.15
 const DECAY_ENERGY := 0.1
 const DECAY_FUN := 0.08
+const DECAY_MENTAL := 0.05
 
 var hunger: float = 50.0
 var energy: float = 45.0
 var fun: float = 60.0
+var mental_health: float = 100.0
 var sat_score: int = 0
 var homework_done: bool = false
 
@@ -30,6 +32,7 @@ func initialize(data: CharacterData) -> void:
 	hunger = data.starting_hunger
 	energy = data.starting_energy
 	fun = data.starting_fun
+	mental_health = 100.0
 	sat_score = 0
 	_emit_all()
 
@@ -57,6 +60,14 @@ func _decay_needs() -> void:
 	# Fun decays at base rate
 	modify_need("fun", -DECAY_FUN)
 
+	# Mental health decays slowly, faster if other needs are low
+	var mental_mult := 1.0
+	if energy < 30.0 or hunger < 30.0:
+		mental_mult = 2.0
+	if fun < 20.0:
+		mental_mult = 3.0
+	modify_need("mental_health", -DECAY_MENTAL * mental_mult)
+
 
 func modify_need(need_name: String, amount: float) -> void:
 	var old_value: float
@@ -82,6 +93,13 @@ func modify_need(need_name: String, amount: float) -> void:
 				need_changed.emit("fun", fun, MAX_NEED)
 				if fun < 30.0:
 					need_critical.emit("fun", fun)
+		"mental_health":
+			old_value = mental_health
+			mental_health = clampf(mental_health + amount, 0.0, MAX_NEED)
+			if mental_health != old_value:
+				need_changed.emit("mental_health", mental_health, MAX_NEED)
+				if mental_health < 40.0:
+					need_critical.emit("mental_health", mental_health)
 
 
 func modify_sat(amount: int) -> void:

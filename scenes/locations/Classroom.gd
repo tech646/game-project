@@ -18,25 +18,28 @@ func _spawn_objects() -> void:
 		brighta_sprite.texture = tex
 		var scale_factor := 120.0 / float(tex.get_height())
 		brighta_sprite.scale = Vector2(scale_factor, scale_factor)
-		brighta_sprite.position = Vector2(17, -42)
+		brighta_sprite.position = Vector2(17, -62)
 		brighta_sprite.z_index = 5
 		ysort_root.add_child(brighta_sprite)
 
 	create_object({
-		"name": "Brighta's Desk", "action": "Talk", "quality": 3,
-		"need": "", "base_restore": 0.0, "time_cost": 30,
+		"name": "Mrs Brighta", "action": "Office Hour", "quality": 3,
+		"need": "mental_health", "base_restore": 15.0, "time_cost": 30,
+		"alt_action": "Talk", "alt_need": "", "alt_restore": 0.0, "alt_time": 15,
 		"pos": Vector2(17, -12),
 	})
 
-	# Two notebook desks for SAT practice
+	# Two notebook desks — SAT Mock Test or Participate in Class
 	create_object({
-		"name": "Notebook", "action": "Study 2h", "quality": 3,
+		"name": "Notebook", "action": "SAT Mock Test", "quality": 3,
 		"need": "", "base_restore": 0.0, "time_cost": 120,
+		"alt_action": "Participate in Class", "alt_need": "", "alt_restore": 0.0, "alt_time": 60,
 		"pos": Vector2(-14, 45),
 	})
 	create_object({
-		"name": "Notebook", "action": "Study 2h", "quality": 3,
+		"name": "Notebook", "action": "SAT Mock Test", "quality": 3,
 		"need": "", "base_restore": 0.0, "time_cost": 120,
+		"alt_action": "Participate in Class", "alt_need": "", "alt_restore": 0.0, "alt_time": 60,
 		"pos": Vector2(33, 19),
 	})
 

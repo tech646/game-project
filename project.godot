@@ -14,8 +14,8 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Dois Mundos"
-config/description="A life simulation game about social inequality — two characters, same dream, different starting conditions."
+config/name="Education as Path Out of Poverty"
+config/description="A life simulation game showing how education and resources shape the path to college — two students, same dream, different starting conditions."
 run/main_scene="res://scenes/main/Main.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 

@@ -11,20 +11,20 @@ func _spawn_objects() -> void:
 
 	# Exact positions from debug clicks:
 
-	# Tables for eating
+	# Tables for eating (school food costs $8)
 	create_object({
-		"name": "Table", "action": "Eat", "quality": 2,
-		"need": "hunger", "base_restore": 25.0, "time_cost": 30,
+		"name": "Table", "action": "School Lunch ($8)", "quality": 2,
+		"need": "hunger", "base_restore": 30.0, "time_cost": 30,
 		"pos": Vector2(45, 59),
 	})
 	create_object({
-		"name": "Table", "action": "Eat", "quality": 2,
-		"need": "hunger", "base_restore": 25.0, "time_cost": 30,
+		"name": "Table", "action": "School Lunch ($8)", "quality": 2,
+		"need": "hunger", "base_restore": 30.0, "time_cost": 30,
 		"pos": Vector2(143, 104),
 	})
 	create_object({
-		"name": "Table", "action": "Eat", "quality": 2,
-		"need": "hunger", "base_restore": 25.0, "time_cost": 30,
+		"name": "Table", "action": "School Lunch ($8)", "quality": 2,
+		"need": "hunger", "base_restore": 30.0, "time_cost": 30,
 		"pos": Vector2(-64, 116),
 	})
 

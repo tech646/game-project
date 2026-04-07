@@ -536,9 +536,9 @@ func _on_open_upgrades() -> void:
 func _update_coins_label() -> void:
 	var needs := CharacterManager.get_active_needs()
 	if needs:
-		coins_label.text = "$ %d" % coin_system.get_coins(needs.character_name)
+		coins_label.text = "Coins: $%d" % coin_system.get_coins(needs.character_name)
 	else:
-		coins_label.text = "$ 0"
+		coins_label.text = "Coins: $0"
 
 
 func _on_furniture_upgraded(_character: String, _furniture_id: String, _new_level: int) -> void:

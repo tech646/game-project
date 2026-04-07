@@ -124,6 +124,32 @@ text = "100"
 custom_minimum_size = Vector2(28, 0)
 horizontal_alignment = 2
 
+[node name="MentalRow" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Icon" type="Label" parent="Margin/VBox/MentalRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "[MH]"
+custom_minimum_size = Vector2(20, 0)
+
+[node name="Bar" type="ProgressBar" parent="Margin/VBox/MentalRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 14)
+theme_override_styles/background = SubResource("StyleBoxFlat_bar_bg")
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Val" type="Label" parent="Margin/VBox/MentalRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "100"
+custom_minimum_size = Vector2(28, 0)
+horizontal_alignment = 2
+
 [node name="Sep2" type="HSeparator" parent="Margin/VBox"]
 layout_mode = 2
 

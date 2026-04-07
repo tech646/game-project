@@ -10,20 +10,28 @@ signal start_game
 @onready var subtitle: Label = $VBox/Subtitle
 
 var _narrative_lines := [
-	"Two kids. Same dream. Different worlds.",
+	"Two students. Same dream. Different worlds.",
 	"",
-	"Smartle lives in the favela. Wakes up early, rides a packed bus,",
-	"studies at a worn-out desk, eats whatever's there.",
+	"Smartle lives in the favela. Rides a packed bus every day,",
+	"studies at a worn-out desk, and counts every coin for food.",
 	"",
 	"Gritty is middle class. His parents work hard for his education.",
-	"He has a decent home, a car ride to school, and more time to study.",
+	"He has a decent home, a car to school, and more resources.",
 	"",
 	"They both attend the same elite bilingual school.",
 	"They both dream of getting into a US college.",
-	"",
 	"But the path couldn't be more different.",
 	"",
-	"You'll play as both. You'll feel the difference.",
+	"--- HOW TO PLAY ---",
+	"Arrow keys: Move your character",
+	"Enter: Interact with objects and doors",
+	"Tab: Switch between characters",
+	"Space: Pause menu (upgrades, speed, college list)",
+	"",
+	"Study to earn coins. Use coins to buy food and upgrade your room.",
+	"Answer SAT questions correctly for bonus coins!",
+	"Take care of your hunger, energy, fun, and mental health.",
+	"On Day 7, college decision letters arrive!",
 ]
 
 var _intro_tween: Tween = null
