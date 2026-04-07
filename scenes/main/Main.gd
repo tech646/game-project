@@ -284,11 +284,11 @@ func _use_door(door: DoorObject) -> void:
 	var at_home := current_loc in ["favela_kitchen", "mansion_kitchen", "favela_bedroom", "mansion"]
 
 	if (is_going_to_school and at_home) or (is_going_home and at_school):
-		# Smartle: bus 2 hours (120 min). Gritty: car 30 min.
+		# Smartle: bus 2 hours each way (120 min). Gritty: car 20 min each way.
 		var mode := "bus" if char_name == "smartle" else "car"
-		var travel := 120 if char_name == "smartle" else 30
+		var travel := 120 if char_name == "smartle" else 20
 		var direction := "to school" if is_going_to_school else "home"
-		commute_anim.show_commute(char_name + " going " + direction, mode, travel)
+		commute_anim.show_commute(char_name.capitalize() + " going " + direction, mode, travel)
 		commute_anim.commute_done.connect(func():
 			_do_door_transition(player, target, char_name)
 		, CONNECT_ONE_SHOT)

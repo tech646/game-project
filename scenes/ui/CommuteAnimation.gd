@@ -64,19 +64,36 @@ func show_commute(character_name: String, mode: String, travel_time: int) -> voi
 			thought_label.text = thoughts[mini(i, thoughts.size() - 1)]
 		)
 
-	# Energy drain notification for bus
+	# Energy drain + arrival message
 	if is_bus:
 		tween.tween_callback(func():
-			thought_label.text = ":( Arrived exhausted... -15 [Nrg]"
+			thought_label.text = ":( Arrived exhausted... -15 Energy"
 			thought_label.add_theme_color_override("font_color", Color(1, 0.5, 0.3))
 		)
 	else:
 		tween.tween_callback(func():
-			thought_label.text = ":) Arrived fresh! -5 [Nrg]"
+			thought_label.text = ":) Arrived fresh! -5 Energy"
 			thought_label.add_theme_color_override("font_color", Color(0.5, 1, 0.5))
 		)
 
-	tween.tween_interval(1.5)
+	tween.tween_interval(1.0)
+
+	# Show comparison: how long each student takes
+	tween.tween_callback(func():
+		scene_label.text = "-- Commute Comparison --"
+		vehicle_label.text = ""
+		progress_bar.visible = false
+		time_label.text = ""
+		thought_label.add_theme_color_override("font_color", Color(0.85, 0.82, 0.75))
+		thought_label.text = (
+			"Smartle (bus): 2 hours each way = 4 hours/day\n" +
+			"Gritty (car): 20 min each way = 40 min/day\n\n" +
+			"Smartle spends 3h20min MORE commuting every day.\n" +
+			"That's time she could use to study, rest, or eat."
+		)
+	)
+
+	tween.tween_interval(4.0)
 	tween.tween_callback(_finish)
 
 

@@ -15,10 +15,10 @@ var activities := {
 	"sat_extra": {"start": 810, "end": 960, "label": "SAT Prep"},             # 13:30-16:00
 }
 
-# Commute deadlines — Smartle: 2h bus, Gritty: 30min car
+# Commute deadlines — Smartle: 2h bus each way, Gritty: 20min car each way
 var commute_deadlines := {
 	"smartle": {"leave_by": 360, "travel_time": 120, "mode": "bus"},  # 06:00, 2h bus (favela)
-	"gritty": {"leave_by": 450, "travel_time": 30, "mode": "car"},   # 07:30, 30min car (middle class)
+	"gritty": {"leave_by": 460, "travel_time": 20, "mode": "car"},   # 07:40, 20min car (middle class)
 }
 
 # Homework: always available at home, but penalty if not done by 22:00 (1320 min)
