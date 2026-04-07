@@ -30,6 +30,14 @@ func setup_background(image_path: String, scale: float = 0.25) -> void:
 	bg_sprite.position = Vector2.ZERO
 	add_child(bg_sprite)
 
+	# Static camera centered on room
+	var cam := Camera2D.new()
+	cam.name = "RoomCamera"
+	cam.zoom = Vector2(1.8, 1.8)
+	cam.position = Vector2.ZERO
+	cam.make_current()
+	add_child(cam)
+
 
 func setup_room(style: RoomRenderer.RoomStyle, width: float = 500.0, height: float = 350.0) -> void:
 	## Fallback: procedural room (used if no background image)

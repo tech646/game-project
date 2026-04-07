@@ -61,9 +61,6 @@ func _unhandled_input(event: InputEvent) -> void:
 func _set_active(index: int) -> void:
 	var player := players[index]
 	player.is_active = true
-	var camera: Camera2D = player.get_node_or_null("Camera2D")
-	if camera:
-		camera.make_current()
 
 
 func _set_inactive(player: CharacterBody2D) -> void:

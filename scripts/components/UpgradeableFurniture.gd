@@ -41,6 +41,7 @@ func _ready() -> void:
 
 	_sprite = Sprite2D.new()
 	_sprite.z_index = 0
+	_sprite.visible = false  # Invisible — background image shows the furniture
 	add_child(_sprite)
 
 	_name_label = Label.new()
