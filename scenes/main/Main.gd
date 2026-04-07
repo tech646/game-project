@@ -42,6 +42,7 @@ const LOCATION_NAMES := {
 	"classroom": "Classroom",
 	"library": "Library",
 	"cafeteria": "Cafeteria",
+	"gym": "Gym",
 }
 
 var _sleep_warned: bool = false
@@ -252,7 +253,7 @@ func _use_door(door: DoorObject) -> void:
 
 	# Check school hours — allow leaving home early for commute
 	# School open 8:00-16:00, but commute takes time
-	if target in ["classroom", "library", "cafeteria"]:
+	if target in ["classroom", "library", "cafeteria", "gym"]:
 		var time := GameClock.get_total_minutes()
 		# Allow leaving from 7:00 onward (earliest commute departure)
 		# Block after 16:00
@@ -264,7 +265,7 @@ func _use_door(door: DoorObject) -> void:
 	if target == "cafeteria":
 		var time := GameClock.get_total_minutes()
 		var current_loc := SceneManager.get_location(needs.character_name if needs else "")
-		var at_school := current_loc in ["classroom", "library"]
+		var at_school := current_loc in ["classroom", "library", "cafeteria", "gym"]
 		if at_school and (time < 720 or time > 810):
 			EventBus.warning_shown.emit("Cafeteria open 12:00-13:30 only!", "red")
 			return
@@ -279,7 +280,7 @@ func _use_door(door: DoorObject) -> void:
 	# Commute animation — going HOME from school
 	var is_going_home := target in ["favela_bedroom", "mansion", "home"]
 	var current_loc := SceneManager.get_location(char_name) if char_name != "" else ""
-	var at_school := current_loc in ["classroom", "library", "cafeteria"]
+	var at_school := current_loc in ["classroom", "library", "cafeteria", "gym"]
 	var at_home := current_loc in ["favela_kitchen", "mansion_kitchen", "favela_bedroom", "mansion"]
 
 	if (is_going_to_school and at_home) or (is_going_home and at_school):

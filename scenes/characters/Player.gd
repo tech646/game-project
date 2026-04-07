@@ -98,6 +98,11 @@ func _apply_frame(frame_idx: int, mood: String) -> void:
 	sprite.scale = Vector2(absf(scale_factor), scale_factor)  # Keep positive for flip_h
 
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		print("[DEBUG CLICK] World pos: ", get_global_mouse_position(), " | State: ", GameState.State.keys()[GameState.current_state], " | Active: ", is_active)
+
+
 func _physics_process(delta: float) -> void:
 	if GameState.current_state != GameState.State.PLAYING:
 		velocity = Vector2.ZERO

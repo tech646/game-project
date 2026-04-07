@@ -49,8 +49,8 @@ func _spawn_objects() -> void:
 		"pos": Vector2(-165, 12),
 	})
 
-	# Doors back to classroom
+	# One door back to classroom, one to gym
 	create_invisible_door("classroom", Vector2(-150, -89))
-	create_invisible_door("classroom", Vector2(-188, 120))
+	create_invisible_door("gym", Vector2(-188, 120))
 
 	spawn_point = Vector2(0, 60)

@@ -13,6 +13,7 @@ const LOCATIONS := {
 	"classroom": "res://scenes/locations/Classroom.tscn",
 	"library": "res://scenes/locations/Library.tscn",
 	"cafeteria": "res://scenes/locations/Cafeteria.tscn",
+	"gym": "res://scenes/locations/Gym.tscn",
 }
 
 var character_locations := {
