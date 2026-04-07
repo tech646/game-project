@@ -9,14 +9,13 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_background("res://assets/rooms/Cozinha Smartle.png", 0.25)
 
-	# Invisible hitboxes over furniture
-	spawn_furniture("stove", "smartle", Vector2(60, -30))
-	spawn_furniture("fridge", "smartle", Vector2(160, -40))
-	spawn_furniture("sink", "smartle", Vector2(-10, -40))
-	spawn_furniture("table", "smartle", Vector2(-130, 20))
+	# Exact positions from debug clicks:
+	spawn_furniture("stove", "smartle", Vector2(93, 17))
+	spawn_furniture("sink", "smartle", Vector2(-65, -5))
+	spawn_furniture("fridge", "smartle", Vector2(-1, -54))
+	spawn_furniture("table", "smartle", Vector2(-165, 70))
 
-	# Invisible doors at doorway positions
-	create_invisible_door("favela_bedroom", Vector2(-230, -40))
-	create_invisible_door("school", Vector2(230, -30))
+	create_invisible_door("favela_bedroom", Vector2(-169, -23))
+	create_invisible_door("school", Vector2(305, -3))
 
-	spawn_point = Vector2(0, 30)
+	spawn_point = Vector2(0, 40)
