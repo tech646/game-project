@@ -574,10 +574,16 @@ func _on_open_upgrades() -> void:
 
 func _update_coins_label() -> void:
 	var needs := CharacterManager.get_active_needs()
+	var amount := 0
 	if needs:
-		coins_label.text = "Coins: $%d" % coin_system.get_coins(needs.character_name)
-	else:
-		coins_label.text = "Coins: $0"
+		amount = coin_system.get_coins(needs.character_name)
+	# Update in needs panel
+	var needs_bars_node := get_node_or_null("HUD/NeedsBars")
+	if needs_bars_node and needs_bars_node.has_method("update_coins"):
+		needs_bars_node.update_coins(amount)
+	# Also update standalone label if exists
+	if coins_label:
+		coins_label.text = "Coins: $%d" % amount
 
 
 func _on_furniture_upgraded(_character: String, _furniture_id: String, _new_level: int) -> void:

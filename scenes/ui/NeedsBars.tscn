@@ -40,7 +40,7 @@ theme_override_constants/separation = 3
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
-text = "GRITTY"
+text = "SMARTLE"
 horizontal_alignment = 1
 
 [node name="Sep1" type="HSeparator" parent="Margin/VBox"]
@@ -52,9 +52,9 @@ theme_override_constants/separation = 6
 
 [node name="Icon" type="Label" parent="Margin/VBox/HungerRow"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "[Food]"
-custom_minimum_size = Vector2(20, 0)
+theme_override_font_sizes/font_size = 11
+text = "Hunger"
+custom_minimum_size = Vector2(55, 0)
 
 [node name="Bar" type="ProgressBar" parent="Margin/VBox/HungerRow"]
 layout_mode = 2
@@ -78,9 +78,9 @@ theme_override_constants/separation = 6
 
 [node name="Icon" type="Label" parent="Margin/VBox/EnergyRow"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "[Nrg]"
-custom_minimum_size = Vector2(20, 0)
+theme_override_font_sizes/font_size = 11
+text = "Energy"
+custom_minimum_size = Vector2(55, 0)
 
 [node name="Bar" type="ProgressBar" parent="Margin/VBox/EnergyRow"]
 layout_mode = 2
@@ -104,9 +104,9 @@ theme_override_constants/separation = 6
 
 [node name="Icon" type="Label" parent="Margin/VBox/FunRow"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "[Fun]"
-custom_minimum_size = Vector2(20, 0)
+theme_override_font_sizes/font_size = 11
+text = "Fun"
+custom_minimum_size = Vector2(55, 0)
 
 [node name="Bar" type="ProgressBar" parent="Margin/VBox/FunRow"]
 layout_mode = 2
@@ -130,9 +130,9 @@ theme_override_constants/separation = 6
 
 [node name="Icon" type="Label" parent="Margin/VBox/MentalRow"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "[MH]"
-custom_minimum_size = Vector2(20, 0)
+theme_override_font_sizes/font_size = 11
+text = "Mental"
+custom_minimum_size = Vector2(55, 0)
 
 [node name="Bar" type="ProgressBar" parent="Margin/VBox/MentalRow"]
 layout_mode = 2
@@ -157,7 +157,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 theme_override_colors/font_color = Color(0.4, 0.7, 1, 1)
-text = "[SAT] SAT: 0 / 1600"
+text = "SAT: 0 / 1600"
 
 [node name="SATBar" type="ProgressBar" parent="Margin/VBox"]
 layout_mode = 2
@@ -166,3 +166,13 @@ theme_override_styles/background = SubResource("StyleBoxFlat_bar_bg")
 max_value = 100.0
 value = 0.0
 show_percentage = false
+
+[node name="Sep3" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="CoinsRow" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+text = "Coins: $0"
+horizontal_alignment = 1

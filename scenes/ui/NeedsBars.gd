@@ -13,6 +13,7 @@ extends PanelContainer
 @onready var mental_val: Label = $Margin/VBox/MentalRow/Val
 @onready var sat_label: Label = $Margin/VBox/SATLabel
 @onready var sat_bar: ProgressBar = $Margin/VBox/SATBar
+@onready var coins_row: Label = $Margin/VBox/CoinsRow
 
 var _current_needs: NeedsComponent = null
 
@@ -89,9 +90,14 @@ func _update_bar(bar: ProgressBar, val_label: Label, value: float) -> void:
 	val_label.add_theme_color_override("font_color", color)
 
 
+func update_coins(amount: int) -> void:
+	if coins_row:
+		coins_row.text = "Coins: $%d" % amount
+
+
 func _update_sat(score: int, target: int) -> void:
 	sat_bar.value = float(score) / float(target) * 100.0
-	sat_label.text = "[SAT] SAT: %d / %d" % [score, target]
+	sat_label.text = "SAT: %d / %d" % [score, target]
 
 	var style := StyleBoxFlat.new()
 	style.bg_color = COLOR_BLUE
