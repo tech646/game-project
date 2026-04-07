@@ -10,7 +10,9 @@ const LOCATIONS := {
 	"favela_kitchen": "res://scenes/locations/FavelaKitchen.tscn",
 	"mansion": "res://scenes/locations/MansionHome.tscn",
 	"mansion_kitchen": "res://scenes/locations/MansionKitchen.tscn",
-	"school": "res://scenes/locations/School.tscn",
+	"classroom": "res://scenes/locations/Classroom.tscn",
+	"library": "res://scenes/locations/Library.tscn",
+	"cafeteria": "res://scenes/locations/Cafeteria.tscn",
 }
 
 var character_locations := {

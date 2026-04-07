@@ -39,7 +39,9 @@ const LOCATION_NAMES := {
 	"favela_kitchen": "Smartle's Kitchen",
 	"mansion": "Gritty's Bedroom",
 	"mansion_kitchen": "Gritty's Kitchen",
-	"school": "Bilingual School",
+	"classroom": "Classroom",
+	"library": "Library",
+	"cafeteria": "Cafeteria",
 }
 
 var _sleep_warned: bool = false

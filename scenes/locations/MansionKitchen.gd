@@ -16,6 +16,6 @@ func _spawn_objects() -> void:
 	spawn_furniture("table", "gritty", Vector2(-1, 101))
 
 	create_invisible_door("mansion", Vector2(-199, -4))
-	create_invisible_door("school", Vector2(233, -12))
+	create_invisible_door("classroom", Vector2(233, -12))
 
 	spawn_point = Vector2(0, 40)
