@@ -9,14 +9,15 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_background("res://assets/rooms/Quarto Gritty.png", 0.25)
 
-	spawn_furniture("bed", "gritty", Vector2(-130, -20))
-	spawn_furniture("bookshelf", "gritty", Vector2(-230, -50))
-	spawn_furniture("desk", "gritty", Vector2(160, 20))
-	spawn_furniture("tv", "gritty", Vector2(180, -40))
-	spawn_furniture("sofa", "gritty", Vector2(60, -20))
-	spawn_furniture("closet", "gritty", Vector2(220, -50))
-	spawn_furniture("rug", "gritty", Vector2(-120, 40))
+	# Exact positions from debug clicks:
+	spawn_furniture("bed", "gritty", Vector2(-113, -6))
+	spawn_furniture("bookshelf", "gritty", Vector2(-268, -10))
+	spawn_furniture("rug", "gritty", Vector2(-94, 78))
+	spawn_furniture("sofa", "gritty", Vector2(124, -2))
+	spawn_furniture("tv", "gritty", Vector2(218, -41))
+	spawn_furniture("closet", "gritty", Vector2(302, 17))
+	spawn_furniture("desk", "gritty", Vector2(211, 90))
 
-	create_invisible_door("mansion_kitchen", Vector2(-10, -40))
+	create_invisible_door("mansion_kitchen", Vector2(19, -13))
 
-	spawn_point = Vector2(-60, 40)
+	spawn_point = Vector2(-60, 60)
