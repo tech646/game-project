@@ -34,13 +34,6 @@ func setup(data: CharacterData) -> void:
 	CharacterManager.register_player(self)
 
 
-func _input(event: InputEvent) -> void:
-	# Debug: print world position on mouse click
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var world_pos := get_global_mouse_position()
-		print("[DEBUG CLICK] World pos: ", world_pos, " | State: ", GameState.State.keys()[GameState.current_state], " | Active: ", is_active)
-
-
 func _physics_process(delta: float) -> void:
 	if GameState.current_state != GameState.State.PLAYING:
 		velocity = Vector2.ZERO
