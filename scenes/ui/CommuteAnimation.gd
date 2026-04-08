@@ -136,7 +136,7 @@ func _finish() -> void:
 
 	# Calculate if arrived on time (before 8:00 = 480 min)
 	var arrival_time := GameClock.get_total_minutes()
-	var late_minutes := max(0, arrival_time - 480)
+	var late_minutes: int = max(0, arrival_time - 480)
 
 	# Extract character name from scene_label (was set to "Smartle going to school" etc)
 	var char_name := ""
