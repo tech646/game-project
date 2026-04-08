@@ -83,6 +83,86 @@ func _refresh() -> void:
 		scroll.add_child(vbox)
 		tab_container.add_child(scroll)
 
+	# Add College List tab
+	_add_college_tab()
+
+
+func _add_college_tab() -> void:
+	var college_sys := _get_college_system()
+	if not college_sys:
+		return
+
+	var scroll := ScrollContainer.new()
+	scroll.name = "Colleges"
+	scroll.custom_minimum_size = Vector2(0, 200)
+
+	var vbox := VBoxContainer.new()
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.add_theme_constant_override("separation", 6)
+
+	if not college_sys.college_lists.has(_character):
+		var msg := Label.new()
+		msg.text = "No college list yet"
+		msg.add_theme_font_size_override("font_size", 12)
+		msg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		vbox.add_child(msg)
+	else:
+		var colleges: Array = college_sys.college_lists[_character]
+		for college_name in colleges:
+			var info: Dictionary = CollegeSystem.COLLEGES.get(college_name, {})
+			var completed := college_sys.get_completion_count(_character, college_name)
+			var total := CollegeSystem.CHECKLIST_ITEMS.size()
+
+			var panel := PanelContainer.new()
+			var style := StyleBoxFlat.new()
+			style.bg_color = Color(0.15, 0.12, 0.2, 0.8)
+			style.corner_radius_top_left = 6
+			style.corner_radius_top_right = 6
+			style.corner_radius_bottom_left = 6
+			style.corner_radius_bottom_right = 6
+			style.content_margin_left = 8
+			style.content_margin_right = 8
+			style.content_margin_top = 6
+			style.content_margin_bottom = 6
+			panel.add_theme_stylebox_override("panel", style)
+
+			var col := VBoxContainer.new()
+			col.add_theme_constant_override("separation", 2)
+
+			var name_l := Label.new()
+			name_l.text = "%s (%s)" % [info.get("label", college_name), info.get("type", "")]
+			name_l.add_theme_font_size_override("font_size", 12)
+			name_l.add_theme_color_override("font_color", Color(1, 0.95, 0.85))
+			col.add_child(name_l)
+
+			var sat_l := Label.new()
+			sat_l.text = "SAT required: %d" % info.get("sat_min", 0)
+			sat_l.add_theme_font_size_override("font_size", 10)
+			sat_l.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+			col.add_child(sat_l)
+
+			var prog_l := Label.new()
+			prog_l.text = "Checklist: %d / %d complete" % [completed, total]
+			prog_l.add_theme_font_size_override("font_size", 10)
+			if completed == total:
+				prog_l.add_theme_color_override("font_color", Color(0.4, 0.9, 0.4))
+			else:
+				prog_l.add_theme_color_override("font_color", Color(0.8, 0.7, 0.3))
+			col.add_child(prog_l)
+
+			panel.add_child(col)
+			vbox.add_child(panel)
+
+	scroll.add_child(vbox)
+	tab_container.add_child(scroll)
+
+
+func _get_college_system() -> CollegeSystem:
+	var systems := get_tree().root.find_child("CollegeSystem", true, false)
+	if systems and systems is CollegeSystem:
+		return systems as CollegeSystem
+	return null
+
 
 func _create_item_row(item: Dictionary) -> PanelContainer:
 	var panel := PanelContainer.new()

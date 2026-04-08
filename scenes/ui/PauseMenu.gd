@@ -49,29 +49,7 @@ func _update_info() -> void:
 		character_label.text = "%s" % needs.character_name.capitalize()
 	else:
 		character_label.text = ""
-
 	college_label.text = ""
-	var college_sys: Node = null
-	for node in get_tree().root.get_children():
-		if node.name == "CollegeSystem":
-			college_sys = node
-			break
-	# Try finding it under Systems
-	if not college_sys:
-		var systems := get_tree().root.find_child("CollegeSystem", true, false)
-		if systems:
-			college_sys = systems
-
-	if college_sys and college_sys is CollegeSystem and needs:
-		var cs: CollegeSystem = college_sys as CollegeSystem
-		var char_name := needs.character_name
-		if cs.college_lists.has(char_name):
-			var colleges: Array = cs.college_lists[char_name]
-			var text := "College List:\n"
-			for c in colleges:
-				var progress: int = cs.get_completion_count(char_name, c)
-				text += "  %s (%d/5)\n" % [c, progress]
-			college_label.text = text
 
 
 func _update_speed_label() -> void:
