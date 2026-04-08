@@ -15,7 +15,8 @@ const ALL_COMPLETE_BONUS := 10
 const SHARED_MISSIONS := [
 	{"id": "go_school", "icon": "-", "desc": "Arrive at school (by 8:00)", "event": "commute_arrived"},
 	{"id": "on_time", "icon": "-", "desc": "Arrive on time (before 8:00)", "event": "arrived_on_time"},
-	{"id": "study", "icon": "-", "desc": "Study at school (8:00-16:00)", "event": "action_study"},
+	{"id": "study", "icon": "-", "desc": "Study at school (8:00-17:00)", "event": "action_study"},
+	{"id": "leave_school", "icon": "-", "desc": "Leave school by 17:00", "event": "left_school"},
 	{"id": "eat_lunch", "icon": "-", "desc": "Eat lunch (12:00-13:30)", "event": "action_eat"},
 	{"id": "homework", "icon": "-", "desc": "Do homework at home", "event": "homework_done"},
 	{"id": "eat", "icon": "-", "desc": "Eat at home", "event": "action_eat_home"},

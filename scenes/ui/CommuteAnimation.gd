@@ -133,6 +133,20 @@ func _finish() -> void:
 	visible = false
 	set_process_unhandled_input(false)
 	GameState.change_state(GameState.State.PLAYING)
+
+	# Calculate if arrived on time (before 8:00 = 480 min)
+	var arrival_time := GameClock.get_total_minutes()
+	var late_minutes := max(0, arrival_time - 480)
+
+	# Extract character name from scene_label (was set to "Smartle going to school" etc)
+	var char_name := ""
+	var needs := CharacterManager.get_active_needs()
+	if needs:
+		char_name = needs.character_name
+
+	# Emit commute_finished so MissionManager can track arrival
+	EventBus.commute_finished.emit(char_name, int(late_minutes))
+
 	commute_done.emit()
 
 

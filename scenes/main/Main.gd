@@ -337,6 +337,14 @@ func _use_door(door: DoorObject) -> void:
 	if char_name != "":
 		SceneManager.character_locations[char_name] = target
 
+	# Track leaving school mission
+	if is_going_home and at_school and char_name != "":
+		var time := GameClock.get_total_minutes()
+		if time <= 1020:  # Left by 17:00
+			var mm := get_tree().get_first_node_in_group("mission_manager") as MissionManager
+			if mm:
+				mm.complete_mission_by_event(char_name, "left_school")
+
 	if (is_going_to_school and at_home) or (is_going_home and at_school):
 		# Smartle: bus 2 hours each way (120 min). Gritty: car 20 min each way.
 		var mode := "bus" if char_name == "smartle" else "car"
