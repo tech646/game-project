@@ -29,6 +29,14 @@ func _spawn_objects() -> void:
 
 	spawn_furniture("table", "smartle", Vector2(-165, 70))
 
+	# Old fridge — doesn't cool, used as storage
+	create_object({
+		"name": "Old Fridge", "action": "Store Food", "quality": 1,
+		"need": "hunger", "base_restore": 5.0, "time_cost": 5,
+		"alt_action": "Organize Supplies", "alt_need": "mental_health", "alt_restore": 5.0, "alt_time": 15,
+		"pos": Vector2(228, 38),
+	})
+
 	create_invisible_door("favela_bedroom", Vector2(-169, -23))
 	create_invisible_door("classroom", Vector2(305, -3))
 
