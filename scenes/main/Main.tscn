@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -25,6 +25,8 @@
 [ext_resource type="Script" path="res://scripts/systems/FurnitureUpgradeSystem.gd" id="23_furniture"]
 [ext_resource type="Script" path="res://scenes/ui/RoomScoreBar.gd" id="24_roomscore"]
 [ext_resource type="PackedScene" path="res://scenes/ui/SATFullTest.tscn" id="25_fulltest"]
+[ext_resource type="PackedScene" path="res://scenes/ui/JourneyPanel.tscn" id="26_journey"]
+[ext_resource type="Script" path="res://scripts/systems/JourneySystem.gd" id="27_journey_sys"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_script")
@@ -103,6 +105,8 @@ vertical_alignment = 1
 [node name="DialogueBox" parent="HUD" instance=ExtResource("8_dialogue")]
 [node name="SATQuiz" parent="HUD" instance=ExtResource("9_quiz")]
 [node name="SATFullTest" parent="HUD" instance=ExtResource("25_fulltest")]
+
+[node name="JourneyPanel" parent="HUD" instance=ExtResource("26_journey")]
 [node name="TitleScreen" parent="HUD" instance=ExtResource("13_title")]
 [node name="DaySplitScreen" parent="HUD" instance=ExtResource("14_split")]
 [node name="CommuteAnimation" parent="HUD" instance=ExtResource("15_commute_anim")]
@@ -152,3 +156,6 @@ script = ExtResource("22_coins")
 
 [node name="FurnitureUpgradeSystem" type="Node" parent="Systems"]
 script = ExtResource("23_furniture")
+
+[node name="JourneySystem" type="Node" parent="Systems"]
+script = ExtResource("27_journey_sys")

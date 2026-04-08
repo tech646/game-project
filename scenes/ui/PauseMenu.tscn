@@ -84,7 +84,7 @@ autowrap_mode = 2
 [node name="UpgradesBtn" type="Button" parent="Margin/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "Room Upgrades"
+text = "My Journey"
 
 [node name="ResumeBtn" type="Button" parent="Margin/VBox"]
 layout_mode = 2

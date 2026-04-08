@@ -18,6 +18,7 @@ extends Node2D
 @onready var day_summary: Control = $HUD/DaySummary
 @onready var decision_day: Control = $HUD/DecisionDay
 @onready var upgrade_shop: PanelContainer = $HUD/UpgradeShop
+@onready var journey_panel: PanelContainer = $HUD/JourneyPanel
 @onready var sat_full_test: PanelContainer = $HUD/SATFullTest
 @onready var needs_bars_panel: PanelContainer = $HUD/NeedsBars
 # Room score removed from HUD — shown in pause menu instead
@@ -65,6 +66,10 @@ func _ready() -> void:
 	furniture_system.add_to_group("furniture_upgrade_system")
 	furniture_system.setup_defaults()
 	college_system.setup_default_lists()
+
+	# Journey system
+	var journey_sys := $Systems/JourneySystem
+	journey_sys.add_to_group("journey_system")
 
 	# Setup scene manager
 	SceneManager.setup(world, fade_overlay)
@@ -436,6 +441,7 @@ func _can_interact() -> bool:
 	if decision_day.visible: return false
 	if pause_menu.visible: return false
 	if upgrade_shop.visible: return false
+	if journey_panel.visible: return false
 	if sat_full_test.visible: return false
 	if GameState.current_state != GameState.State.PLAYING: return false
 	return true
@@ -630,7 +636,7 @@ func _on_coins_changed(_character: String, _amount: int) -> void:
 func _on_open_upgrades() -> void:
 	var needs := CharacterManager.get_active_needs()
 	if needs:
-		upgrade_shop.show_shop(needs.character_name)
+		journey_panel.show_panel(needs.character_name)
 
 
 func _update_coins_label() -> void:
