@@ -75,7 +75,7 @@ func _create_item_row(item: Dictionary, upgrade_sys: FurnitureUpgradeSystem, coi
 
 	var star_val: float = item.get("stars", 1.5)
 	var stars_l := Label.new()
-	stars_l.text = "%.1f ★  (Level %d/%d)" % [star_val, item.level, item.max_level]
+	stars_l.text = "Level %d/%d" % [item.level, item.max_level]
 	stars_l.add_theme_font_size_override("font_size", 11)
 	if item.level >= 3:
 		stars_l.add_theme_color_override("font_color", Color(1, 0.85, 0.3))

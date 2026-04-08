@@ -137,19 +137,9 @@ func _update_visual() -> void:
 		_name_label.text = display_name
 
 	if _stars_label:
+		# Use text instead of star characters (★☆ don't render in web)
 		var star_val: float = FurnitureUpgradeSystem.STAR_VALUES.get(level, 1.5)
-		var full := int(star_val)
-		var has_half := (star_val - float(full)) >= 0.2
-		var stars := ""
-		for i in range(5):
-			if i < full:
-				stars += "★"
-			elif has_half and i == full:
-				stars += "★"
-				has_half = false
-			else:
-				stars += "☆"
-		_stars_label.text = stars
+		_stars_label.text = "Lv.%d" % level
 		if level >= 3:
 			_stars_label.add_theme_color_override("font_color", Color(1, 0.85, 0.3))
 		elif level >= 2:

@@ -65,10 +65,7 @@ func get_restore_amount() -> float:
 
 
 func get_quality_string() -> String:
-	var stars := ""
-	for i in range(5):
-		stars += "★" if i < quality else "☆"
-	return stars
+	return "Lv.%d" % quality
 
 
 func _update_labels() -> void:
