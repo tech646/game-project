@@ -307,13 +307,17 @@ func _use_door(door: DoorObject) -> void:
 		else:
 			target = "favela_bedroom"
 
-	# Check school hours — allow leaving home early for commute
-	# School open 8:00-16:00, but commute takes time
+	# Smartle needs bus pass to go to school
 	if target in ["classroom", "library", "cafeteria", "gym"]:
+		if needs and needs.character_name == "smartle":
+			var journey_sys := _get_journey_system()
+			if journey_sys and not journey_sys.has_item("smartle", "bus_pass"):
+				EventBus.warning_shown.emit("You need a Bus Pass to get to school! Check My Journey.", "red")
+				return
+
+		# School closes at 17:00
 		var time := GameClock.get_total_minutes()
-		# Allow leaving from 7:00 onward (earliest commute departure)
-		# Block after 16:00
-		if time > 960:
+		if time > 1020:  # 17:00
 			EventBus.warning_shown.emit("School is closed! Come back tomorrow.", "red")
 			return
 
@@ -744,6 +748,12 @@ func _award_mission_coins(character: String) -> void:
 		if completed == total_missions:
 			msg += " (ALL COMPLETE BONUS +$%d!)" % COINS_ALL_MISSIONS_BONUS
 		EventBus.warning_shown.emit(msg, "yellow")
+
+
+func _get_journey_system() -> JourneySystem:
+	for node in get_tree().get_nodes_in_group("journey_system"):
+		return node as JourneySystem
+	return null
 
 
 func _auto_save() -> void:

@@ -5,14 +5,14 @@ extends Node
 
 # School schedule
 const SCHOOL_ENTRY := 480    # 08:00
-const SCHOOL_EXIT := 960     # 16:00
+const SCHOOL_EXIT := 1020    # 17:00
 
 # Activity windows: {name: {start: minutes, end: minutes}}
 var activities := {
 	"english_class": {"start": 480, "end": 600, "label": "English Class"},     # 08:00-10:00
 	"math_class": {"start": 600, "end": 720, "label": "Math Class"},           # 10:00-12:00
 	"cafeteria": {"start": 720, "end": 810, "label": "Lunch Break"},           # 12:00-13:30
-	"sat_extra": {"start": 810, "end": 960, "label": "SAT Prep"},             # 13:30-16:00
+	"sat_extra": {"start": 810, "end": 1020, "label": "SAT Prep"},            # 13:30-17:00
 }
 
 # Commute deadlines — Smartle: 2h bus each way, Gritty: 20min car each way
