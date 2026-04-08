@@ -100,6 +100,15 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 text = "PLAY"
 visible = false
 
+[node name="ContinueBtn" type="Button" parent="VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 40)
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.7, 0.85, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "Continue saved game"
+visible = false
+
 [node name="SmartleWalk" type="Sprite2D" parent="."]
 position = Vector2(200, 500)
 scale = Vector2(0.15, 0.15)

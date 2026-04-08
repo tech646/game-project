@@ -5,12 +5,14 @@ extends Control
 ## Page 2: Tutorial (how to play)
 
 signal start_game
+signal continue_game
 
 @onready var title: Label = $VBox/Title
 @onready var subtitle: Label = $VBox/Subtitle
 @onready var narrative: Label = $VBox/Narrative
 @onready var next_btn: Button = $VBox/NextBtn
 @onready var play_btn: Button = $VBox/PlayBtn
+@onready var continue_btn: Button = $VBox/ContinueBtn
 @onready var smartle_sprite: Sprite2D = $SmartleWalk
 @onready var gritty_sprite: Sprite2D = $GrittyWalk
 
@@ -57,7 +59,9 @@ var _tutorial_text := (
 func _ready() -> void:
 	next_btn.pressed.connect(_on_next)
 	play_btn.pressed.connect(_on_play)
+	continue_btn.pressed.connect(_on_continue)
 	play_btn.visible = false
+	continue_btn.visible = SaveSystem.has_save()
 	set_process_unhandled_input(true)
 	_show_page_1()
 	_load_character_sprites()
@@ -136,6 +140,11 @@ func _on_next() -> void:
 func _on_play() -> void:
 	set_process_unhandled_input(false)
 	start_game.emit()
+
+
+func _on_continue() -> void:
+	set_process_unhandled_input(false)
+	continue_game.emit()
 
 
 func _unhandled_input(event: InputEvent) -> void:

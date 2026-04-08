@@ -97,6 +97,7 @@ func _ready() -> void:
 	coin_system.coins_changed.connect(_on_coins_changed)
 	furniture_system.furniture_upgraded.connect(_on_furniture_upgraded)
 	title_screen.start_game.connect(_on_title_start)
+	title_screen.continue_game.connect(_on_continue_game)
 	day_split.continue_day.connect(_on_split_continue)
 
 	# Setup UI
@@ -108,6 +109,37 @@ func _ready() -> void:
 	# Start paused — show title screen
 	GameState.change_state(GameState.State.IN_MENU)
 	GameClock.pause()
+
+
+func _on_continue_game() -> void:
+	title_screen.visible = false
+	title_screen.set_process_unhandled_input(false)
+
+	# Load saved data
+	var data := SaveSystem.load_game()
+	if not data.is_empty():
+		SaveSystem.apply_save_data(
+			data,
+			_get_needs(gritty_player),
+			_get_needs(smartle_player),
+			coin_system,
+			furniture_system,
+			college_system,
+		)
+		# Restore character times
+		if data.has("character_times"):
+			GameClock._character_times = data["character_times"]
+		# Restore locations
+		if data.has("character_locations"):
+			for key in data["character_locations"]:
+				SceneManager.character_locations[key] = data["character_locations"][key]
+
+	# Start playing with Smartle's time
+	GameClock.restore_time_for("smartle")
+	GameState.change_state(GameState.State.PLAYING)
+	GameClock.resume()
+	_update_coins_label()
+	EventBus.warning_shown.emit("Game loaded! Welcome back.", "yellow")
 
 
 func _on_title_start() -> void:
@@ -316,6 +348,8 @@ func _use_door(door: DoorObject) -> void:
 
 
 func _do_door_transition(player: CharacterBody2D, target: String, char_name: String) -> void:
+	# Auto-save on every scene transition
+	_auto_save()
 	# Park players
 	_park_player(player)
 	var other := CharacterManager.get_inactive_player()
@@ -713,6 +747,11 @@ func _award_mission_coins(character: String) -> void:
 
 
 func _auto_save() -> void:
+	# Save current character's time
+	var active_needs := CharacterManager.get_active_needs()
+	if active_needs:
+		GameClock.save_time_for(active_needs.character_name)
+
 	var data := SaveSystem.build_save_data(
 		_get_needs(gritty_player),
 		_get_needs(smartle_player),
@@ -721,4 +760,7 @@ func _auto_save() -> void:
 		college_system,
 		GameClock.game_day
 	)
+	# Add character times and locations
+	data["character_times"] = GameClock._character_times.duplicate(true)
+	data["character_locations"] = SceneManager.character_locations.duplicate()
 	SaveSystem.save_game(data)
