@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3]
+[gd_scene load_steps=30 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -27,6 +27,34 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/SATFullTest.tscn" id="25_fulltest"]
 [ext_resource type="PackedScene" path="res://scenes/ui/JourneyPanel.tscn" id="26_journey"]
 [ext_resource type="Script" path="res://scripts/systems/JourneySystem.gd" id="27_journey_sys"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_missions"]
+bg_color = Color(0.15, 0.12, 0.25, 0.9)
+border_color = Color(0.4, 0.6, 0.8, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 10.0
+content_margin_right = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_journey"]
+bg_color = Color(0.12, 0.18, 0.12, 0.9)
+border_color = Color(0.4, 0.7, 0.3, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 10.0
+content_margin_right = 10.0
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_script")
@@ -63,32 +91,29 @@ horizontal_alignment = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = -80.0
-offset_right = 170.0
+offset_left = 15.0
+offset_top = -95.0
+offset_right = 185.0
 offset_bottom = -10.0
 grow_vertical = 0
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
 [node name="MissionsBtn" type="Button" parent="HUD/BottomButtons"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "Missions"
+custom_minimum_size = Vector2(0, 36)
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 0.95, 0.85, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_missions")
+text = "-- Missions --"
 
 [node name="JourneyBtn" type="Button" parent="HUD/BottomButtons"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "My Journey"
+custom_minimum_size = Vector2(0, 36)
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 0.95, 0.85, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_journey")
+text = "-- My Journey --"
 
-[node name="DayTimeline" type="Control" parent="HUD"]
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 20.0
-offset_top = 72.0
-offset_right = -20.0
-offset_bottom = 92.0
-grow_horizontal = 2
-script = ExtResource("19_timeline")
 
 [node name="NeedsBars" parent="HUD" instance=ExtResource("4_needs")]
 anchors_preset = 1
