@@ -638,9 +638,12 @@ func _on_coins_changed(_character: String, _amount: int) -> void:
 
 
 func _on_open_upgrades() -> void:
-	var needs := CharacterManager.get_active_needs()
-	if needs:
-		journey_panel.show_panel(needs.character_name)
+	if journey_panel.visible:
+		journey_panel._close()
+	else:
+		var needs := CharacterManager.get_active_needs()
+		if needs:
+			journey_panel.show_panel(needs.character_name)
 
 
 func _on_toggle_missions() -> void:
