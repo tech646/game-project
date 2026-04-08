@@ -86,6 +86,21 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		if obj.action_name == "Talk" or obj.action_name == "Office Hour":
 			_complete_mission(needs.character_name, "talk_npc")
 
+		# Track college checklist items
+		var college_sys := _get_college_system()
+		if college_sys:
+			# English hours: each study session adds time
+			var hours_added := obj.time_cost / 60.0
+			college_sys.english_hours[needs.character_name] = college_sys.english_hours.get(needs.character_name, 0) + int(hours_added)
+
+			# Ask for Recommendation
+			if obj.action_name == "Ask for Recommendation":
+				college_sys.recommendations[needs.character_name] = true
+
+			# Write Essay (triggered by SAT Mock Test at home desk)
+			if obj.action_name == "SAT Mock Test" and (obj.object_name.contains("Desk") or obj.object_name.contains("Setup")):
+				college_sys.essays_written[needs.character_name] = true
+
 		# 2h+ study = full test (3+ questions), otherwise single quiz
 		if obj.time_cost >= 120:
 			full_test_requested.emit(needs.character_name)
@@ -114,6 +129,13 @@ func _get_mission_manager() -> MissionManager:
 	var nodes := get_tree().get_nodes_in_group("mission_manager")
 	if not nodes.is_empty():
 		return nodes[0] as MissionManager
+	return null
+
+
+func _get_college_system() -> CollegeSystem:
+	var node := get_tree().root.find_child("CollegeSystem", true, false)
+	if node and node is CollegeSystem:
+		return node as CollegeSystem
 	return null
 
 

@@ -111,11 +111,13 @@ func _add_college_tab(tab_index: int) -> void:
 		msg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		vbox.add_child(msg)
 	else:
+		var needs := CharacterManager.get_active_needs()
+		var sat_score := needs.sat_score if needs else 0
 		var colleges: Array = college_sys.college_lists[_character]
+
 		for college_name in colleges:
 			var info: Dictionary = CollegeSystem.COLLEGES.get(college_name, {})
-			var completed := college_sys.get_completion_count(_character, college_name)
-			var total := CollegeSystem.CHECKLIST_ITEMS.size()
+			var checklist := college_sys.get_checklist_progress(_character, college_name)
 
 			var panel := PanelContainer.new()
 			var style := StyleBoxFlat.new()
@@ -133,26 +135,30 @@ func _add_college_tab(tab_index: int) -> void:
 			var col := VBoxContainer.new()
 			col.add_theme_constant_override("separation", 2)
 
+			# College name and type
 			var name_l := Label.new()
 			name_l.text = "%s (%s)" % [info.get("label", college_name), info.get("type", "")]
 			name_l.add_theme_font_size_override("font_size", 12)
 			name_l.add_theme_color_override("font_color", Color(1, 0.95, 0.85))
 			col.add_child(name_l)
 
-			var sat_l := Label.new()
-			sat_l.text = "SAT required: %d" % info.get("sat_min", 0)
-			sat_l.add_theme_font_size_override("font_size", 10)
-			sat_l.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
-			col.add_child(sat_l)
+			# Detailed checklist
+			var sat_min: int = info.get("sat_min", 0)
+			_add_check_item(col, "SAT Score", "%d / %d" % [sat_score, sat_min], sat_score >= sat_min)
+			_add_check_item(col, "English Hours", "%d / 10h" % college_sys.english_hours.get(_character, 0), college_sys.english_hours.get(_character, 0) >= 10)
+			_add_check_item(col, "Essay Written", "", checklist.get("essay_written", false))
+			_add_check_item(col, "Recommendation Letter", "", checklist.get("recommendation", false))
+			_add_check_item(col, "Extracurriculars", "%d / 20 missions" % college_sys.total_missions.get(_character, 0), college_sys.total_missions.get(_character, 0) >= 20)
 
-			var prog_l := Label.new()
-			prog_l.text = "Checklist: %d / %d complete" % [completed, total]
-			prog_l.add_theme_font_size_override("font_size", 10)
-			if completed == total:
-				prog_l.add_theme_color_override("font_color", Color(0.4, 0.9, 0.4))
-			else:
-				prog_l.add_theme_color_override("font_color", Color(0.8, 0.7, 0.3))
-			col.add_child(prog_l)
+			# Application purchased?
+			var journey_sys := _get_journey_system()
+			var app_ids := ["college_app_1", "college_app_2", "college_app_3"]
+			var apps_bought := 0
+			if journey_sys:
+				for aid in app_ids:
+					if journey_sys.has_item(_character, aid):
+						apps_bought += 1
+			_add_check_item(col, "Application Fee Paid", "", apps_bought > 0)
 
 			panel.add_child(col)
 			vbox.add_child(panel)
@@ -160,6 +166,21 @@ func _add_college_tab(tab_index: int) -> void:
 	scroll.add_child(vbox)
 	tab_container.add_child(scroll)
 	tab_container.set_tab_title(tab_index, "Colleges")
+
+
+func _add_check_item(parent: VBoxContainer, label_text: String, progress: String, done: bool) -> void:
+	var l := Label.new()
+	var check := "[x]" if done else "[ ]"
+	if progress != "":
+		l.text = "  %s %s: %s" % [check, label_text, progress]
+	else:
+		l.text = "  %s %s" % [check, label_text]
+	l.add_theme_font_size_override("font_size", 10)
+	if done:
+		l.add_theme_color_override("font_color", Color(0.4, 0.9, 0.4))
+	else:
+		l.add_theme_color_override("font_color", Color(0.7, 0.6, 0.5))
+	parent.add_child(l)
 
 
 func _get_college_system() -> CollegeSystem:

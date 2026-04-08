@@ -23,9 +23,9 @@ func _spawn_objects() -> void:
 		ysort_root.add_child(brighta_sprite)
 
 	create_object({
-		"name": "Mrs Brighta", "action": "Office Hour", "quality": 3,
-		"need": "mental_health", "base_restore": 15.0, "time_cost": 30,
-		"alt_action": "Talk", "alt_need": "", "alt_restore": 0.0, "alt_time": 15,
+		"name": "Mrs Brighta", "action": "Ask for Recommendation", "quality": 3,
+		"need": "mental_health", "base_restore": 10.0, "time_cost": 30,
+		"alt_action": "Office Hour", "alt_need": "mental_health", "alt_restore": 15.0, "alt_time": 30,
 		"pos": Vector2(17, -12),
 	})
 
