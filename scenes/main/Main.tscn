@@ -59,6 +59,15 @@ theme_override_colors/font_color = Color(0.9, 0.85, 0.7, 1)
 text = ""
 horizontal_alignment = 1
 
+[node name="JourneyBtn" type="Button" parent="HUD"]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 680.0
+offset_right = 160.0
+offset_bottom = 710.0
+theme_override_font_sizes/font_size = 13
+text = "My Journey"
+
 [node name="DayTimeline" type="Control" parent="HUD"]
 anchors_preset = 10
 anchor_right = 1.0

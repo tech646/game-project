@@ -10,8 +10,8 @@ const COINS_PER_CORRECT := 10
 const COINS_PER_PERFECT_DAY := 25  # Bonus for all missions complete
 
 var coins: Dictionary = {
-	"gritty": 30,   # Middle class — some allowance
-	"smartle": 0,    # Favela — no spare money
+	"gritty": 150,   # Middle class — parents' allowance, comfortable
+	"smartle": 50,    # Favela — mom scraped together minimum for first week
 }
 
 

@@ -19,6 +19,7 @@ extends Node2D
 @onready var decision_day: Control = $HUD/DecisionDay
 @onready var upgrade_shop: PanelContainer = $HUD/UpgradeShop
 @onready var journey_panel: PanelContainer = $HUD/JourneyPanel
+@onready var journey_btn: Button = $HUD/JourneyBtn
 @onready var sat_full_test: PanelContainer = $HUD/SATFullTest
 @onready var needs_bars_panel: PanelContainer = $HUD/NeedsBars
 # Room score removed from HUD — shown in pause menu instead
@@ -70,6 +71,7 @@ func _ready() -> void:
 	# Journey system
 	var journey_sys := $Systems/JourneySystem
 	journey_sys.add_to_group("journey_system")
+	journey_btn.pressed.connect(_on_open_upgrades)
 
 	# Setup scene manager
 	SceneManager.setup(world, fade_overlay)
