@@ -56,12 +56,13 @@ func _refresh() -> void:
 		categories[cat].append(item)
 
 	var tab_names := {"education": "Education", "survival": "Survival", "community": "Community", "personal": "Personal"}
+	var tab_index := 0
 
 	for cat in ["education", "survival", "community", "personal"]:
 		if not categories.has(cat):
 			continue
 		var scroll := ScrollContainer.new()
-		scroll.name = tab_names[cat]
+		scroll.name = "Tab_%s" % cat  # Unique name to avoid conflicts
 		scroll.custom_minimum_size = Vector2(0, 200)
 
 		var vbox := VBoxContainer.new()
@@ -82,18 +83,21 @@ func _refresh() -> void:
 
 		scroll.add_child(vbox)
 		tab_container.add_child(scroll)
+		# Set tab title explicitly after adding
+		tab_container.set_tab_title(tab_index, tab_names[cat])
+		tab_index += 1
 
 	# Add College List tab
-	_add_college_tab()
+	_add_college_tab(tab_index)
 
 
-func _add_college_tab() -> void:
+func _add_college_tab(tab_index: int) -> void:
 	var college_sys := _get_college_system()
 	if not college_sys:
 		return
 
 	var scroll := ScrollContainer.new()
-	scroll.name = "Colleges"
+	scroll.name = "Tab_colleges"
 	scroll.custom_minimum_size = Vector2(0, 200)
 
 	var vbox := VBoxContainer.new()
@@ -155,6 +159,7 @@ func _add_college_tab() -> void:
 
 	scroll.add_child(vbox)
 	tab_container.add_child(scroll)
+	tab_container.set_tab_title(tab_index, "Colleges")
 
 
 func _get_college_system() -> CollegeSystem:
