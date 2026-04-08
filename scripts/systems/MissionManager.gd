@@ -13,23 +13,26 @@ const ALL_COMPLETE_BONUS := 10
 
 # Shared missions (both characters)
 const SHARED_MISSIONS := [
-	{"id": "go_school", "icon": "-", "desc": "Go to school", "event": "commute_arrived"},
-	{"id": "study", "icon": "-", "desc": "Study", "event": "action_study"},
-	{"id": "eat", "icon": "-", "desc": "Eat", "event": "action_eat"},
-	{"id": "sleep", "icon": "-", "desc": "Sleep", "event": "action_sleep"},
-	{"id": "fun", "icon": "-", "desc": "Have fun", "event": "action_fun"},
-	{"id": "homework", "icon": "-", "desc": "Do homework", "event": "homework_done"},
-	{"id": "on_time", "icon": "-", "desc": "Arrive on time", "event": "arrived_on_time"},
+	{"id": "go_school", "icon": "-", "desc": "Arrive at school (by 8:00)", "event": "commute_arrived"},
+	{"id": "on_time", "icon": "-", "desc": "Arrive on time (before 8:00)", "event": "arrived_on_time"},
+	{"id": "study", "icon": "-", "desc": "Study at school (8:00-16:00)", "event": "action_study"},
+	{"id": "eat_lunch", "icon": "-", "desc": "Eat lunch (12:00-13:30)", "event": "action_eat"},
+	{"id": "homework", "icon": "-", "desc": "Do homework at home", "event": "homework_done"},
+	{"id": "eat", "icon": "-", "desc": "Eat at home", "event": "action_eat_home"},
+	{"id": "sleep", "icon": "-", "desc": "Sleep (at least 6h)", "event": "action_sleep"},
+	{"id": "fun", "icon": "-", "desc": "Have fun / relax", "event": "action_fun"},
 ]
 
-# Smartle-only missions (chores at home)
+# Smartle-only missions
 const SMARTLE_MISSIONS := [
+	{"id": "leave_early", "icon": "-", "desc": "Leave home by 6:00 (2h bus)", "event": "commute_arrived"},
 	{"id": "wash_dishes", "icon": "-", "desc": "Wash the dishes", "event": "action_wash"},
 	{"id": "organize_closet", "icon": "-", "desc": "Organize closet", "event": "action_organize"},
 ]
 
 # Gritty-only missions
 const GRITTY_MISSIONS := [
+	{"id": "leave_later", "icon": "-", "desc": "Leave home by 7:40 (20min car)", "event": "commute_arrived"},
 	{"id": "gym", "icon": "-", "desc": "Go to the gym (30min)", "event": "action_gym"},
 ]
 

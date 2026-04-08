@@ -36,6 +36,12 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		match obj.need_affected:
 			"hunger":
 				_complete_mission(needs.character_name, "action_eat")
+				# Differentiate school vs home eating
+				var loc := SceneManager.get_location(needs.character_name)
+				if loc in ["cafeteria"]:
+					_complete_mission(needs.character_name, "action_eat")  # school lunch
+				else:
+					_complete_mission(needs.character_name, "action_eat_home")
 			"energy":
 				if obj.action_name.begins_with("Sleep"):
 					_complete_mission(needs.character_name, "action_sleep")
