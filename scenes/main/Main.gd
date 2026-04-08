@@ -372,6 +372,10 @@ func _force_end_day() -> void:
 	college_system.total_missions["gritty"] += mission_manager.get_completion_count("gritty")
 	college_system.total_missions["smartle"] += mission_manager.get_completion_count("smartle")
 
+	# Award coins for completed missions
+	_award_mission_coins("gritty")
+	_award_mission_coins("smartle")
+
 	# Show end of day summary
 	day_summary.show_summary(
 		GameClock.game_day,
@@ -678,6 +682,25 @@ func _get_avg_furniture_level(character: String) -> int:
 	if count == 0:
 		return 1
 	return total / count
+
+
+const COINS_PER_MISSION := 5
+const COINS_ALL_MISSIONS_BONUS := 20
+
+func _award_mission_coins(character: String) -> void:
+	var completed := mission_manager.get_completion_count(character)
+	var total_missions := mission_manager.get_missions(character).size()
+	var coins_earned := completed * COINS_PER_MISSION
+
+	if completed == total_missions and total_missions > 0:
+		coins_earned += COINS_ALL_MISSIONS_BONUS
+
+	if coins_earned > 0:
+		coin_system.add_coins(character, coins_earned)
+		var msg := "%s earned $%d from missions" % [character.capitalize(), coins_earned]
+		if completed == total_missions:
+			msg += " (ALL COMPLETE BONUS +$%d!)" % COINS_ALL_MISSIONS_BONUS
+		EventBus.warning_shown.emit(msg, "yellow")
 
 
 func _auto_save() -> void:
