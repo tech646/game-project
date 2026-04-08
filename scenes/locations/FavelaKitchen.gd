@@ -9,10 +9,24 @@ func _init() -> void:
 func _spawn_objects() -> void:
 	setup_background("res://assets/rooms/Cozinha Smartle.png", 0.25)
 
-	# Exact positions from debug clicks:
-	spawn_furniture("stove", "smartle", Vector2(93, 17))
+	# Stove — Smartle cooks for herself, can pack lunch for school
+	create_object({
+		"name": "Stove", "action": "Cook Meal ($3)", "quality": 1,
+		"need": "hunger", "base_restore": 30.0, "time_cost": 45,
+		"alt_action": "Pack Lunch for School ($2)", "alt_need": "hunger", "alt_restore": 20.0, "alt_time": 20,
+		"pos": Vector2(93, 17),
+	})
+
 	spawn_furniture("sink", "smartle", Vector2(-65, -5))
-	spawn_furniture("fridge", "smartle", Vector2(-1, -54))
+
+	# Fridge — basic snacks
+	create_object({
+		"name": "Fridge", "action": "Snack ($1)", "quality": 1,
+		"need": "hunger", "base_restore": 10.0, "time_cost": 5,
+		"alt_action": "Water (free)", "alt_need": "hunger", "alt_restore": 5.0, "alt_time": 2,
+		"pos": Vector2(-1, -54),
+	})
+
 	spawn_furniture("table", "smartle", Vector2(-165, 70))
 
 	create_invisible_door("favela_bedroom", Vector2(-169, -23))
