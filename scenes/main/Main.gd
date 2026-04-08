@@ -19,7 +19,8 @@ extends Node2D
 @onready var decision_day: Control = $HUD/DecisionDay
 @onready var upgrade_shop: PanelContainer = $HUD/UpgradeShop
 @onready var journey_panel: PanelContainer = $HUD/JourneyPanel
-@onready var journey_btn: Button = $HUD/JourneyBtn
+@onready var journey_btn: Button = $HUD/BottomButtons/JourneyBtn
+@onready var missions_btn: Button = $HUD/BottomButtons/MissionsBtn
 @onready var sat_full_test: PanelContainer = $HUD/SATFullTest
 @onready var needs_bars_panel: PanelContainer = $HUD/NeedsBars
 # Room score removed from HUD — shown in pause menu instead
@@ -72,6 +73,7 @@ func _ready() -> void:
 	var journey_sys := $Systems/JourneySystem
 	journey_sys.add_to_group("journey_system")
 	journey_btn.pressed.connect(_on_open_upgrades)
+	missions_btn.pressed.connect(_on_toggle_missions)
 
 	# Setup scene manager
 	SceneManager.setup(world, fade_overlay)
@@ -639,6 +641,10 @@ func _on_open_upgrades() -> void:
 	var needs := CharacterManager.get_active_needs()
 	if needs:
 		journey_panel.show_panel(needs.character_name)
+
+
+func _on_toggle_missions() -> void:
+	mission_panel.visible = not mission_panel.visible
 
 
 func _update_coins_label() -> void:

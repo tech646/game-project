@@ -59,12 +59,24 @@ theme_override_colors/font_color = Color(0.9, 0.85, 0.7, 1)
 text = ""
 horizontal_alignment = 1
 
-[node name="JourneyBtn" type="Button" parent="HUD"]
-anchors_preset = 0
+[node name="BottomButtons" type="VBoxContainer" parent="HUD"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
 offset_left = 20.0
-offset_top = 680.0
-offset_right = 160.0
-offset_bottom = 710.0
+offset_top = -80.0
+offset_right = 170.0
+offset_bottom = -10.0
+grow_vertical = 0
+theme_override_constants/separation = 4
+
+[node name="MissionsBtn" type="Button" parent="HUD/BottomButtons"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Missions"
+
+[node name="JourneyBtn" type="Button" parent="HUD/BottomButtons"]
+layout_mode = 2
 theme_override_font_sizes/font_size = 13
 text = "My Journey"
 
@@ -89,6 +101,7 @@ offset_bottom = 240.0
 grow_horizontal = 0
 
 [node name="MissionPanel" parent="HUD" instance=ExtResource("10_missions")]
+visible = false
 offset_left = 20.0
 offset_top = 100.0
 offset_right = 220.0
