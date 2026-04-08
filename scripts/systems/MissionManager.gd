@@ -25,14 +25,14 @@ const SHARED_MISSIONS := [
 
 # Smartle-only missions
 const SMARTLE_MISSIONS := [
-	{"id": "leave_early", "icon": "-", "desc": "Leave home by 6:00 (2h bus)", "event": "commute_arrived"},
+	{"id": "leave_early", "icon": "-", "desc": "Wake up 5:00, leave by 6:00 (2h bus)", "event": "commute_arrived"},
 	{"id": "wash_dishes", "icon": "-", "desc": "Wash the dishes", "event": "action_wash"},
 	{"id": "organize_closet", "icon": "-", "desc": "Organize closet", "event": "action_organize"},
 ]
 
 # Gritty-only missions
 const GRITTY_MISSIONS := [
-	{"id": "leave_later", "icon": "-", "desc": "Leave home by 7:40 (20min car)", "event": "commute_arrived"},
+	{"id": "leave_later", "icon": "-", "desc": "Wake up 7:00, leave by 7:40 (20min car)", "event": "commute_arrived"},
 	{"id": "gym", "icon": "-", "desc": "Go to the gym (30min)", "event": "action_gym"},
 ]
 

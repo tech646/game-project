@@ -122,9 +122,18 @@ func _show_morning_split() -> void:
 
 
 func _on_split_continue() -> void:
-	# Initialize both characters' clocks at 6:00
+	# Smartle wakes up at 5:00 (needs 2h bus to arrive by 8:00, plus prep time)
+	GameClock.game_hour = 5
+	GameClock.game_minute = 0
 	GameClock.save_time_for("smartle")
+
+	# Gritty wakes up at 7:00 (only 20min car ride)
+	GameClock.game_hour = 7
+	GameClock.game_minute = 0
 	GameClock.save_time_for("gritty")
+
+	# Start with Smartle's time (she's the active player)
+	GameClock.restore_time_for("smartle")
 
 	# Start playing!
 	GameState.change_state(GameState.State.PLAYING)

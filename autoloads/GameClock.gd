@@ -9,7 +9,7 @@ signal day_changed(day: int)
 signal deadline_warning(character: String, minutes_left: int)
 
 var game_minute: int = 0
-var game_hour: int = 6
+var game_hour: int = 5  # Smartle wakes at 5:00
 var game_day: int = 1
 var speed: float = 1.0
 var is_paused: bool = false
