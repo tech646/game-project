@@ -276,14 +276,8 @@ func _use_door(door: DoorObject) -> void:
 			EventBus.warning_shown.emit("School is closed! Come back tomorrow.", "red")
 			return
 
-	# Check cafeteria hours (12:00 - 13:30) — only if already at school
-	if target == "cafeteria":
-		var time := GameClock.get_total_minutes()
-		var current_loc := SceneManager.get_location(needs.character_name if needs else "")
-		var at_school := current_loc in ["classroom", "library", "cafeteria", "gym"]
-		if at_school and (time < 720 or time > 810):
-			EventBus.warning_shown.emit("Cafeteria open 12:00-13:30 only!", "red")
-			return
+	# Cafeteria is always accessible but food only at meal times
+	# (handled in InteractionPopup time lock check)
 
 	var char_name: String = needs.character_name if needs else ""
 

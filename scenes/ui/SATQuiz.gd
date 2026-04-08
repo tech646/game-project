@@ -50,7 +50,7 @@ func show_quiz() -> void:
 	option_b.text = _current_question.options[1]
 	option_c.text = _current_question.options[2]
 	option_d.text = _current_question.options[3]
-	source_label.text = "Source: %s | %s" % [_current_question.source, _current_question.id]
+	source_label.text = "All questions from the Official CollegeBoard SAT Question Bank | %s" % _current_question.id
 
 	_set_buttons_enabled(true)
 	visible = true

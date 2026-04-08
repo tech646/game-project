@@ -56,7 +56,7 @@ func start_test() -> void:
 	_current_index = 0
 	_correct_count = 0
 
-	header_label.text = "-- SAT Practice Test --"
+	header_label.text = "SAT Practice Test (CollegeBoard)"
 	visible = true
 	set_process_unhandled_input(true)
 	GameState.change_state(GameState.State.IN_MENU)

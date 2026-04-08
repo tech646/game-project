@@ -43,10 +43,16 @@ func show_for_object(obj: GameObject) -> void:
 	# Check time lock
 	var schedule_mgr := _get_schedule_manager()
 	if schedule_mgr and not _is_activity_available(obj, schedule_mgr):
-		action_btn.text = "[X] " + obj.action_name + " — unavailable now"
+		action_btn.text = "[X] " + obj.action_name + " -- unavailable now"
 		action_btn.disabled = true
 	else:
 		action_btn.disabled = false
+
+	# Check Journey requirements for home study
+	var missing := _check_journey_requirements(obj)
+	if missing != "":
+		action_btn.text = "[X] " + obj.action_name + " -- Need: " + missing
+		action_btn.disabled = true
 
 	# Alt action button
 	if obj.has_alt_action():
@@ -110,6 +116,45 @@ func _is_activity_available(obj: GameObject, schedule_mgr: Node) -> bool:
 	if obj.action_name == "Eat" and obj.object_name == "Cafeteria":
 		return schedule_mgr.is_activity_available("cafeteria")
 	return true
+
+
+func _check_journey_requirements(obj: GameObject) -> String:
+	## Returns missing item name if a Journey item is required, or "" if OK.
+	var needs := CharacterManager.get_active_needs()
+	if not needs:
+		return ""
+	var character := needs.character_name
+	var journey_sys := _get_journey_system()
+	if not journey_sys:
+		return ""
+
+	# Study at home requires School Supplies + SAT Prep Book
+	var is_home_study := obj.action_name.begins_with("Study") or obj.action_name.begins_with("SAT Mock")
+	var is_at_school := SceneManager.get_location(character) in ["classroom", "library", "cafeteria", "gym"]
+
+	if is_home_study and not is_at_school:
+		if not journey_sys.has_item(character, "school_supplies"):
+			return "School Supplies"
+		if not journey_sys.has_item(character, "sat_prep_book"):
+			return "SAT Prep Book"
+
+	# Online Course at home requires Computer
+	if obj.action_name.contains("Online") and not is_at_school:
+		if not journey_sys.has_item(character, "computer"):
+			return "Computer"
+
+	# Bus pass required for Smartle to go to school
+	if character == "smartle" and obj.action_name.contains("school"):
+		if not journey_sys.has_item(character, "bus_pass"):
+			return "Bus Pass"
+
+	return ""
+
+
+func _get_journey_system() -> JourneySystem:
+	for node in get_tree().get_nodes_in_group("journey_system"):
+		return node as JourneySystem
+	return null
 
 
 func _get_schedule_manager() -> Node:

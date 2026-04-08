@@ -38,7 +38,12 @@ const ITEMS := {
 	},
 	"school_supplies": {
 		"name": "School Supplies", "cost": 10, "category": EDUCATION,
-		"desc": "Required for homework", "effect": "homework_enabled",
+		"desc": "Required to study at home", "effect": "homework_enabled",
+		"available_to": ["smartle", "gritty"],
+	},
+	"computer": {
+		"name": "Computer", "cost": 100, "category": EDUCATION,
+		"desc": "Required for online courses at home", "effect": "computer",
 		"available_to": ["smartle", "gritty"],
 	},
 	"college_app_1": {
