@@ -11,11 +11,11 @@ signal sat_changed(score: int, target: int)
 const MAX_NEED := 100.0
 const SAT_TARGET := 1600
 
-# Base decay per game minute
-const DECAY_HUNGER := 0.15
-const DECAY_ENERGY := 0.1
-const DECAY_FUN := 0.08
-const DECAY_MENTAL := 0.05
+# Base decay per game minute (slower — a full bar lasts ~12 hours)
+const DECAY_HUNGER := 0.04
+const DECAY_ENERGY := 0.03
+const DECAY_FUN := 0.02
+const DECAY_MENTAL := 0.015
 
 var hunger: float = 50.0
 var energy: float = 45.0
@@ -42,6 +42,13 @@ func _ready() -> void:
 
 
 func _on_time_tick(_hour: int, _minute: int) -> void:
+	# Only decay for the active character — inactive character's needs freeze
+	var active_needs := CharacterManager.get_active_needs()
+	if active_needs != self:
+		return
+	# Don't decay when paused
+	if GameState.current_state != GameState.State.PLAYING:
+		return
 	_decay_needs()
 
 
