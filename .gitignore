@@ -2,5 +2,8 @@
 .godot/
 *.import
 
+# Export builds (too large for GitHub)
+export/
+
 # OS
 .DS_Store
