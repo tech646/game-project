@@ -68,6 +68,8 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		obj.action_name.begins_with("Study") or
 		obj.action_name.begins_with("SAT") or
 		obj.action_name.begins_with("Do Homework") or
+		obj.action_name.begins_with("Write Essay") or
+		obj.action_name.begins_with("English Practice") or
 		obj.action_name.begins_with("Participate") or
 		obj.action_name.begins_with("Ask for") or
 		obj.action_name == "Talk" or
@@ -91,17 +93,28 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		# Track college checklist items
 		var college_sys := _get_college_system()
 		if college_sys:
-			# English hours: each study session adds time
-			var hours_added := obj.time_cost / 60.0
-			college_sys.english_hours[needs.character_name] = college_sys.english_hours.get(needs.character_name, 0) + int(hours_added)
+			var char_name := needs.character_name
+
+			# English hours: English Practice adds hours
+			if obj.action_name.begins_with("English Practice"):
+				var hours_added: int = obj.time_cost / 60
+				college_sys.english_hours[char_name] = college_sys.english_hours.get(char_name, 0) + hours_added
+				var total_hours: int = college_sys.english_hours[char_name]
+				EventBus.warning_shown.emit("English Hours: %d/10h" % total_hours, "yellow")
+				if total_hours >= 10:
+					EventBus.warning_shown.emit("English Hours complete!", "yellow")
 
 			# Ask for Recommendation
-			if obj.action_name == "Ask for Recommendation":
-				college_sys.recommendations[needs.character_name] = true
+			if obj.action_name.begins_with("Ask for Recommendation"):
+				if not college_sys.recommendations.get(char_name, false):
+					college_sys.recommendations[char_name] = true
+					EventBus.warning_shown.emit("Recommendation Letter received!", "yellow")
 
-			# Write Essay (triggered by SAT Mock Test at home desk)
-			if obj.action_name == "SAT Mock Test" and (obj.object_name.contains("Desk") or obj.object_name.contains("Setup")):
-				college_sys.essays_written[needs.character_name] = true
+			# Write Essay — explicit action on home desk
+			if obj.action_name.begins_with("Write Essay"):
+				if not college_sys.essays_written.get(char_name, false):
+					college_sys.essays_written[char_name] = true
+					EventBus.warning_shown.emit("College Essay written!", "yellow")
 
 		# 2h+ study = full test (3+ questions), otherwise single quiz
 		if obj.time_cost >= 120:

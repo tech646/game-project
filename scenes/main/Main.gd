@@ -605,6 +605,10 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 	# Check if alt action is study-related
 	var is_study := obj.alt_need_affected == "" and (
 		obj.alt_action_name.begins_with("Study") or
+		obj.alt_action_name.begins_with("SAT Mock") or
+		obj.alt_action_name.begins_with("Write Essay") or
+		obj.alt_action_name.begins_with("English Practice") or
+		obj.alt_action_name.begins_with("Do Homework") or
 		obj.alt_action_name.begins_with("Participate"))
 
 	if is_study:
@@ -626,6 +630,21 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 				if other_needs:
 					other_needs.modify_sat(int(sat_gain * 0.5))
 					other_needs.modify_need("mental_health", 10.0)
+		# Track college checklist for alt actions
+		var college_sys_node := get_tree().root.find_child("CollegeSystem", true, false)
+		if college_sys_node and college_sys_node is CollegeSystem:
+			var cs: CollegeSystem = college_sys_node as CollegeSystem
+			if obj.alt_action_name.begins_with("English Practice"):
+				var hours: int = obj.alt_time_cost / 60
+				cs.english_hours[needs.character_name] = cs.english_hours.get(needs.character_name, 0) + hours
+				EventBus.warning_shown.emit("English Hours: %d/10h" % cs.english_hours[needs.character_name], "yellow")
+			if obj.alt_action_name.begins_with("Write Essay"):
+				cs.essays_written[needs.character_name] = true
+				EventBus.warning_shown.emit("College Essay written!", "yellow")
+			if obj.alt_action_name.begins_with("SAT Mock"):
+				var hours: int = obj.alt_time_cost / 60
+				cs.english_hours[needs.character_name] = cs.english_hours.get(needs.character_name, 0) + hours
+
 		# Trigger quiz
 		sat_quiz.show_quiz()
 	elif obj.alt_need_affected != "":

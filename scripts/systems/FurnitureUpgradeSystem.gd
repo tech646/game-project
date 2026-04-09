@@ -25,7 +25,7 @@ const FURNITURE_DEFS := {
 			"path": "res://assets/furniture/bed/Cama %d.png"},
 	"desk": {"name": ["Old Desk", "Wooden Desk", "Pro Setup"],
 			 "action": "Do Homework (1h)", "need": "", "base_restore": 0.0, "time_cost": 60,
-			 "alt_action": "SAT Mock Test (2h)", "alt_need": "", "alt_restore": 0.0, "alt_time": 120,
+			 "alt_action": "Write Essay (2h)", "alt_need": "", "alt_restore": 0.0, "alt_time": 120,
 			 "path": "res://assets/furniture/desk/Mesa %d.png"},
 	"stove": {"name": ["Hot Plate", "Basic Stove", "Chef Kitchen"],
 			  "action": "Cook Healthy ($5)", "need": "hunger", "base_restore": 40.0, "time_cost": 45,

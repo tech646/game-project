@@ -29,17 +29,17 @@ func _spawn_objects() -> void:
 		"pos": Vector2(17, -12),
 	})
 
-	# Two notebook desks — SAT Mock Test or Participate in Class
+	# Notebook desks — SAT Mock Test or English Practice
 	create_object({
-		"name": "Notebook", "action": "SAT Mock Test", "quality": 3,
+		"name": "Notebook", "action": "SAT Mock Test (2h)", "quality": 3,
 		"need": "", "base_restore": 0.0, "time_cost": 120,
-		"alt_action": "Participate in Class", "alt_need": "", "alt_restore": 0.0, "alt_time": 60,
+		"alt_action": "English Practice (1h)", "alt_need": "", "alt_restore": 0.0, "alt_time": 60,
 		"pos": Vector2(-14, 45),
 	})
 	create_object({
-		"name": "Notebook", "action": "SAT Mock Test", "quality": 3,
-		"need": "", "base_restore": 0.0, "time_cost": 120,
-		"alt_action": "Participate in Class", "alt_need": "", "alt_restore": 0.0, "alt_time": 60,
+		"name": "Notebook", "action": "English Practice (1h)", "quality": 3,
+		"need": "", "base_restore": 0.0, "time_cost": 60,
+		"alt_action": "SAT Mock Test (2h)", "alt_need": "", "alt_restore": 0.0, "alt_time": 120,
 		"pos": Vector2(33, 19),
 	})
 
