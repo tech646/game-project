@@ -128,15 +128,21 @@ func _check_journey_requirements(obj: GameObject) -> String:
 	if not journey_sys:
 		return ""
 
-	# Study at home requires School Supplies + SAT Prep Book
-	var is_home_study := obj.action_name.begins_with("Study") or obj.action_name.begins_with("SAT Mock")
+	# Homework and SAT practice at home requires all three items
+	var is_home_study := (
+		obj.action_name.begins_with("Study") or
+		obj.action_name.begins_with("SAT Mock") or
+		obj.action_name.begins_with("Do Homework")
+	)
 	var is_at_school := SceneManager.get_location(character) in ["classroom", "library", "cafeteria", "gym"]
 
 	if is_home_study and not is_at_school:
 		if not journey_sys.has_item(character, "school_supplies"):
-			return "School Supplies"
+			return "School Supplies ($10)"
 		if not journey_sys.has_item(character, "sat_prep_book"):
-			return "SAT Prep Book"
+			return "SAT Prep Book ($30)"
+		if not journey_sys.has_item(character, "calculator"):
+			return "Calculator ($20)"
 
 	# Online Course at home requires Computer
 	if obj.action_name.contains("Online") and not is_at_school:
