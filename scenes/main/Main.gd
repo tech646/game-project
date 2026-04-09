@@ -245,6 +245,14 @@ func _on_character_switched(active_name: String) -> void:
 	# Restore the new character's time
 	GameClock.restore_time_for(active_name)
 
+	# Check if the new character's day is already done
+	var new_day_done := (_gritty_day_done and active_name == "gritty") or (_smartle_day_done and active_name == "smartle")
+	if new_day_done:
+		GameClock.pause()
+		EventBus.warning_shown.emit("%s's day is already done!" % active_name.capitalize(), "yellow")
+	else:
+		GameClock.resume()
+
 	# Park inactive in holder
 	_park_player(inactive)
 
@@ -406,13 +414,15 @@ func _on_hour_changed(hour: int) -> void:
 			else:
 				_smartle_day_done = true
 
+			# Pause clock — this character's day is over
+			GameClock.pause()
+			GameClock.game_hour = 23
+			GameClock.game_minute = 0
+
 			# If only one is done, prompt to switch
 			if not (_gritty_day_done and _smartle_day_done):
 				var other := "Gritty" if needs.character_name == "smartle" else "Smartle"
 				EventBus.warning_shown.emit("%s's day is done! Press Tab to play %s's day." % [needs.character_name.capitalize(), other], "yellow")
-				# Reset clock to morning for this character (day done)
-				GameClock.game_hour = 23
-				GameClock.game_minute = 59
 			else:
 				# Both done — end the day!
 				_force_end_day()
