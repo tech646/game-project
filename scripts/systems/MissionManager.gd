@@ -22,6 +22,7 @@ const SHARED_MISSIONS := [
 	{"id": "eat", "icon": "-", "desc": "Eat at home", "event": "action_eat_home"},
 	{"id": "sleep", "icon": "-", "desc": "Sleep (at least 6h)", "event": "action_sleep"},
 	{"id": "fun", "icon": "-", "desc": "Have fun / relax", "event": "action_fun"},
+	{"id": "talk_brighta", "icon": "-", "desc": "Talk to Mrs Brighta", "event": "talk_npc"},
 ]
 
 # Smartle-only missions

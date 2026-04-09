@@ -67,7 +67,9 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 	var is_study := obj.need_affected == "" and (
 		obj.action_name.begins_with("Study") or
 		obj.action_name.begins_with("SAT") or
+		obj.action_name.begins_with("Do Homework") or
 		obj.action_name.begins_with("Participate") or
+		obj.action_name.begins_with("Ask for") or
 		obj.action_name == "Talk" or
 		obj.action_name == "Office Hour" or
 		obj.action_name == "Read"

@@ -38,15 +38,14 @@ var essays_written: Dictionary = {"gritty": false, "smartle": false}
 var recommendations: Dictionary = {"gritty": false, "smartle": false}
 var total_missions: Dictionary = {"gritty": 0, "smartle": 0}
 
-## Has counselor (Smartle advantage)
-var has_counselor: Dictionary = {"gritty": false, "smartle": true}
+## Has counselor (Gritty has parents' support)
+var has_counselor: Dictionary = {"gritty": true, "smartle": false}
 
 
 func setup_default_lists() -> void:
-	# Gritty's dream is big but realistic
-	college_lists["gritty"] = ["MIT", "BU", "ASU"]
-	# Smartle has more options and counselor guidance
-	college_lists["smartle"] = ["Stanford", "Columbia", "NYU", "UCF"]
+	# Both dream of Harvard, with match and safety options
+	college_lists["gritty"] = ["Harvard", "BU", "ASU"]
+	college_lists["smartle"] = ["Harvard", "NYU", "UCF"]
 
 	for character in college_lists:
 		applications[character] = {}

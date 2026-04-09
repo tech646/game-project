@@ -105,26 +105,6 @@ func show_commute(character_name: String, mode: String, travel_time: int) -> voi
 		)
 
 	tween.tween_interval(2.0)
-
-	# IMPACT SCREEN — the comparison that matters
-	tween.tween_callback(func():
-		scene_label.text = "THE INEQUALITY OF TIME"
-		scene_label.add_theme_color_override("font_color", Color(1, 0.85, 0.3))
-		vehicle_label.text = ""
-		progress_bar.visible = false
-		time_label.text = ""
-		thought_label.add_theme_color_override("font_color", Color(0.9, 0.87, 0.8))
-		thought_label.text = (
-			"SMARTLE: 2 hours each way = 4 HOURS/DAY on a bus\n" +
-			"Lost: -25 Energy, -15 Hunger, -10 Mental Health\n\n" +
-			"GRITTY: 20 min each way = 40 min/day in a car\n" +
-			"Lost: -5 Energy, -5 Hunger\n\n" +
-			"Every single day, Smartle loses 3h20min and arrives\n" +
-			"exhausted while Gritty arrives fresh and ready."
-		)
-	)
-
-	tween.tween_interval(5.0)
 	tween.tween_callback(_finish)
 
 

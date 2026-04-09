@@ -50,6 +50,8 @@ const LOCATION_NAMES := {
 
 var _sleep_warned: bool = false
 var _day_ended: bool = false
+var _gritty_day_done: bool = false
+var _smartle_day_done: bool = false
 
 var gritty_player: CharacterBody2D = null
 var smartle_player: CharacterBody2D = null
@@ -395,13 +397,32 @@ func _on_hour_changed(hour: int) -> void:
 	if hour == SLEEP_WARNING_HOUR and not _sleep_warned:
 		_sleep_warned = true
 		EventBus.warning_shown.emit("Time to sleep!", "yellow")
-	if hour == FORCE_END_HOUR and not _day_ended:
-		_force_end_day()
+	if hour == FORCE_END_HOUR:
+		# Mark current character's day as done
+		var needs := CharacterManager.get_active_needs()
+		if needs:
+			if needs.character_name == "gritty":
+				_gritty_day_done = true
+			else:
+				_smartle_day_done = true
+
+			# If only one is done, prompt to switch
+			if not (_gritty_day_done and _smartle_day_done):
+				var other := "Gritty" if needs.character_name == "smartle" else "Smartle"
+				EventBus.warning_shown.emit("%s's day is done! Press Tab to play %s's day." % [needs.character_name.capitalize(), other], "yellow")
+				# Reset clock to morning for this character (day done)
+				GameClock.game_hour = 23
+				GameClock.game_minute = 59
+			else:
+				# Both done — end the day!
+				_force_end_day()
 
 
 func _on_day_changed(day: int) -> void:
 	_sleep_warned = false
 	_day_ended = false
+	_gritty_day_done = false
+	_smartle_day_done = false
 	_apply_overnight_recovery()
 	_show_day_banner(day)
 	EventBus.day_started.emit(day)

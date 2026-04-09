@@ -24,17 +24,22 @@ func show_summary(day: int, gritty_needs: NeedsComponent, smartle_needs: NeedsCo
 	_fill_col(gritty_col, "GRITTY", gritty_needs, gritty_missions, Color(0.9, 0.5, 0.6))
 	_fill_col(smartle_col, "SMARTLE", smartle_needs, smartle_missions, Color(0.5, 0.7, 0.9))
 
-	# Insight — highlight inequality
-	var sat_diff := smartle_needs.sat_score - gritty_needs.sat_score
+	# Insight — commute inequality + SAT comparison
+	var insight_text := ""
+	insight_text += "THE INEQUALITY OF TIME\n"
+	insight_text += "Smartle: 2h bus each way = 4h/day commuting\n"
+	insight_text += "Gritty: 20min car each way = 40min/day commuting\n"
+	insight_text += "Smartle loses 3h20min MORE every day.\n\n"
+
+	var sat_diff := gritty_needs.sat_score - smartle_needs.sat_score
 	if sat_diff > 20:
-		insight_label.text = "Smartle is %d SAT points ahead. Resources make a difference." % sat_diff
-		insight_label.add_theme_color_override("font_color", Color(1, 0.7, 0.4))
+		insight_text += "Gritty is %d SAT points ahead. Resources make a difference." % sat_diff
 	elif sat_diff < -20:
-		insight_label.text = "Gritty is %d SAT points ahead! Determination beats privilege!" % abs(sat_diff)
-		insight_label.add_theme_color_override("font_color", Color(0.5, 1, 0.5))
+		insight_text += "Smartle is %d SAT points ahead! Determination beats privilege!" % abs(sat_diff)
 	else:
-		insight_label.text = "They're neck and neck. The race goes on."
-		insight_label.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
+		insight_text += "They're neck and neck. The race goes on."
+	insight_label.text = insight_text
+	insight_label.add_theme_color_override("font_color", Color(0.9, 0.85, 0.7))
 
 	visible = true
 	set_process_unhandled_input(true)

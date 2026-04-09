@@ -37,7 +37,7 @@ func _spawn_objects() -> void:
 
 	# Food counter
 	create_object({
-		"name": "Food Counter", "action": "Buy Food", "quality": 2,
+		"name": "Food Counter", "action": "Buy Meal ($8)", "quality": 2,
 		"need": "hunger", "base_restore": 35.0, "time_cost": 20,
 		"pos": Vector2(82, -49),
 	})
