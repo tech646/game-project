@@ -42,9 +42,11 @@ func _refresh() -> void:
 	var total := _journey_sys.get_total_available(_character)
 	progress_label.text = "Progress: %d / %d milestones" % [bought, total]
 
-	# Clear old tabs
-	for child in tab_container.get_children():
-		child.queue_free()
+	# Clear old tabs — remove immediately, not deferred
+	var children := tab_container.get_children()
+	for child in children:
+		tab_container.remove_child(child)
+		child.free()
 
 	# Build tabs by category
 	var items := _journey_sys.get_items_for(_character)
@@ -55,21 +57,22 @@ func _refresh() -> void:
 			categories[cat] = []
 		categories[cat].append(item)
 
-	var tab_names := {"education": "Education", "survival": "Survival", "community": "Community", "personal": "Personal"}
-	var tab_index := 0
+	var all_cats := ["education", "survival", "community", "personal"]
+	var cat_labels := ["Education", "Survival", "Community", "Personal"]
+	var idx := 0
 
-	for cat in ["education", "survival", "community", "personal"]:
+	for i in range(all_cats.size()):
+		var cat: String = all_cats[i]
 		if not categories.has(cat):
 			continue
+
 		var scroll := ScrollContainer.new()
-		scroll.name = "Tab_%s" % cat  # Unique name to avoid conflicts
 		scroll.custom_minimum_size = Vector2(0, 200)
 
 		var vbox := VBoxContainer.new()
 		vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		vbox.add_theme_constant_override("separation", 4)
 
-		# Special message for Gritty's survival tab
 		if cat == "survival" and _character == "gritty":
 			var msg := Label.new()
 			msg.text = "All covered by family"
@@ -83,12 +86,11 @@ func _refresh() -> void:
 
 		scroll.add_child(vbox)
 		tab_container.add_child(scroll)
-		# Set tab title explicitly after adding
-		tab_container.set_tab_title(tab_index, tab_names[cat])
-		tab_index += 1
+		tab_container.set_tab_title(idx, cat_labels[i])
+		idx += 1
 
 	# Add College List tab
-	_add_college_tab(tab_index)
+	_add_college_tab(idx)
 
 
 func _add_college_tab(tab_index: int) -> void:
