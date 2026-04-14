@@ -418,30 +418,44 @@ func _on_state_changed(old_state: GameState.State, new_state: GameState.State) -
 
 
 func _on_hour_changed(hour: int) -> void:
+	if _day_ended:
+		return
 	if hour == SLEEP_WARNING_HOUR and not _sleep_warned:
 		_sleep_warned = true
 		EventBus.warning_shown.emit("Time to sleep!", "yellow")
-	if hour == FORCE_END_HOUR and not _day_ended:
-		# Mark current character's day as done
+	# At hour 23, if character hasn't slept, force them to end
+	if hour == 23:
 		var needs := CharacterManager.get_active_needs()
 		if needs:
-			if needs.character_name == "gritty":
-				_gritty_day_done = true
-			else:
-				_smartle_day_done = true
+			var char_name := needs.character_name
+			var already_done := (_gritty_day_done and char_name == "gritty") or \
+								(_smartle_day_done and char_name == "smartle")
+			if not already_done:
+				EventBus.warning_shown.emit("It's late! You should sleep now. Your day will end soon.", "yellow")
 
-			# Pause clock — this character's day is over
-			GameClock.pause()
-			GameClock.game_hour = 23
-			GameClock.game_minute = 0
 
-			# If only one is done, prompt to switch
-			if not (_gritty_day_done and _smartle_day_done):
-				var other := "Gritty" if needs.character_name == "smartle" else "Smartle"
-				EventBus.warning_shown.emit("%s's day is done! Press Tab to play %s's day." % [needs.character_name.capitalize(), other], "yellow")
-			else:
-				# Both done — end the day!
-				_force_end_day()
+func mark_character_day_done(character_name: String) -> void:
+	## Called when a character sleeps — their day is over.
+	if _day_ended:
+		return
+	if character_name == "gritty":
+		_gritty_day_done = true
+	else:
+		_smartle_day_done = true
+
+	if _gritty_day_done and _smartle_day_done:
+		# Both done — end the day!
+		_force_end_day()
+	else:
+		# One is done — pause and prompt to switch
+		GameClock.pause()
+		var needs := CharacterManager.get_active_needs()
+		if needs:
+			var other := "Gritty" if character_name == "smartle" else "Smartle"
+			EventBus.warning_shown.emit(
+				"%s went to sleep. Press Tab to play %s's day." % [character_name.capitalize(), other],
+				"yellow"
+			)
 
 
 func _on_day_changed(day: int) -> void:
@@ -628,6 +642,8 @@ func _on_action_confirmed(obj: GameObject) -> void:
 		executor.study_completed.connect(_on_study_completed)
 	if not executor.full_test_requested.is_connected(_on_full_test_requested):
 		executor.full_test_requested.connect(_on_full_test_requested)
+	if not executor.character_slept.is_connected(_on_character_slept):
+		executor.character_slept.connect(_on_character_slept)
 
 	executor.execute(obj, needs)
 	executor.action_completed.connect(func(text: String):
@@ -724,6 +740,12 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 
 	# Mission events
 	var mm := get_tree().get_first_node_in_group("mission_manager") as MissionManager
+
+	# If alt action is sleeping, mark day as done
+	if obj.alt_need_affected == "energy" and obj.alt_action_name.begins_with("Sleep"):
+		if mm:
+			mm.complete_mission_by_event(needs.character_name, "action_sleep")
+		mark_character_day_done(needs.character_name)
 	if mm:
 		if is_study:
 			mm.complete_mission_by_event(needs.character_name, "action_study")
@@ -740,8 +762,13 @@ func _on_popup_closed() -> void:
 		player.unlock_from_action()
 
 
+func _on_character_slept(character_name: String) -> void:
+	## Character slept — their day is over.
+	mark_character_day_done(character_name)
+
+
 func _on_study_completed(_character: String) -> void:
-	# 1h study → single quiz question
+	# 1h study -> single quiz question
 	sat_quiz.show_quiz()
 
 

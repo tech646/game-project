@@ -8,6 +8,7 @@ signal action_started(object_name: String)
 signal action_completed(result_text: String)
 signal study_completed(character: String)  # triggers SAT single quiz
 signal full_test_requested(character: String)  # triggers SAT full test
+signal character_slept(character: String)  # character went to sleep — day is done
 
 const SAT_PER_STUDY := 10
 
@@ -61,6 +62,7 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 			"energy":
 				if obj.action_name.begins_with("Sleep"):
 					_complete_mission(needs.character_name, "action_sleep")
+					character_slept.emit(needs.character_name)
 			"fun":
 				_complete_mission(needs.character_name, "action_fun")
 			"mental_health":
