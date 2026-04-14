@@ -296,7 +296,7 @@ func _apply_effect(item_id: String) -> void:
 			needs.modify_need("mental_health", 40.0)
 			EventBus.warning_shown.emit("+40 Mental Health - Therapy helps!", "yellow")
 		"sat_bonus_10":
-			EventBus.warning_shown.emit("SAT Prep Book acquired! +10% quiz bonus", "yellow")
+			EventBus.warning_shown.emit("College Board access granted! +10% quiz bonus", "yellow")
 		"college_app":
 			EventBus.warning_shown.emit("College application submitted!", "yellow")
 		"extra_curricular":

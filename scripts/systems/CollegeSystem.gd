@@ -13,7 +13,9 @@ const COLLEGES := {
 	"Columbia": {"type": "match", "sat_min": 1400, "label": "Columbia University", "icon": ""},
 	"BU": {"type": "match", "sat_min": 1300, "label": "Boston University", "icon": ""},
 	"UC Davis": {"type": "match", "sat_min": 1200, "label": "UC Davis", "icon": ""},
-	"NYU": {"type": "match", "sat_min": 1350, "label": "New York University", "icon": ""},
+	"Notre Dame": {"type": "dream", "sat_min": 1470, "label": "University of Notre Dame", "icon": ""},
+	"Dartmouth": {"type": "dream", "sat_min": 1500, "label": "Dartmouth College", "icon": ""},
+	"Rochester": {"type": "match", "sat_min": 1410, "label": "University of Rochester", "icon": ""},
 	"ASU": {"type": "safety", "sat_min": 1000, "label": "Arizona State University", "icon": ""},
 	"UCF": {"type": "safety", "sat_min": 1050, "label": "University of Central Florida", "icon": "*"},
 	"UMass": {"type": "safety", "sat_min": 1100, "label": "UMass Amherst", "icon": ""},
@@ -45,7 +47,7 @@ var has_counselor: Dictionary = {"gritty": true, "smartle": false}
 func setup_default_lists() -> void:
 	# Both dream of Harvard, with match and safety options
 	college_lists["gritty"] = ["Harvard", "BU", "ASU"]
-	college_lists["smartle"] = ["Harvard", "NYU", "UCF"]
+	college_lists["smartle"] = ["Harvard", "Rochester", "UCF"]
 
 	for character in college_lists:
 		applications[character] = {}

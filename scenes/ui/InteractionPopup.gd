@@ -140,9 +140,17 @@ func _check_journey_requirements(obj: GameObject) -> String:
 		if not journey_sys.has_item(character, "school_supplies"):
 			return "School Supplies ($10)"
 		if not journey_sys.has_item(character, "sat_prep_book"):
-			return "SAT Prep Book ($30)"
+			return "College Board Access ($30)"
 		if not journey_sys.has_item(character, "calculator"):
 			return "Calculator ($20)"
+		# During curfew, Smartle needs internet + computer to study at home
+		if character == "smartle":
+			var curfew_sys := _get_curfew_system()
+			if curfew_sys and curfew_sys.is_smartle_locked_in():
+				if not journey_sys.has_item("smartle", "internet"):
+					return "Internet (curfew lockdown)"
+				if not journey_sys.has_item("smartle", "computer"):
+					return "Computer (curfew lockdown)"
 
 	# Online Course at home requires Computer
 	if obj.action_name.contains("Online") and not is_at_school:
@@ -160,6 +168,12 @@ func _check_journey_requirements(obj: GameObject) -> String:
 func _get_journey_system() -> JourneySystem:
 	for node in get_tree().get_nodes_in_group("journey_system"):
 		return node as JourneySystem
+	return null
+
+
+func _get_curfew_system() -> CurfewSystem:
+	for node in get_tree().get_nodes_in_group("curfew_system"):
+		return node as CurfewSystem
 	return null
 
 

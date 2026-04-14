@@ -23,12 +23,13 @@ var _story_text := (
 	"Two students. Same dream. Different worlds.\n\n" +
 	"Smartle lives in the favela. She is a first-generation student;\n" +
 	"her mother has raised her alone while struggling to make ends meet.\n" +
-	"She rides a packed bus 2 hours to school and 2 hours back home.\n" +
-	"She has learned to use that 'wasted time' to study for tests.\n\n" +
+	"Her 3-hour daily commute on a packed bus represents an exhausting\n" +
+	"routine that severely limits her time for sleep, study, and personal\n" +
+	"life, but she has learned to use that \"wasted time\" to study for tests.\n\n" +
 	"While Gritty's family can afford a good private school, Smartle\n" +
 	"only attends the same institution because she was granted a\n" +
 	"merit scholarship. She counts every coin for food.\n\n" +
-	"Gritty is middle class. Both his parents graduated from universities\n" +
+	"Gritty is middle class. Both his parents hold university degrees\n" +
 	"and have supported him during his college application process.\n" +
 	"He lives close to school, eats balanced meals prepared by his mother,\n" +
 	"and practices sports 4 times a week to relieve stress.\n\n" +
@@ -52,7 +53,7 @@ var _tutorial_text := (
 	"Smartle must spend coins on survival (bus, food, internet).\n" +
 	"Gritty's family covers those costs.\n\n" +
 	"On Day 7, college decision letters arrive!\n" +
-	"Can both students achieve their dream?"
+	"Can both students achieve their dreams?"
 )
 
 

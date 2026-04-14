@@ -63,6 +63,15 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		# Any action counts for explore mission
 		_complete_mission(needs.character_name, "action_any")
 
+	# Talking to Mrs Brighta — triggers talk_npc mission regardless of need
+	if obj.object_name == "Mrs Brighta":
+		_complete_mission(needs.character_name, "talk_npc")
+		# "Ask for Recommendation" also fulfills college checklist
+		if obj.action_name.begins_with("Ask for"):
+			var college_sys_b := _get_college_system()
+			if college_sys_b:
+				college_sys_b.recommendations[needs.character_name] = true
+
 	# Study → SAT quiz ALWAYS triggers when studying
 	var is_study := obj.need_affected == "" and (
 		obj.action_name.begins_with("Study") or

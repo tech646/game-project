@@ -21,3 +21,7 @@ signal day_ended(day: int)
 # Stats
 signal sat_penalty(character: String, amount: int, reason: String)
 signal energy_changed(character: String, amount: float)
+
+# Curfew (Smartle only — favela violence prevents leaving)
+signal curfew_started
+signal curfew_ended

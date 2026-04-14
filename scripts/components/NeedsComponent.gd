@@ -11,11 +11,12 @@ signal sat_changed(score: int, target: int)
 const MAX_NEED := 100.0
 const SAT_TARGET := 1600
 
-# Base decay per game minute (slower — a full bar lasts ~12 hours)
-const DECAY_HUNGER := 0.04
-const DECAY_ENERGY := 0.03
-const DECAY_FUN := 0.02
-const DECAY_MENTAL := 0.015
+# Base decay per game minute
+# Energy drains noticeably — full bar lasts ~8h active time
+const DECAY_HUNGER := 0.08
+const DECAY_ENERGY := 0.18
+const DECAY_FUN := 0.05
+const DECAY_MENTAL := 0.03
 
 var hunger: float = 50.0
 var energy: float = 45.0

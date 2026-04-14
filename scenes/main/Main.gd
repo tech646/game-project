@@ -77,6 +77,10 @@ func _ready() -> void:
 	journey_btn.pressed.connect(_on_open_upgrades)
 	missions_btn.pressed.connect(_on_toggle_missions)
 
+	# Curfew system (random favela lockdown for Smartle)
+	var curfew_sys := $Systems/CurfewSystem
+	curfew_sys.add_to_group("curfew_system")
+
 	# Setup scene manager
 	SceneManager.setup(world, fade_overlay)
 	SceneManager.location_changed.connect(_on_location_changed)
@@ -319,15 +323,26 @@ func _use_door(door: DoorObject) -> void:
 
 	# Smartle needs bus pass to go to school
 	if target in ["classroom", "library", "cafeteria", "gym"]:
+		var char_name_early: String = needs.character_name if needs else ""
+		var current_loc_early := SceneManager.get_location(char_name_early) if char_name_early != "" else ""
+		var already_at_school := current_loc_early in ["classroom", "library", "cafeteria", "gym"]
+
+		# Curfew blocks Smartle from leaving home during favela violence
+		if needs and needs.character_name == "smartle" and not already_at_school:
+			var curfew_sys := _get_curfew_system()
+			if curfew_sys and curfew_sys.is_smartle_locked_in():
+				EventBus.warning_shown.emit("CURFEW! Violence in the favela. You can't leave home today.", "red")
+				return
+
 		if needs and needs.character_name == "smartle":
 			var journey_sys := _get_journey_system()
 			if journey_sys and not journey_sys.has_item("smartle", "bus_pass"):
 				EventBus.warning_shown.emit("You need a Bus Pass to get to school! Check My Journey.", "red")
 				return
 
-		# School closes at 17:00
+		# School entry closed after 17:00 — but internal room switching is allowed
 		var time := GameClock.get_total_minutes()
-		if time > 1020:  # 17:00
+		if time > 1020 and not already_at_school:  # 17:00
 			EventBus.warning_shown.emit("School is closed! Come back tomorrow.", "red")
 			return
 
@@ -470,13 +485,29 @@ func _force_end_day() -> void:
 		mission_manager.get_completion_count("smartle")
 	)
 
-	# Decision Day on day 7
+	# When summary closes: advance to next day OR show Decision Day
 	if GameClock.game_day >= 7:
+		# Day 7 — DECISION DAY! Show college results after summary
 		var gritty_results := college_system.evaluate_decisions("gritty", _get_needs(gritty_player).sat_score)
 		var smartle_results := college_system.evaluate_decisions("smartle", _get_needs(smartle_player).sat_score)
 		day_summary.summary_closed.connect(func():
 			decision_day.show_decisions(gritty_results, smartle_results)
 		, CONNECT_ONE_SHOT)
+	else:
+		# Days 1-6 — advance to next day when summary closes
+		day_summary.summary_closed.connect(func():
+			_advance_to_next_day()
+		, CONNECT_ONE_SHOT)
+
+
+func _advance_to_next_day() -> void:
+	## Reset clock to 06:00 of the next day and trigger day_changed.
+	GameClock.game_day += 1
+	GameClock.game_hour = 6
+	GameClock.game_minute = 0
+	GameClock.resume()
+	GameState.change_state(GameState.State.PLAYING)
+	GameClock.day_changed.emit(GameClock.game_day)
 
 
 func _check_homework() -> void:
@@ -811,6 +842,12 @@ func _award_mission_coins(character: String) -> void:
 func _get_journey_system() -> JourneySystem:
 	for node in get_tree().get_nodes_in_group("journey_system"):
 		return node as JourneySystem
+	return null
+
+
+func _get_curfew_system() -> CurfewSystem:
+	for node in get_tree().get_nodes_in_group("curfew_system"):
+		return node as CurfewSystem
 	return null
 
 

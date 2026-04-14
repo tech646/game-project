@@ -17,8 +17,8 @@ const PERSONAL := "personal"
 const ITEMS := {
 	# === EDUCATION ===
 	"sat_prep_book": {
-		"name": "SAT Prep Book", "cost": 30, "category": EDUCATION,
-		"desc": "Boosts SAT quiz accuracy", "effect": "sat_bonus_10",
+		"name": "College Board Access", "cost": 30, "category": EDUCATION,
+		"desc": "Official practice questions, boosts SAT accuracy", "effect": "sat_bonus_10",
 		"available_to": ["smartle", "gritty"],
 	},
 	"online_course": {

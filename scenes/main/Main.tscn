@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3]
+[gd_scene load_steps=32 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -27,6 +27,8 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/SATFullTest.tscn" id="25_fulltest"]
 [ext_resource type="PackedScene" path="res://scenes/ui/JourneyPanel.tscn" id="26_journey"]
 [ext_resource type="Script" path="res://scripts/systems/JourneySystem.gd" id="27_journey_sys"]
+[ext_resource type="Script" path="res://scripts/systems/CurfewSystem.gd" id="28_curfew_sys"]
+[ext_resource type="Texture2D" path="res://assets/logo.png" id="29_logo"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_missions"]
 bg_color = Color(0.15, 0.12, 0.25, 0.9)
@@ -115,14 +117,28 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_btn_journey")
 text = "-- My Journey --"
 
 
+[node name="LogoSprite" type="TextureRect" parent="HUD"]
+texture = ExtResource("29_logo")
+expand_mode = 1
+stretch_mode = 5
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -90.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 90.0
+grow_horizontal = 0
+mouse_filter = 2
+
 [node name="NeedsBars" parent="HUD" instance=ExtResource("4_needs")]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -220.0
-offset_top = 10.0
+offset_top = 100.0
 offset_right = -10.0
-offset_bottom = 240.0
+offset_bottom = 330.0
 grow_horizontal = 0
 
 [node name="MissionPanel" parent="HUD" instance=ExtResource("10_missions")]
@@ -206,3 +222,6 @@ script = ExtResource("23_furniture")
 
 [node name="JourneySystem" type="Node" parent="Systems"]
 script = ExtResource("27_journey_sys")
+
+[node name="CurfewSystem" type="Node" parent="Systems"]
+script = ExtResource("28_curfew_sys")
