@@ -30,8 +30,11 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 	is_executing = true
 	action_started.emit(obj.object_name)
 
-	# Advance clock
+	# Advance clock — but STOP at 23:59 (don't cross midnight)
+	# Crossing midnight during an action causes day-end logic to fire mid-action
 	for i in range(obj.time_cost):
+		if GameClock.game_hour == 23 and GameClock.game_minute == 59:
+			break  # Don't cross midnight — let Main handle day end
 		GameClock._advance_minute()
 
 	# Get SAT effectiveness multiplier BEFORE restoring needs

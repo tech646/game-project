@@ -421,7 +421,7 @@ func _on_hour_changed(hour: int) -> void:
 	if hour == SLEEP_WARNING_HOUR and not _sleep_warned:
 		_sleep_warned = true
 		EventBus.warning_shown.emit("Time to sleep!", "yellow")
-	if hour == FORCE_END_HOUR:
+	if hour == FORCE_END_HOUR and not _day_ended:
 		# Mark current character's day as done
 		var needs := CharacterManager.get_active_needs()
 		if needs:
@@ -655,8 +655,10 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 	# Get SAT multiplier BEFORE advancing time
 	var sat_mult := needs.get_sat_multiplier()
 
-	# Advance clock
+	# Advance clock — stop at 23:59 to prevent midnight crossing
 	for i in range(obj.alt_time_cost):
+		if GameClock.game_hour == 23 and GameClock.game_minute == 59:
+			break
 		GameClock._advance_minute()
 
 	# Check if alt action is study-related
