@@ -17,12 +17,25 @@ var is_executing: bool = false
 func execute(obj: GameObject, needs: NeedsComponent) -> void:
 	if is_executing:
 		return
+
+	# Check if character is too exhausted/hungry to act
+	# Recovery actions (sleep, eat) are always allowed
+	var is_recovery := obj.need_affected in ["energy", "hunger"]
+	if not is_recovery and needs.is_too_exhausted_to_act():
+		var reason := needs.get_block_reason()
+		EventBus.warning_shown.emit(reason, "red")
+		action_completed.emit("")
+		return
+
 	is_executing = true
 	action_started.emit(obj.object_name)
 
 	# Advance clock
 	for i in range(obj.time_cost):
 		GameClock._advance_minute()
+
+	# Get SAT effectiveness multiplier BEFORE restoring needs
+	var sat_mult := needs.get_sat_multiplier()
 
 	# Restore need
 	var result_text := ""
@@ -86,9 +99,17 @@ func execute(obj: GameObject, needs: NeedsComponent) -> void:
 		obj.action_name == "Read"
 	)
 	if is_study:
-		var sat_gain := int(float(SAT_PER_STUDY) * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0))
+		var base_sat: float = float(SAT_PER_STUDY) * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0)
+		var sat_gain: int = int(base_sat * sat_mult)
 		needs.modify_sat(sat_gain)
-		result_text = "+%d SAT" % sat_gain
+
+		# Show effectiveness feedback
+		if sat_mult < 0.01:
+			result_text = "+0 SAT (can't focus!)"
+		elif sat_mult < 1.0:
+			result_text = "+%d SAT (reduced - %s)" % [sat_gain, needs.get_status_text()]
+		else:
+			result_text = "+%d SAT" % sat_gain
 
 		_complete_mission(needs.character_name, "action_study")
 

@@ -12,11 +12,15 @@ const MAX_NEED := 100.0
 const SAT_TARGET := 1600
 
 # Base decay per game minute
-# Energy drains noticeably — full bar lasts ~8h active time
-const DECAY_HUNGER := 0.08
-const DECAY_ENERGY := 0.18
-const DECAY_FUN := 0.05
-const DECAY_MENTAL := 0.03
+# Full bar lasts ~10-12h active time (balanced for 7-day game)
+const DECAY_HUNGER := 0.07
+const DECAY_ENERGY := 0.12
+const DECAY_FUN := 0.04
+const DECAY_MENTAL := 0.025
+
+# Consequence thresholds
+const CRITICAL_THRESHOLD := 10.0   # Can't do anything except recover
+const WARNING_THRESHOLD := 30.0    # Reduced effectiveness
 
 var hunger: float = 50.0
 var energy: float = 45.0
@@ -120,7 +124,61 @@ func get_need(need_name: String) -> float:
 		"hunger": return hunger
 		"energy": return energy
 		"fun": return fun
+		"mental_health": return mental_health
 	return 0.0
+
+
+## ===== CONSEQUENCE SYSTEM =====
+
+func is_too_exhausted_to_act() -> bool:
+	## Returns true if character cannot do anything except recover (sleep/eat).
+	return energy < CRITICAL_THRESHOLD or hunger < CRITICAL_THRESHOLD or mental_health < CRITICAL_THRESHOLD
+
+
+func get_block_reason() -> String:
+	## Returns the reason the character is blocked, or "" if not blocked.
+	if energy < CRITICAL_THRESHOLD:
+		return "Too exhausted! You must sleep first."
+	if hunger < CRITICAL_THRESHOLD:
+		return "Too hungry! You must eat first."
+	if mental_health < CRITICAL_THRESHOLD:
+		return "Mentally drained! You need to rest or talk to someone."
+	return ""
+
+
+func get_sat_multiplier() -> float:
+	## Returns SAT effectiveness multiplier based on current state.
+	## 1.0 = normal, 0.5 = reduced, 0.0 = can't study
+	if energy < CRITICAL_THRESHOLD or hunger < CRITICAL_THRESHOLD:
+		return 0.0  # Can't focus at all
+	var mult := 1.0
+	if energy < WARNING_THRESHOLD:
+		mult *= 0.5  # Tired — half effectiveness
+	if hunger < WARNING_THRESHOLD:
+		mult *= 0.5  # Hungry — half effectiveness
+	if mental_health < WARNING_THRESHOLD:
+		mult *= 0.75  # Stressed — reduced
+	return mult
+
+
+func get_status_text() -> String:
+	## Returns a short status description for UI feedback.
+	if energy < CRITICAL_THRESHOLD:
+		return "EXHAUSTED"
+	if hunger < CRITICAL_THRESHOLD:
+		return "STARVING"
+	if mental_health < CRITICAL_THRESHOLD:
+		return "BURNOUT"
+	var warnings: Array[String] = []
+	if energy < WARNING_THRESHOLD:
+		warnings.append("tired")
+	if hunger < WARNING_THRESHOLD:
+		warnings.append("hungry")
+	if mental_health < WARNING_THRESHOLD:
+		warnings.append("stressed")
+	if warnings.is_empty():
+		return ""
+	return "Feeling " + ", ".join(warnings)
 
 
 func get_most_critical_need() -> Dictionary:

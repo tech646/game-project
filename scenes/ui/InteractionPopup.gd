@@ -54,13 +54,31 @@ func show_for_object(obj: GameObject) -> void:
 		action_btn.text = "[X] " + obj.action_name + " -- Need: " + missing
 		action_btn.disabled = true
 
+	# Check consequences — exhausted/starving characters can only recover
+	var needs := CharacterManager.get_active_needs()
+	var is_recovery := obj.need_affected in ["energy", "hunger"]
+	if needs and not is_recovery and needs.is_too_exhausted_to_act():
+		action_btn.text = "[X] " + obj.action_name + " -- " + needs.get_block_reason()
+		action_btn.disabled = true
+	elif needs and not is_recovery and needs.get_sat_multiplier() < 1.0:
+		# Show warning but don't block
+		var status := needs.get_status_text()
+		if status != "":
+			action_btn.text += "  [%s]" % status
+
 	# Alt action button
 	if obj.has_alt_action():
 		var alt_time := _format_time(obj.alt_time_cost)
 		var alt_restore := _format_restore(obj.alt_need_affected, obj.alt_base_restore * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0))
 		alt_action_btn.text = "%s  (%s)  %s" % [obj.alt_action_name, alt_time, alt_restore]
 		alt_action_btn.visible = true
-		alt_action_btn.disabled = false
+		# Block alt action if exhausted (unless it's a recovery action)
+		var alt_is_recovery := obj.alt_need_affected in ["energy", "hunger"]
+		if needs and not alt_is_recovery and needs.is_too_exhausted_to_act():
+			alt_action_btn.text = "[X] " + obj.alt_action_name + " -- " + needs.get_block_reason()
+			alt_action_btn.disabled = true
+		else:
+			alt_action_btn.disabled = false
 	else:
 		alt_action_btn.visible = false
 
