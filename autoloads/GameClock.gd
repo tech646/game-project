@@ -24,7 +24,6 @@ func save_time_for(character_name: String) -> void:
 	_character_times[character_name] = {
 		"hour": game_hour,
 		"minute": game_minute,
-		"day": game_day,
 	}
 
 
@@ -33,7 +32,7 @@ func restore_time_for(character_name: String) -> void:
 		var t: Dictionary = _character_times[character_name]
 		game_hour = t.hour
 		game_minute = t.minute
-		game_day = t.day
+		# DON'T restore game_day — it's global, managed by Main._advance_to_next_day
 		_accumulator = 0.0
 		time_tick.emit(game_hour, game_minute)
 
@@ -54,8 +53,8 @@ func _advance_minute() -> void:
 		game_hour += 1
 		if game_hour >= 24:
 			game_hour = 0
-			game_day += 1
-			day_changed.emit(game_day)
+			# DON'T auto-increment day here — Main.gd handles day transitions
+			# This prevents double-counting and going past day 7
 		hour_changed.emit(game_hour)
 	time_tick.emit(game_hour, game_minute)
 
