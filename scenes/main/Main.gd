@@ -100,6 +100,7 @@ func _ready() -> void:
 	interaction_popup.popup_closed.connect(_on_popup_closed)
 	sat_quiz.quiz_completed.connect(_on_quiz_completed)
 	sat_full_test.test_completed.connect(_on_full_test_completed)
+	decision_day.game_ended.connect(_on_game_ended)
 	coin_system.coins_changed.connect(_on_coins_changed)
 	furniture_system.furniture_upgraded.connect(_on_furniture_upgraded)
 	title_screen.start_game.connect(_on_title_start)
@@ -486,8 +487,9 @@ func _force_end_day() -> void:
 	)
 
 	# When summary closes: advance to next day OR show Decision Day
+	# Day 7 is the LAST day — after it ends, show Decision Day
 	if GameClock.game_day >= 7:
-		# Day 7 — DECISION DAY! Show college results after summary
+		# DECISION DAY! Show college results after summary — game ends
 		var gritty_results := college_system.evaluate_decisions("gritty", _get_needs(gritty_player).sat_score)
 		var smartle_results := college_system.evaluate_decisions("smartle", _get_needs(smartle_player).sat_score)
 		day_summary.summary_closed.connect(func():
@@ -502,7 +504,11 @@ func _force_end_day() -> void:
 
 func _advance_to_next_day() -> void:
 	## Reset clock to 06:00 of the next day and trigger day_changed.
-	GameClock.game_day += 1
+	## NEVER advance past day 7.
+	var next_day := GameClock.game_day + 1
+	if next_day > 7:
+		return  # Game should have ended — don't advance
+	GameClock.game_day = next_day
 	GameClock.game_hour = 6
 	GameClock.game_minute = 0
 	GameClock.resume()
@@ -849,6 +855,13 @@ func _get_curfew_system() -> CurfewSystem:
 	for node in get_tree().get_nodes_in_group("curfew_system"):
 		return node as CurfewSystem
 	return null
+
+
+func _on_game_ended() -> void:
+	## Game is over — delete save and return to title screen.
+	SaveSystem.delete_save()
+	GameClock.pause()
+	get_tree().reload_current_scene()
 
 
 func _auto_save() -> void:

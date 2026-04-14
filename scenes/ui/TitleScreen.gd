@@ -117,7 +117,7 @@ func _process(delta: float) -> void:
 func _show_page_1() -> void:
 	_page = 1
 	title.text = "Education as Path Out of Poverty"
-	subtitle.text = "Same dream. Different paths."
+	subtitle.text = "Read the instructions carefully before beginning to play.\nThis game is designed for computers only — it does not work on tablets or phones."
 	narrative.text = _story_text
 	next_btn.text = "Next >"
 	next_btn.visible = true
