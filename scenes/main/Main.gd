@@ -645,6 +645,16 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 		return
 	var needs: NeedsComponent = player.get_node("NeedsComponent")
 
+	# CONSEQUENCE CHECK: block non-recovery actions when exhausted
+	var alt_is_recovery := obj.alt_need_affected in ["energy", "hunger"]
+	if not alt_is_recovery and needs.is_too_exhausted_to_act():
+		EventBus.warning_shown.emit(needs.get_block_reason(), "red")
+		player.unlock_from_action()
+		return
+
+	# Get SAT multiplier BEFORE advancing time
+	var sat_mult := needs.get_sat_multiplier()
+
 	# Advance clock
 	for i in range(obj.alt_time_cost):
 		GameClock._advance_minute()
@@ -659,13 +669,18 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 		obj.alt_action_name.begins_with("Participate"))
 
 	if is_study:
-		# SAT gain — bonus if studying together with friend!
-		var sat_gain := int(10.0 * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0))
+		# SAT gain with consequence multiplier
+		var base_gain: float = 10.0 * GameObject.QUALITY_MULTIPLIERS.get(obj.quality, 1.0)
+		var sat_gain := int(base_gain * sat_mult)
 		var is_together := obj.alt_action_name.contains("Together")
 		if is_together:
 			sat_gain = int(sat_gain * 1.5)  # 50% bonus studying together!
-			needs.modify_need("mental_health", 10.0)  # Friendship helps mental health
+			needs.modify_need("mental_health", 10.0)
 			EventBus.warning_shown.emit("+%d SAT (study buddy bonus!) +10 Mental" % sat_gain, "yellow")
+		elif sat_mult < 0.01:
+			EventBus.warning_shown.emit("+0 SAT (can't focus!)", "red")
+		elif sat_mult < 1.0:
+			EventBus.warning_shown.emit("+%d SAT (reduced - %s)" % [sat_gain, needs.get_status_text()], "yellow")
 		else:
 			EventBus.warning_shown.emit("+%d SAT" % sat_gain, "yellow")
 		needs.modify_sat(sat_gain)
