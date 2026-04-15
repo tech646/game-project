@@ -98,6 +98,7 @@ func _ready() -> void:
 	pause_menu.open_upgrades.connect(_on_open_upgrades)
 	GameState.state_changed.connect(_on_state_changed)
 	GameClock.hour_changed.connect(_on_hour_changed)
+	GameClock.time_tick.connect(_on_time_tick)
 	GameClock.day_changed.connect(_on_day_changed)
 	CharacterManager.character_switched.connect(_on_character_switched)
 	interaction_popup.action_confirmed.connect(_on_action_confirmed)
@@ -421,6 +422,19 @@ func _on_state_changed(old_state: GameState.State, new_state: GameState.State) -
 	elif old_state == GameState.State.PAUSED:
 		pause_overlay.visible = false
 		pause_menu.hide_menu()
+
+
+func _on_time_tick(hour: int, minute: int) -> void:
+	if _day_ended:
+		return
+	# Force end of day at 23:59 if character hasn't slept
+	if hour == 23 and minute >= 59:
+		print("[DAY] 23:59 reached — forcing day end (day %d)" % GameClock.game_day)
+		var needs := CharacterManager.get_active_needs()
+		if needs:
+			EventBus.warning_shown.emit("It's midnight! You fell asleep from exhaustion.", "red")
+			needs.modify_need("energy", -20.0)  # Penalty for not sleeping properly
+			mark_character_day_done(needs.character_name)
 
 
 func _on_hour_changed(hour: int) -> void:
