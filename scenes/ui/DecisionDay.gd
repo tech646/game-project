@@ -1,8 +1,10 @@
 extends Control
 
-## Decision Day — shows acceptance/rejection letters for both characters.
+## Decision Day — shows college results.
+## Two modes: single character result, or comparative (both done).
 
 signal game_ended
+signal play_other_character(other_name: String)
 
 @onready var gritty_results: VBoxContainer = $VBox/HBox/GrittyResults
 @onready var smartle_results: VBoxContainer = $VBox/HBox/SmartleResults
@@ -12,14 +14,52 @@ signal game_ended
 
 func _ready() -> void:
 	visible = false
-	end_btn.pressed.connect(func(): game_ended.emit())
+	end_btn.pressed.connect(_on_end_btn)
 
 
+## Show ONE character's results + prompt to play the other
+func show_single_result(character: String, results: Array, other_character: String) -> void:
+	var col: VBoxContainer
+	var other_col: VBoxContainer
+	if character == "smartle":
+		col = smartle_results
+		other_col = gritty_results
+		_fill_results(col, "SMARTLE's Results", results, Color(0.5, 0.7, 0.9))
+		_clear_col(other_col, "GRITTY")
+		_add_line(other_col, "Journey not yet played", Color(0.5, 0.5, 0.5))
+	else:
+		col = gritty_results
+		other_col = smartle_results
+		_fill_results(col, "GRITTY's Results", results, Color(0.9, 0.5, 0.6))
+		_clear_col(other_col, "SMARTLE")
+		_add_line(other_col, "Journey not yet played", Color(0.5, 0.5, 0.5))
+
+	var accepted := 0
+	for r in results:
+		if r.accepted:
+			accepted += 1
+
+	if accepted > 0:
+		message_label.text = "%s got accepted! Now play %s's 7-day journey to see if they can too." % [character.capitalize(), other_character]
+	else:
+		message_label.text = "%s didn't get accepted. Now play %s's 7-day journey." % [character.capitalize(), other_character]
+
+	end_btn.text = "Play %s's Journey" % other_character
+	end_btn.set_meta("mode", "switch")
+	end_btn.set_meta("other", other_character.to_lower())
+
+	visible = true
+	GameState.change_state(GameState.State.IN_MENU)
+	modulate.a = 0.0
+	var tween := create_tween()
+	tween.tween_property(self, "modulate:a", 1.0, 1.0)
+
+
+## Show BOTH characters' results (comparative final screen)
 func show_decisions(gritty_list: Array, smartle_list: Array) -> void:
 	_fill_results(gritty_results, "GRITTY", gritty_list, Color(0.9, 0.5, 0.6))
 	_fill_results(smartle_results, "SMARTLE", smartle_list, Color(0.5, 0.7, 0.9))
 
-	# Final message
 	var gritty_accepted := 0
 	for r in gritty_list:
 		if r.accepted:
@@ -30,29 +70,38 @@ func show_decisions(gritty_list: Array, smartle_list: Array) -> void:
 			smartle_accepted += 1
 
 	if gritty_accepted > 0 and smartle_accepted > 0:
-		message_label.text = "They both made it! But the path was very different."
-	elif gritty_accepted > 0:
-		message_label.text = "Gritty made it against all odds!"
-	elif smartle_accepted > 0:
-		message_label.text = "Smartle used their resources wisely."
+		message_label.text = "They both made it! But the path was very different.\nSame dream, different journeys. That's the reality of inequality."
+	elif gritty_accepted > 0 and smartle_accepted == 0:
+		message_label.text = "Gritty made it, but Smartle didn't. Resources matter.\nThe system wasn't built equally for both."
+	elif smartle_accepted > 0 and gritty_accepted == 0:
+		message_label.text = "Smartle made it against all odds! Determination wins.\nBut imagine how much easier it could have been."
 	else:
-		message_label.text = "Neither got accepted yet. The dream goes on."
+		message_label.text = "Neither got accepted. The dream goes on.\nBut their experiences were very different."
+
+	end_btn.text = "Play Again"
+	end_btn.set_meta("mode", "restart")
 
 	visible = true
 	GameState.change_state(GameState.State.IN_MENU)
-
-	# Dramatic reveal animation
 	modulate.a = 0.0
 	var tween := create_tween()
 	tween.tween_property(self, "modulate:a", 1.0, 1.0)
 
 
-func _fill_results(col: VBoxContainer, name: String, results: Array, color: Color) -> void:
-	for i in range(col.get_child_count() - 1, 0, -1):
-		col.get_child(i).queue_free()
+func _on_end_btn() -> void:
+	var mode: String = end_btn.get_meta("mode", "restart")
+	if mode == "switch":
+		var other: String = end_btn.get_meta("other", "gritty")
+		visible = false
+		play_other_character.emit(other)
+	else:
+		visible = false
+		game_ended.emit()
 
+
+func _fill_results(col: VBoxContainer, name: String, results: Array, color: Color) -> void:
+	_clear_col(col, name)
 	var header: Label = col.get_child(0)
-	header.text = "" + name
 	header.add_theme_color_override("font_color", color)
 
 	for r in results:
@@ -103,3 +152,19 @@ func _fill_results(col: VBoxContainer, name: String, results: Array, color: Colo
 
 		panel.add_child(vbox)
 		col.add_child(panel)
+
+
+func _clear_col(col: VBoxContainer, header_text: String) -> void:
+	for i in range(col.get_child_count() - 1, 0, -1):
+		col.get_child(i).queue_free()
+	var header: Label = col.get_child(0)
+	header.text = header_text
+
+
+func _add_line(col: VBoxContainer, text: String, color: Color) -> void:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_size_override("font_size", 12)
+	l.add_theme_color_override("font_color", color)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	col.add_child(l)

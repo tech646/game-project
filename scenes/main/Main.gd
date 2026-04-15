@@ -53,6 +53,11 @@ var _day_ended: bool = false
 var _gritty_day_done: bool = false
 var _smartle_day_done: bool = false
 
+# Journey tracking — each character plays 7 days independently
+var _smartle_journey_complete: bool = false
+var _gritty_journey_complete: bool = false
+var _current_journey_character: String = "smartle"  # Who is currently playing their 7 days
+
 var gritty_player: CharacterBody2D = null
 var smartle_player: CharacterBody2D = null
 var _player_scene: PackedScene = preload("res://scenes/characters/Player.tscn")
@@ -101,6 +106,7 @@ func _ready() -> void:
 	sat_quiz.quiz_completed.connect(_on_quiz_completed)
 	sat_full_test.test_completed.connect(_on_full_test_completed)
 	decision_day.game_ended.connect(_on_game_ended)
+	decision_day.play_other_character.connect(_on_play_other_character)
 	coin_system.coins_changed.connect(_on_coins_changed)
 	furniture_system.furniture_upgraded.connect(_on_furniture_upgraded)
 	title_screen.start_game.connect(_on_title_start)
@@ -435,27 +441,14 @@ func _on_hour_changed(hour: int) -> void:
 
 
 func mark_character_day_done(character_name: String) -> void:
-	## Called when a character sleeps — their day is over.
+	## Called when the current character sleeps — their day is over.
+	print("[DAY] mark_character_day_done: %s (day=%d)" % [character_name, GameClock.game_day])
 	if _day_ended:
 		return
-	if character_name == "gritty":
-		_gritty_day_done = true
-	else:
-		_smartle_day_done = true
 
-	if _gritty_day_done and _smartle_day_done:
-		# Both done — end the day!
-		_force_end_day()
-	else:
-		# One is done — pause and prompt to switch
-		GameClock.pause()
-		var needs := CharacterManager.get_active_needs()
-		if needs:
-			var other := "Gritty" if character_name == "smartle" else "Smartle"
-			EventBus.warning_shown.emit(
-				"%s went to sleep. Press Tab to play %s's day." % [character_name.capitalize(), other],
-				"yellow"
-			)
+	# In the new system, each character plays independently.
+	# When the active character sleeps, their day ends immediately.
+	_force_end_day()
 
 
 func _on_day_changed(day: int) -> void:
@@ -476,8 +469,9 @@ func _on_day_changed(day: int) -> void:
 
 
 func _force_end_day() -> void:
+	print("[DAY] _force_end_day called! day=%d" % GameClock.game_day)
 	_day_ended = true
-	EventBus.warning_shown.emit("You didn't sleep! -%.0f%% energy" % NO_SLEEP_PENALTY, "red")
+	GameClock.pause()
 	_get_needs(gritty_player).modify_need("energy", -NO_SLEEP_PENALTY)
 	_get_needs(smartle_player).modify_need("energy", -NO_SLEEP_PENALTY)
 	_check_homework()
@@ -500,14 +494,12 @@ func _force_end_day() -> void:
 		mission_manager.get_completion_count("smartle")
 	)
 
-	# When summary closes: advance to next day OR show Decision Day
-	# Day 7 is the LAST day — after it ends, show Decision Day
+	# When summary closes: advance to next day OR handle day 7 ending
 	if GameClock.game_day >= 7:
-		# DECISION DAY! Show college results after summary — game ends
-		var gritty_results := college_system.evaluate_decisions("gritty", _get_needs(gritty_player).sat_score)
-		var smartle_results := college_system.evaluate_decisions("smartle", _get_needs(smartle_player).sat_score)
+		# Day 7 complete for current character!
+		var current_char := _current_journey_character
 		day_summary.summary_closed.connect(func():
-			decision_day.show_decisions(gritty_results, smartle_results)
+			_handle_journey_end(current_char)
 		, CONNECT_ONE_SHOT)
 	else:
 		# Days 1-6 — advance to next day when summary closes
@@ -520,14 +512,42 @@ func _advance_to_next_day() -> void:
 	## Reset clock to 06:00 of the next day and trigger day_changed.
 	## NEVER advance past day 7.
 	var next_day := GameClock.game_day + 1
+	print("[DAY] _advance_to_next_day: %d -> %d" % [GameClock.game_day, next_day])
 	if next_day > 7:
-		return  # Game should have ended — don't advance
+		print("[DAY] BLOCKED — past day 7!")
+		return
 	GameClock.game_day = next_day
 	GameClock.game_hour = 6
 	GameClock.game_minute = 0
 	GameClock.resume()
 	GameState.change_state(GameState.State.PLAYING)
 	GameClock.day_changed.emit(GameClock.game_day)
+	print("[DAY] Now on day %d, clock: %s" % [GameClock.game_day, GameClock.get_time_string()])
+
+
+func _handle_journey_end(character: String) -> void:
+	## Called when a character finishes day 7.
+	print("[DAY] Journey end for: %s" % character)
+
+	if character == "smartle":
+		_smartle_journey_complete = true
+	else:
+		_gritty_journey_complete = true
+
+	# Get this character's college results
+	var player := smartle_player if character == "smartle" else gritty_player
+	var sat := _get_needs(player).sat_score
+	var results := college_system.evaluate_decisions(character, sat)
+
+	if _smartle_journey_complete and _gritty_journey_complete:
+		# BOTH journeys complete — show COMPARATIVE final results
+		var gritty_results := college_system.evaluate_decisions("gritty", _get_needs(gritty_player).sat_score)
+		var smartle_results := college_system.evaluate_decisions("smartle", _get_needs(smartle_player).sat_score)
+		decision_day.show_decisions(gritty_results, smartle_results)
+	else:
+		# Only one journey done — show their results + prompt to play the other
+		var other := "Gritty" if character == "smartle" else "Smartle"
+		decision_day.show_single_result(character, results, other)
 
 
 func _check_homework() -> void:
@@ -764,6 +784,7 @@ func _on_popup_closed() -> void:
 
 func _on_character_slept(character_name: String) -> void:
 	## Character slept — their day is over.
+	print("[DAY] _on_character_slept: %s" % character_name)
 	mark_character_day_done(character_name)
 
 
@@ -906,6 +927,48 @@ func _on_game_ended() -> void:
 	SaveSystem.delete_save()
 	GameClock.pause()
 	get_tree().reload_current_scene()
+
+
+func _on_play_other_character(other_name: String) -> void:
+	## Switch to the other character's 7-day journey.
+	print("[DAY] Starting %s's journey!" % other_name)
+	_current_journey_character = other_name
+	_day_ended = false
+	_sleep_warned = false
+	_gritty_day_done = false
+	_smartle_day_done = false
+
+	# Reset day to 1 for this character
+	GameClock.game_day = 1
+	GameClock.game_hour = 6
+	GameClock.game_minute = 0
+
+	# Switch active character
+	if other_name == "gritty":
+		CharacterManager.active_index = CharacterManager.players.find(gritty_player)
+	else:
+		CharacterManager.active_index = CharacterManager.players.find(smartle_player)
+
+	# Load their home location
+	var home := "mansion" if other_name == "gritty" else "favela_bedroom"
+	var active_player := CharacterManager.get_active_player()
+	_park_player(active_player)
+
+	SceneManager.character_locations[other_name] = home
+	var loc := SceneManager.load_location_immediate(home)
+	var ysort: Node2D = loc.get_node("YSortRoot")
+	ysort.add_child(active_player)
+	active_player.position = loc.get_spawn_world_pos()
+	active_player.is_active = true
+	var camera: Camera2D = active_player.get_node_or_null("Camera2D")
+	if camera:
+		camera.make_current()
+
+	_update_location_label(home)
+	GameClock.resume()
+	GameState.change_state(GameState.State.PLAYING)
+	_show_day_banner(1)
+	mission_manager.generate_missions(other_name)
 
 
 func _auto_save() -> void:
