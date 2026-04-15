@@ -761,11 +761,16 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 	# Mission events
 	var mm := get_tree().get_first_node_in_group("mission_manager") as MissionManager
 
-	# If alt action is sleeping, mark day as done
+	# If alt action is sleeping
 	if obj.alt_need_affected == "energy" and obj.alt_action_name.begins_with("Sleep"):
 		if mm:
 			mm.complete_mission_by_event(needs.character_name, "action_sleep")
-		mark_character_day_done(needs.character_name)
+		# Only end the day if it's evening (after 20:00)
+		var sleep_hour := GameClock.game_hour
+		if sleep_hour >= 20 or sleep_hour < 4:
+			mark_character_day_done(needs.character_name)
+		else:
+			EventBus.warning_shown.emit("Quick rest! Day continues.", "yellow")
 	if mm:
 		if is_study:
 			mm.complete_mission_by_event(needs.character_name, "action_study")
@@ -783,9 +788,16 @@ func _on_popup_closed() -> void:
 
 
 func _on_character_slept(character_name: String) -> void:
-	## Character slept — their day is over.
-	print("[DAY] _on_character_slept: %s" % character_name)
-	mark_character_day_done(character_name)
+	## Character slept — only ends the day if it's evening (after 20:00).
+	## Before 20:00, sleeping is just a nap that restores energy.
+	var hour := GameClock.game_hour
+	print("[DAY] _on_character_slept: %s at %02d:00" % [character_name, hour])
+	if hour >= 20 or hour < 4:
+		# Night time — sleeping ends the day
+		mark_character_day_done(character_name)
+	else:
+		# Daytime nap — just restore energy, day continues
+		EventBus.warning_shown.emit("Quick rest! Day continues.", "yellow")
 
 
 func _on_study_completed(_character: String) -> void:

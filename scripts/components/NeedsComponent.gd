@@ -12,11 +12,11 @@ const MAX_NEED := 100.0
 const SAT_TARGET := 1600
 
 # Base decay per game minute
-# Full bar lasts ~10-12h active time (balanced for 7-day game)
-const DECAY_HUNGER := 0.07
-const DECAY_ENERGY := 0.12
-const DECAY_FUN := 0.04
-const DECAY_MENTAL := 0.025
+# Full bar lasts ~16-18h so player has time to plan their day
+const DECAY_HUNGER := 0.04
+const DECAY_ENERGY := 0.06
+const DECAY_FUN := 0.025
+const DECAY_MENTAL := 0.015
 
 # Consequence thresholds
 const CRITICAL_THRESHOLD := 10.0   # Can't do anything except recover
