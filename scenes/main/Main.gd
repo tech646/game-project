@@ -31,6 +31,8 @@ extends Node2D
 @onready var college_system: CollegeSystem = $Systems/CollegeSystem
 @onready var coin_system: CoinSystem = $Systems/CoinSystem
 @onready var furniture_system: FurnitureUpgradeSystem = $Systems/FurnitureUpgradeSystem
+@onready var tutorial_system: TutorialSystem = $Systems/TutorialSystem
+@onready var tutorial_overlay: Control = $HUD/TutorialOverlay
 @onready var world: Node2D = $World
 
 const SLEEP_WARNING_HOUR := 23
@@ -120,6 +122,12 @@ func _ready() -> void:
 	mission_manager.generate_missions("smartle")
 	_update_coins_label()
 
+	# Tutorial setup
+	tutorial_system.step_changed.connect(_on_tutorial_step_changed)
+	tutorial_system.tutorial_finished.connect(_on_tutorial_finished)
+	tutorial_overlay.skip_pressed.connect(_on_tutorial_skip)
+	tutorial_overlay.next_pressed.connect(_on_tutorial_next)
+
 	# Start paused — show title screen
 	GameState.change_state(GameState.State.IN_MENU)
 	GameClock.pause()
@@ -185,6 +193,10 @@ func _on_split_continue() -> void:
 	GameState.change_state(GameState.State.PLAYING)
 	GameClock.resume()
 	_show_day_banner(GameClock.game_day)
+
+	# Start tutorial on day 1
+	if GameClock.game_day == 1:
+		tutorial_system.start()
 	_update_room_score()
 	_update_coins_label()
 
@@ -277,6 +289,12 @@ func _on_character_switched(active_name: String) -> void:
 
 
 func _on_location_changed(_character: String, location: String) -> void:
+	# Tutorial hooks
+	if location.ends_with("_kitchen"):
+		_tutorial_event("entered_kitchen")
+	elif location == "classroom":
+		_tutorial_event("entered_school")
+
 	# Place player after scene swap completes
 	if not _pending_player_placement.is_empty():
 		var player: CharacterBody2D = _pending_player_placement.player
@@ -427,6 +445,11 @@ func _on_state_changed(old_state: GameState.State, new_state: GameState.State) -
 func _on_time_tick(hour: int, minute: int) -> void:
 	if _day_ended:
 		return
+	# Tutorial: detect player movement via active player velocity
+	if tutorial_system and tutorial_system.active:
+		var active_player := CharacterManager.get_active_player()
+		if active_player and active_player.velocity.length() > 1.0:
+			_tutorial_event("player_moved")
 	# Force end of day at 23:59 if character hasn't slept
 	if hour == 23 and minute >= 59:
 		print("[DAY] 23:59 reached — forcing day end (day %d)" % GameClock.game_day)
@@ -679,6 +702,14 @@ func _on_action_confirmed(obj: GameObject) -> void:
 	if not executor.character_slept.is_connected(_on_character_slept):
 		executor.character_slept.connect(_on_character_slept)
 
+	# Tutorial hooks
+	if obj.need_affected == "hunger":
+		_tutorial_event("ate_food")
+	if obj.object_name == "Mrs Brighta":
+		_tutorial_event("talked_brighta")
+	if obj.action_name.begins_with("Study") or obj.action_name.begins_with("SAT") or obj.action_name.begins_with("English Practice"):
+		_tutorial_event("studied")
+
 	executor.execute(obj, needs)
 	executor.action_completed.connect(func(text: String):
 		if text != "":
@@ -806,6 +837,7 @@ func _on_character_slept(character_name: String) -> void:
 	## Before 20:00, sleeping is just a nap that restores energy.
 	var hour := GameClock.game_hour
 	print("[DAY] _on_character_slept: %s at %02d:00" % [character_name, hour])
+	_tutorial_event("slept")
 	if hour >= 20 or hour < 4:
 		# Night time — sleeping ends the day
 		mark_character_day_done(character_name)
@@ -875,6 +907,7 @@ func _on_open_upgrades() -> void:
 		var needs := CharacterManager.get_active_needs()
 		if needs:
 			journey_panel.show_panel(needs.character_name)
+			_tutorial_event("opened_journey")
 
 
 func _on_toggle_missions() -> void:
@@ -948,6 +981,32 @@ func _get_curfew_system() -> CurfewSystem:
 	return null
 
 
+# ============ TUTORIAL HANDLERS ============
+
+func _on_tutorial_step_changed(step_index: int, step_data: Dictionary) -> void:
+	if tutorial_overlay:
+		tutorial_overlay.show_step(step_index, step_data, TutorialSystem.TUTORIAL_STEPS.size())
+
+
+func _on_tutorial_finished() -> void:
+	if tutorial_overlay:
+		tutorial_overlay.hide_tutorial()
+
+
+func _on_tutorial_skip() -> void:
+	tutorial_system.skip()
+
+
+func _on_tutorial_next() -> void:
+	# Only called on the final step — just finish
+	tutorial_system.skip()
+
+
+func _tutorial_event(event_name: String) -> void:
+	if tutorial_system and tutorial_system.active:
+		tutorial_system.complete_event(event_name)
+
+
 func _on_game_ended() -> void:
 	## Game is over — delete save and return to title screen.
 	SaveSystem.delete_save()
@@ -995,6 +1054,9 @@ func _on_play_other_character(other_name: String) -> void:
 	GameState.change_state(GameState.State.PLAYING)
 	_show_day_banner(1)
 	mission_manager.generate_missions(other_name)
+
+	# Start tutorial for the new character's day 1
+	tutorial_system.start()
 
 
 func _auto_save() -> void:

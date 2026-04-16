@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3]
+[gd_scene load_steps=34 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -29,6 +29,8 @@
 [ext_resource type="Script" path="res://scripts/systems/JourneySystem.gd" id="27_journey_sys"]
 [ext_resource type="Script" path="res://scripts/systems/CurfewSystem.gd" id="28_curfew_sys"]
 [ext_resource type="Texture2D" path="res://assets/logo.png" id="29_logo"]
+[ext_resource type="Script" path="res://scripts/systems/TutorialSystem.gd" id="30_tutorial_sys"]
+[ext_resource type="PackedScene" path="res://scenes/ui/TutorialOverlay.tscn" id="31_tutorial_ui"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_missions"]
 bg_color = Color(0.15, 0.12, 0.25, 0.9)
@@ -176,6 +178,8 @@ vertical_alignment = 1
 [node name="DaySummary" parent="HUD" instance=ExtResource("16_summary")]
 [node name="DecisionDay" parent="HUD" instance=ExtResource("17_decision")]
 
+[node name="TutorialOverlay" parent="HUD" instance=ExtResource("31_tutorial_ui")]
+
 [node name="UpgradeShop" parent="HUD" instance=ExtResource("21_shop")]
 
 [node name="FadeOverlay" type="ColorRect" parent="HUD"]
@@ -225,3 +229,6 @@ script = ExtResource("27_journey_sys")
 
 [node name="CurfewSystem" type="Node" parent="Systems"]
 script = ExtResource("28_curfew_sys")
+
+[node name="TutorialSystem" type="Node" parent="Systems"]
+script = ExtResource("30_tutorial_sys")
