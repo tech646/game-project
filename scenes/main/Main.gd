@@ -132,13 +132,13 @@ func _ready() -> void:
 	tutorial_overlay.next_pressed.connect(_on_tutorial_next)
 
 	# Hide tutorial while any modal popup is visible so it never covers actions
+	# (MissionPanel is a side panel that's always visible — NOT a modal)
 	interaction_popup.visibility_changed.connect(_refresh_tutorial_visibility)
 	dialogue_box.visibility_changed.connect(_refresh_tutorial_visibility)
 	sat_quiz.visibility_changed.connect(_refresh_tutorial_visibility)
 	sat_full_test.visibility_changed.connect(_refresh_tutorial_visibility)
 	journey_panel.visibility_changed.connect(_refresh_tutorial_visibility)
 	upgrade_shop.visibility_changed.connect(_refresh_tutorial_visibility)
-	mission_panel.visibility_changed.connect(_refresh_tutorial_visibility)
 
 	# Platform warning — shown BEFORE title screen
 	platform_warning.warning_dismissed.connect(_on_platform_warning_dismissed)
@@ -1064,8 +1064,7 @@ func _refresh_tutorial_visibility() -> void:
 		(sat_quiz and sat_quiz.visible) or
 		(sat_full_test and sat_full_test.visible) or
 		(journey_panel and journey_panel.visible) or
-		(upgrade_shop and upgrade_shop.visible) or
-		(mission_panel and mission_panel.visible)
+		(upgrade_shop and upgrade_shop.visible)
 	)
 	if modal_open:
 		tutorial_overlay.hide_tutorial()

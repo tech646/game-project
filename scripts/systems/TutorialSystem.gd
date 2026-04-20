@@ -22,7 +22,7 @@ const TUTORIAL_STEPS := [
 		"completion_event": "entered_kitchen",
 	},
 	{
-		"text": "Walk to the Stove or Fridge and press ENTER to eat breakfast.",
+		"text": "Walk to the Stove or Fridge and press ENTER to eat something.",
 		"target_type": "furniture",
 		"target_name": "eat",
 		"completion_event": "ate_food",
