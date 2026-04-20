@@ -14,6 +14,7 @@ extends Node2D
 @onready var location_label: Label = $HUD/LocationLabel
 @onready var objective_label: Label = $HUD/ObjectiveLabel
 @onready var controls_hint: PanelContainer = $HUD/ControlsHint
+@onready var platform_warning: Control = $HUD/PlatformWarning
 @onready var title_screen: Control = $HUD/TitleScreen
 @onready var day_split: Control = $HUD/DaySplitScreen
 @onready var commute_anim: Control = $HUD/CommuteAnimation
@@ -130,9 +131,19 @@ func _ready() -> void:
 	tutorial_overlay.skip_pressed.connect(_on_tutorial_skip)
 	tutorial_overlay.next_pressed.connect(_on_tutorial_next)
 
-	# Start paused — show title screen
+	# Platform warning — shown BEFORE title screen
+	platform_warning.warning_dismissed.connect(_on_platform_warning_dismissed)
+	platform_warning.visible = true
+	title_screen.visible = false
+
+	# Start paused — show platform warning first, then title screen
 	GameState.change_state(GameState.State.IN_MENU)
 	GameClock.pause()
+
+
+func _on_platform_warning_dismissed() -> void:
+	platform_warning.visible = false
+	title_screen.visible = true
 
 
 func _on_continue_game() -> void:

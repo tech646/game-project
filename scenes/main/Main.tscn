@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3]
+[gd_scene load_steps=36 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -32,6 +32,7 @@
 [ext_resource type="Script" path="res://scripts/systems/TutorialSystem.gd" id="30_tutorial_sys"]
 [ext_resource type="PackedScene" path="res://scenes/ui/TutorialOverlay.tscn" id="31_tutorial_ui"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ControlsHint.tscn" id="32_controls"]
+[ext_resource type="PackedScene" path="res://scenes/ui/PlatformWarning.tscn" id="33_platform"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_missions"]
 bg_color = Color(0.15, 0.12, 0.25, 0.9)
@@ -196,6 +197,8 @@ vertical_alignment = 1
 [node name="TutorialOverlay" parent="HUD" instance=ExtResource("31_tutorial_ui")]
 
 [node name="ControlsHint" parent="HUD" instance=ExtResource("32_controls")]
+
+[node name="PlatformWarning" parent="HUD" instance=ExtResource("33_platform")]
 
 [node name="UpgradeShop" parent="HUD" instance=ExtResource("21_shop")]
 
