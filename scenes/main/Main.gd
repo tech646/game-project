@@ -324,6 +324,13 @@ func _on_location_changed(_character: String, location: String) -> void:
 		_pending_player_placement = {}
 	_update_location_label(location)
 
+	# Failsafe: make sure player is unlocked and game is in PLAYING state
+	var active_player := CharacterManager.get_active_player()
+	if active_player:
+		active_player.unlock_from_action()
+	if GameState.current_state != GameState.State.PLAYING and not title_screen.visible and not day_split.visible:
+		GameState.change_state(GameState.State.PLAYING)
+
 
 func _use_door(door: DoorObject) -> void:
 	var player := CharacterManager.get_active_player()
@@ -644,6 +651,14 @@ func _can_interact() -> bool:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Failsafe: ESC unlocks player if stuck (when no popups are open)
+	if event.is_action_pressed("ui_cancel") and _can_interact():
+		var player := CharacterManager.get_active_player()
+		if player:
+			player.unlock_from_action()
+		GameState.change_state(GameState.State.PLAYING)
+		return
+
 	if event.is_action_pressed("interact") and _can_interact():
 		var player := CharacterManager.get_active_player()
 		if not player:

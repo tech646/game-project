@@ -19,10 +19,13 @@ const ANIM_FPS := 6.0  # Frames per second for walk animation
 
 var is_active: bool = true
 var _interaction_locked: bool = false
+var _lock_timestamp: float = 0.0  # When lock was set
 var _is_walking: bool = false
 var _anim_time: float = 0.0
 var _current_frame: int = 0
 var _current_mood: String = "happy"
+
+const MAX_LOCK_DURATION := 8.0  # Max seconds a lock can stay active before auto-unlocking
 
 # Animation frames loaded per mood: {"happy": [tex1, tex2, ...], ...}
 var _anim_frames: Dictionary = {}
@@ -107,6 +110,12 @@ func _physics_process(delta: float) -> void:
 	if GameState.current_state != GameState.State.PLAYING:
 		velocity = Vector2.ZERO
 		return
+	# Auto-unlock if stuck for too long (safety net)
+	if _interaction_locked:
+		var now := Time.get_ticks_msec() / 1000.0
+		if now - _lock_timestamp > MAX_LOCK_DURATION:
+			print("[Player] Auto-unlocking after timeout")
+			_interaction_locked = false
 	if not is_active or _interaction_locked:
 		velocity = Vector2.ZERO
 		return
@@ -133,7 +142,30 @@ func _physics_process(delta: float) -> void:
 
 	velocity = direction * speed
 	move_and_slide()
+
+	# Clamp position to current room bounds
+	var loc := _get_current_location()
+	if loc:
+		var bounds: Rect2 = loc.get_map_bounds()
+		# Shrink bounds a bit to keep player visible inside the room
+		var margin := 40.0
+		var min_x := bounds.position.x + margin
+		var max_x := bounds.position.x + bounds.size.x - margin
+		var min_y := bounds.position.y + margin
+		var max_y := bounds.position.y + bounds.size.y - margin
+		position.x = clampf(position.x, min_x, max_x)
+		position.y = clampf(position.y, min_y, max_y)
+
 	_animate(delta)
+
+
+func _get_current_location() -> LocationBase:
+	var parent := get_parent()
+	while parent:
+		if parent is LocationBase:
+			return parent
+		parent = parent.get_parent()
+	return null
 
 
 func _animate(delta: float) -> void:
@@ -172,6 +204,7 @@ func try_interact() -> Dictionary:
 
 func lock_for_action() -> void:
 	_interaction_locked = true
+	_lock_timestamp = Time.get_ticks_msec() / 1000.0
 
 
 func unlock_from_action() -> void:
