@@ -131,6 +131,15 @@ func _ready() -> void:
 	tutorial_overlay.skip_pressed.connect(_on_tutorial_skip)
 	tutorial_overlay.next_pressed.connect(_on_tutorial_next)
 
+	# Hide tutorial while any modal popup is visible so it never covers actions
+	interaction_popup.visibility_changed.connect(_refresh_tutorial_visibility)
+	dialogue_box.visibility_changed.connect(_refresh_tutorial_visibility)
+	sat_quiz.visibility_changed.connect(_refresh_tutorial_visibility)
+	sat_full_test.visibility_changed.connect(_refresh_tutorial_visibility)
+	journey_panel.visibility_changed.connect(_refresh_tutorial_visibility)
+	upgrade_shop.visibility_changed.connect(_refresh_tutorial_visibility)
+	mission_panel.visibility_changed.connect(_refresh_tutorial_visibility)
+
 	# Platform warning — shown BEFORE title screen
 	platform_warning.warning_dismissed.connect(_on_platform_warning_dismissed)
 	platform_warning.visible = true
@@ -1024,14 +1033,44 @@ func _get_curfew_system() -> CurfewSystem:
 
 # ============ TUTORIAL HANDLERS ============
 
+var _tutorial_active_step: Dictionary = {}
+var _tutorial_active_index: int = -1
+
+
 func _on_tutorial_step_changed(step_index: int, step_data: Dictionary) -> void:
-	if tutorial_overlay:
-		tutorial_overlay.show_step(step_index, step_data, TutorialSystem.TUTORIAL_STEPS.size())
+	_tutorial_active_index = step_index
+	_tutorial_active_step = step_data
+	_refresh_tutorial_visibility()
 
 
 func _on_tutorial_finished() -> void:
+	_tutorial_active_index = -1
+	_tutorial_active_step = {}
 	if tutorial_overlay:
 		tutorial_overlay.hide_tutorial()
+
+
+func _refresh_tutorial_visibility() -> void:
+	if not tutorial_overlay:
+		return
+	# No active step → always hidden
+	if _tutorial_active_index < 0 or _tutorial_active_step.is_empty():
+		tutorial_overlay.hide_tutorial()
+		return
+	# Hide while any modal is showing so we never cover action buttons
+	var modal_open := (
+		(interaction_popup and interaction_popup.visible) or
+		(dialogue_box and dialogue_box.visible) or
+		(sat_quiz and sat_quiz.visible) or
+		(sat_full_test and sat_full_test.visible) or
+		(journey_panel and journey_panel.visible) or
+		(upgrade_shop and upgrade_shop.visible) or
+		(mission_panel and mission_panel.visible)
+	)
+	if modal_open:
+		tutorial_overlay.hide_tutorial()
+	else:
+		tutorial_overlay.show_step(_tutorial_active_index, _tutorial_active_step, TutorialSystem.TUTORIAL_STEPS.size())
 
 
 func _on_tutorial_skip() -> void:

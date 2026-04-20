@@ -21,6 +21,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_script")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -31,16 +32,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.85)
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_script")
-
-[node name="Panel" type="PanelContainer" parent="Control"]
+[node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -55,28 +47,28 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBox" type="VBoxContainer" parent="Control/Panel"]
+[node name="VBox" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="WarningIcon" type="Label" parent="Control/Panel/VBox"]
+[node name="WarningIcon" type="Label" parent="Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 72
 theme_override_colors/font_color = Color(1, 0.95, 0.2, 1)
 text = "!"
 horizontal_alignment = 1
 
-[node name="TitleLabel" type="Label" parent="Control/Panel/VBox"]
+[node name="TitleLabel" type="Label" parent="Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "IMPORTANT — PLEASE READ"
 horizontal_alignment = 1
 
-[node name="Separator" type="HSeparator" parent="Control/Panel/VBox"]
+[node name="Separator" type="HSeparator" parent="Panel/VBox"]
 layout_mode = 2
 
-[node name="PlatformLabel" type="Label" parent="Control/Panel/VBox"]
+[node name="PlatformLabel" type="Label" parent="Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -84,7 +76,7 @@ text = "This game works ONLY on WINDOWS or MAC computers."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="MobileLabel" type="Label" parent="Control/Panel/VBox"]
+[node name="MobileLabel" type="Label" parent="Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(1, 0.95, 0.2, 1)
@@ -92,15 +84,16 @@ text = "It DOES NOT work on phones or tablets."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="DetailsLabel" type="Label" parent="Control/Panel/VBox"]
+[node name="DetailsLabel" type="Label" parent="Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(1, 0.95, 0.85, 1)
-text = "Please use a desktop or laptop with a keyboard.\nYou will need ARROW KEYS, ENTER, TAB, and SPACE to play."
+text = "Please use a desktop or laptop with a keyboard.
+You will need ARROW KEYS, ENTER, TAB, and SPACE to play."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="ContinueBtn" type="Button" parent="Control/Panel/VBox"]
+[node name="ContinueBtn" type="Button" parent="Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "I Understand — Continue"
