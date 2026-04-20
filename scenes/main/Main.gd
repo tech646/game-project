@@ -12,6 +12,8 @@ extends Node2D
 @onready var sat_quiz: PanelContainer = $HUD/SATQuiz
 @onready var mission_panel: PanelContainer = $HUD/MissionPanel
 @onready var location_label: Label = $HUD/LocationLabel
+@onready var objective_label: Label = $HUD/ObjectiveLabel
+@onready var controls_hint: PanelContainer = $HUD/ControlsHint
 @onready var title_screen: Control = $HUD/TitleScreen
 @onready var day_split: Control = $HUD/DaySplitScreen
 @onready var commute_anim: Control = $HUD/CommuteAnimation
@@ -259,6 +261,7 @@ func _on_character_switched(active_name: String) -> void:
 	var active := CharacterManager.get_active_player()
 	var inactive := CharacterManager.get_inactive_player()
 	var target := SceneManager.get_location(active_name)
+	_update_objective_label()
 
 	# Save current character's time before switching
 	if inactive:
@@ -502,6 +505,7 @@ func _on_day_changed(day: int) -> void:
 	_smartle_day_done = false
 	_apply_overnight_recovery()
 	_show_day_banner(day)
+	_update_objective_label()
 	EventBus.day_started.emit(day)
 
 	# Update college checklist
@@ -618,6 +622,17 @@ func _get_needs(player: CharacterBody2D) -> NeedsComponent:
 
 func _update_location_label(location: String) -> void:
 	location_label.text = LOCATION_NAMES.get(location, location)
+	if controls_hint:
+		controls_hint.set_location_tip(location)
+	_update_objective_label()
+
+
+func _update_objective_label() -> void:
+	if not objective_label:
+		return
+	var needs := CharacterManager.get_active_needs()
+	var char_name := needs.character_name.capitalize() if needs else ""
+	objective_label.text = "Day %d/7 (%s) - Goal: Study, eat, sleep. Press ENTER to interact." % [GameClock.game_day, char_name]
 
 
 func _show_day_banner(day: int) -> void:

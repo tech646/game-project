@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3]
+[gd_scene load_steps=35 format=3]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ClockDisplay.tscn" id="2_clock"]
@@ -31,6 +31,7 @@
 [ext_resource type="Texture2D" path="res://assets/logo.png" id="29_logo"]
 [ext_resource type="Script" path="res://scripts/systems/TutorialSystem.gd" id="30_tutorial_sys"]
 [ext_resource type="PackedScene" path="res://scenes/ui/TutorialOverlay.tscn" id="31_tutorial_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ControlsHint.tscn" id="32_controls"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_missions"]
 bg_color = Color(0.15, 0.12, 0.25, 0.9)
@@ -89,6 +90,20 @@ grow_horizontal = 2
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.9, 0.85, 0.7, 1)
 text = ""
+horizontal_alignment = 1
+
+[node name="ObjectiveLabel" type="Label" parent="HUD"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 36.0
+offset_right = 300.0
+offset_bottom = 56.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 0.9)
+text = "Day 1/7 - Goal: earn SAT points by studying, take care of your needs"
 horizontal_alignment = 1
 
 [node name="BottomButtons" type="VBoxContainer" parent="HUD"]
@@ -179,6 +194,8 @@ vertical_alignment = 1
 [node name="DecisionDay" parent="HUD" instance=ExtResource("17_decision")]
 
 [node name="TutorialOverlay" parent="HUD" instance=ExtResource("31_tutorial_ui")]
+
+[node name="ControlsHint" parent="HUD" instance=ExtResource("32_controls")]
 
 [node name="UpgradeShop" parent="HUD" instance=ExtResource("21_shop")]
 
