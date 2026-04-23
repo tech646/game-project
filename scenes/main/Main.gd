@@ -84,6 +84,7 @@ func _ready() -> void:
 	# Journey system
 	var journey_sys := $Systems/JourneySystem
 	journey_sys.add_to_group("journey_system")
+	journey_sys.item_purchased.connect(func(_c, _id): _auto_save())
 	journey_btn.pressed.connect(_on_open_upgrades)
 	missions_btn.pressed.connect(_on_toggle_missions)
 
@@ -169,6 +170,7 @@ func _on_continue_game() -> void:
 			coin_system,
 			furniture_system,
 			college_system,
+			$Systems/JourneySystem,
 		)
 		# Restore character times
 		if data.has("character_times"):
@@ -282,6 +284,16 @@ func _on_character_switched(active_name: String) -> void:
 	var inactive := CharacterManager.get_inactive_player()
 	var target := SceneManager.get_location(active_name)
 	_update_objective_label()
+
+	# Close any open popup and clear any stuck interaction locks on either
+	# character. Without this, pressing Tab while a popup is open leaves the
+	# previous character permanently locked and try_interact() returns empty.
+	if interaction_popup.visible:
+		interaction_popup._close()
+	if active:
+		active.unlock_from_action()
+	if inactive:
+		inactive.unlock_from_action()
 
 	# Save current character's time before switching
 	if inactive:
@@ -877,9 +889,14 @@ func _on_alt_action_confirmed(obj: GameObject) -> void:
 
 
 func _on_popup_closed() -> void:
-	var player := CharacterManager.get_active_player()
-	if player:
-		player.unlock_from_action()
+	# Unlock both players — the lock was set on the player that triggered the
+	# popup, but Tab-switching mid-popup could mean the active player changed.
+	var active := CharacterManager.get_active_player()
+	var inactive := CharacterManager.get_inactive_player()
+	if active:
+		active.unlock_from_action()
+	if inactive:
+		inactive.unlock_from_action()
 
 
 func _on_character_slept(character_name: String) -> void:
@@ -948,6 +965,7 @@ func _interact_furniture(furn: UpgradeableFurniture) -> void:
 
 func _on_coins_changed(_character: String, _amount: int) -> void:
 	_update_coins_label()
+	_auto_save()
 
 
 func _on_open_upgrades() -> void:
@@ -1150,7 +1168,8 @@ func _auto_save() -> void:
 		coin_system,
 		furniture_system,
 		college_system,
-		GameClock.game_day
+		GameClock.game_day,
+		$Systems/JourneySystem,
 	)
 	# Add character times and locations
 	data["character_times"] = GameClock._character_times.duplicate(true)

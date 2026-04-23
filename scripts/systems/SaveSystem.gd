@@ -42,16 +42,18 @@ static func build_save_data(
 	coin_system: CoinSystem,
 	furniture_system: FurnitureUpgradeSystem,
 	college_system: CollegeSystem,
-	day: int
+	day: int,
+	journey_system: JourneySystem = null,
 ) -> Dictionary:
-	return {
-		"version": 1,
+	var data := {
+		"version": 2,
 		"day": day,
 		"clock": {"hour": GameClock.game_hour, "minute": GameClock.game_minute},
 		"gritty": {
 			"hunger": gritty_needs.hunger,
 			"energy": gritty_needs.energy,
 			"fun": gritty_needs.fun,
+			"mental_health": gritty_needs.mental_health,
 			"sat_score": gritty_needs.sat_score,
 			"homework_done": gritty_needs.homework_done,
 			"coins": coin_system.get_coins("gritty"),
@@ -60,6 +62,7 @@ static func build_save_data(
 			"hunger": smartle_needs.hunger,
 			"energy": smartle_needs.energy,
 			"fun": smartle_needs.fun,
+			"mental_health": smartle_needs.mental_health,
 			"sat_score": smartle_needs.sat_score,
 			"homework_done": smartle_needs.homework_done,
 			"coins": coin_system.get_coins("smartle"),
@@ -72,6 +75,12 @@ static func build_save_data(
 			"total_missions": college_system.total_missions.duplicate(),
 		},
 	}
+	if journey_system:
+		data["journey"] = {
+			"purchased": journey_system.purchased.duplicate(true),
+			"recurring_today": journey_system.recurring_purchased_today.duplicate(true),
+		}
+	return data
 
 
 static func apply_save_data(
@@ -81,6 +90,7 @@ static func apply_save_data(
 	coin_system: CoinSystem,
 	furniture_system: FurnitureUpgradeSystem,
 	college_system: CollegeSystem,
+	journey_system: JourneySystem = null,
 ) -> void:
 	if data.is_empty():
 		return
@@ -94,6 +104,7 @@ static func apply_save_data(
 	gritty_needs.hunger = gd.get("hunger", 100.0)
 	gritty_needs.energy = gd.get("energy", 100.0)
 	gritty_needs.fun = gd.get("fun", 100.0)
+	gritty_needs.mental_health = gd.get("mental_health", 100.0)
 	gritty_needs.sat_score = gd.get("sat_score", 0)
 	gritty_needs.homework_done = gd.get("homework_done", false)
 	coin_system.coins["gritty"] = gd.get("coins", 0)
@@ -102,6 +113,7 @@ static func apply_save_data(
 	smartle_needs.hunger = sd.get("hunger", 100.0)
 	smartle_needs.energy = sd.get("energy", 100.0)
 	smartle_needs.fun = sd.get("fun", 100.0)
+	smartle_needs.mental_health = sd.get("mental_health", 100.0)
 	smartle_needs.sat_score = sd.get("sat_score", 0)
 	smartle_needs.homework_done = sd.get("homework_done", false)
 	coin_system.coins["smartle"] = sd.get("coins", 50)
@@ -117,3 +129,8 @@ static func apply_save_data(
 	college_system.essays_written = college.get("essays_written", {"gritty": false, "smartle": false})
 	college_system.recommendations = college.get("recommendations", {"gritty": false, "smartle": false})
 	college_system.total_missions = college.get("total_missions", {"gritty": 0, "smartle": 0})
+
+	if journey_system and data.has("journey"):
+		var journey: Dictionary = data["journey"]
+		journey_system.purchased = journey.get("purchased", {"smartle": {}, "gritty": {}})
+		journey_system.recurring_purchased_today = journey.get("recurring_today", {"smartle": {}, "gritty": {}})

@@ -7,7 +7,7 @@ func _init() -> void:
 
 
 func _spawn_objects() -> void:
-	setup_background("res://assets/rooms/Quarto Gritty.png", 0.25)
+	setup_background("res://assets/rooms/Quarto GirttyNOVO.png", 0.25)
 
 	# Exact positions from debug clicks:
 	spawn_furniture("bed", "gritty", Vector2(-113, -6))
